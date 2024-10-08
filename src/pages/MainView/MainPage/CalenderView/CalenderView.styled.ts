@@ -49,7 +49,6 @@ export const CalenderBox = styled.div`
 
   // 날짜별 그리드
   .fc .fc-daygrid-day-frame {
-    padding: 10px;
     font-size: 14px;
     background: white;
   }
