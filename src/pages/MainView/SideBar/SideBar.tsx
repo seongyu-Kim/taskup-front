@@ -21,6 +21,7 @@ export default function SideBar() {
             <p>이름</p>
             <HiPencilSquare />
           </NameDiv>
+          <SideBarButton bottom={'540px'}>로그아웃</SideBarButton>
           <SideBarButton bottom={'140px'}>새 프로젝트</SideBarButton>
           <SideBarButton bottom={'80px'}>알림 확인</SideBarButton>
         </DetailDiv>
