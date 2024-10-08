@@ -12,7 +12,7 @@ export const CalenderBox = styled.div`
     font-size: 12px;
     line-height: 29px;
     color: white;
-    border-radius: 15px 15px 0 0;
+    border-radius: 10px 10px 0 0;
   }
 
   // toolbar 버튼
