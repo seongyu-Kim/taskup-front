@@ -12,7 +12,7 @@ export const CalenderBox = styled.div`
     font-size: 12px;
     line-height: 29px;
     color: white;
-    border-radius: 20px 20px 0 0;
+    border-radius: 15px 15px 0 0;
   }
 
   // toolbar 버튼
@@ -50,6 +50,7 @@ export const CalenderBox = styled.div`
   // 날짜별 그리드
   .fc .fc-daygrid-day-frame {
     padding: 10px;
+    font-size: 14px;
     background: white;
   }
 

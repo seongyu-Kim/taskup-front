@@ -10,6 +10,7 @@ export default function CalenderView() {
         initialView={'dayGridMonth'}
         height={'500px'}
         editable={true}
+        locale={'ko'}
       />
     </CalenderBox>
   );
