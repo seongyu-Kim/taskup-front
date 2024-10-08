@@ -52,4 +52,7 @@ export const SideBarButton = styled.button<SidebarDetailProps>`
   width: 180px;
   height: 50px;
   cursor: pointer;
+  &:hover {
+    background: #5a7291;
+  }
 `;
