@@ -1,99 +1,22 @@
-import styled from 'styled-components';
-import MainPageDetailProps from '../../../../types/MainPageDetailType';
+import { useState } from 'react';
+import {
+  MainPageContainer,
+  ProjectListContainer,
+  ProjectListArea,
+  ProjectListTitle,
+  TitleText,
+  ProjectListTitleName,
+  ProjectList,
+  ProjectListItem,
+  ListTableBox,
+  ListTextValue,
+  ListTextNameAreaBox,
+  PaginationBox,
+  PaginationButton,
+  PageNumText,
+} from './TaskList.styled';
 
-//페이지 리스트 컨테이너
-const MainPageContainer = styled.div`
-  height: 100vh;
-  width: 100%;
-  background-color: #d9d9d9;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-`;
-
-// 프로젝트 리스트 박스
-const ProjectListContainer = styled.div`
-  margin-top: 50px;
-  background: white;
-  width: 70rem;
-  height: 15rem;
-  border: 1px solid black;
-`;
-
-// 프로젝트 리스트 영역
-const ProjectListArea = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-// 리스트 Num Name CheckBox 제목 부분
-const ProjectListTitle = styled.div`
-  background-color: #647ea1;
-  margin: 0;
-  flex: 1;
-`;
-// 리스트 Name 타이틀 영역 크기
-const ProjectListTitleName = styled(ProjectListTitle)`
-  border-right: 1px solid #9c9c9c;
-  border-left: 1px solid #9c9c9c;
-  flex: 2;
-`;
-
-// 제목 부분
-const TitleText = styled.p`
-  margin: 2px;
-  color: white;
-  text-align: center; // 텍스트 중앙 정렬
-`;
-
-// ul 태그 스크롤 추가
-const ProjectList = styled.ul`
-  overflow-y: auto;
-  height: 13.2rem;
-  margin: 0;
-  padding: 0;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-// li 태그
-const ProjectListItem = styled.li<MainPageDetailProps>`
-  background-color: ${(props) => props.backgroundColor};
-  //padding: 5px;
-  list-style-type: none;
-  display: flex;
-  align-items: center;
-`;
-
-// li 태그 아래 리스트 테이블
-const ListTableBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin: 0;
-  flex: 1;
-`;
-// 프로젝트 리스트 항목 이름 아이디/내용/체크박스
-const ListTextValue = styled.p`
-  flex: 1;
-  margin: 5px 0 5px 0;
-  text-align: center;
-`;
-// 이름 필드
-const ListTextNameAreaBox = styled(ListTableBox)`
-  border-left: 1px solid #9c9c9c;
-  border-right: 1px solid #9c9c9c;
-  flex: 2;
-`;
-//페이지 네이션 부분
-const PaginationBox = styled.div`
-  display: flex;
-  gap: 5px;
-`;
-
-//테스트용 임시 값 추후 삭제
+// 임시 데이터
 const testArr = [
   { id: 1, name: '가', checkBox: false },
   { id: 2, name: '나', checkBox: false },
@@ -115,9 +38,64 @@ const testArr = [
   { id: 18, name: '라', checkBox: false },
   { id: 19, name: '마', checkBox: false },
   { id: 20, name: '바', checkBox: false },
+  { id: 21, name: '사', checkBox: false },
+  { id: 22, name: '아', checkBox: false },
+  { id: 23, name: '자', checkBox: false },
+  { id: 24, name: '차', checkBox: false },
+  { id: 25, name: '카', checkBox: false },
+  { id: 26, name: '타', checkBox: false },
+  { id: 27, name: '파', checkBox: false },
+  { id: 28, name: '하', checkBox: false },
+  { id: 29, name: '가', checkBox: false },
+  { id: 30, name: '나', checkBox: false },
+  { id: 31, name: '다', checkBox: false },
+  { id: 32, name: '라', checkBox: false },
+  { id: 33, name: '마', checkBox: false },
+  { id: 34, name: '바', checkBox: false },
+  { id: 35, name: '사', checkBox: false },
+  { id: 36, name: '아', checkBox: false },
+  { id: 37, name: '자', checkBox: false },
+  { id: 38, name: '차', checkBox: false },
+  { id: 39, name: '카', checkBox: false },
+  { id: 40, name: '타', checkBox: false },
+  { id: 41, name: '파', checkBox: false },
+  { id: 42, name: '하', checkBox: false },
+  { id: 43, name: '가', checkBox: false },
+  { id: 44, name: '나', checkBox: false },
+  { id: 45, name: '다', checkBox: false },
+  { id: 46, name: '라', checkBox: false },
+  { id: 47, name: '마', checkBox: false },
+  { id: 48, name: '바', checkBox: false },
+  { id: 49, name: '사', checkBox: false },
+  { id: 50, name: '아', checkBox: false },
+  { id: 51, name: '아', checkBox: false },
 ];
 
+const itemsPerPage = 10;
+
 export default function TaskList() {
+  const totalItems = testArr.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const currentData = testArr.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPage = (index: number) => {
+    setCurrentPage(index + 1);
+  };
+
   return (
     <MainPageContainer>
       <ProjectListContainer>
@@ -133,26 +111,38 @@ export default function TaskList() {
           </ProjectListTitle>
         </ProjectListArea>
         <ProjectList>
-          {testArr.map((item, index) => (
+          {currentData.map((item) => (
             <ProjectListItem
-              backgroundColor={item.id % 2 == 0 ? '#e0e0e0' : 'white'}
-              id={item.id.toString()}>
+              backgroundColor={item.id % 2 === 0 ? '#e0e0e0' : 'white'}
+              key={item.id}>
               <ListTableBox>
                 <ListTextValue>{item.id}</ListTextValue>
               </ListTableBox>
               <ListTextNameAreaBox>
                 <ListTextValue>{item.name}</ListTextValue>
               </ListTextNameAreaBox>
-              {/*체크박스는 임시 값*/}
-              <ListTextValue>{item.checkBox.toString()}</ListTextValue>
+              <ListTableBox>
+                <ListTextValue>{item.checkBox.toString()}</ListTextValue>
+              </ListTableBox>
             </ProjectListItem>
           ))}
         </ProjectList>
       </ProjectListContainer>
       <PaginationBox>
-        <button>이전</button>
-        <p>1</p>
-        <button>다음</button>
+        <PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
+          [이전]
+        </PaginationButton>
+        {[...Array(totalPages)].map((_, index) => (
+          <PageNumText
+            onClick={() => goToPage(index)}
+            key={index}
+            isActive={currentPage === index + 1}>
+            {index + 1}
+          </PageNumText>
+        ))}
+        <PaginationButton onClick={goToNextPage} disabled={currentPage === totalPages}>
+          [다음]
+        </PaginationButton>
       </PaginationBox>
     </MainPageContainer>
   );

@@ -1,16 +1,12 @@
-import styled from 'styled-components';
 import TaskList from './TaskList/TaskList';
-
-const MainBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`;
+import CalenderView from './Calender/CalenderView';
+import { MainBox } from './MainPage.styled';
 
 export default function MainPage() {
   return (
     <MainBox>
       <TaskList />
+      <CalenderView />
     </MainBox>
   );
 }
