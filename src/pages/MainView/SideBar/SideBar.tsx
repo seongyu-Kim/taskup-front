@@ -8,7 +8,7 @@ import { HiPencilSquare } from 'react-icons/hi2';
 const SidebarContainer = styled.div`
   background: #2d3f63;
   height: 100vh;
-  width: 250px;
+  width: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
