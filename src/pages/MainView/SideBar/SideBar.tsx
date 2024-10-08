@@ -5,7 +5,7 @@ import SidebarDetailProps from '../../../types/SidebarDetailType';
 import { HiPencilSquare } from 'react-icons/hi2';
 
 //사이드 바 기본
-const SidebarDiv = styled.div`
+const SidebarContainer = styled.div`
   background: #2d3f63;
   height: 100vh;
   width: 250px;
@@ -60,7 +60,7 @@ const SideBarButton = styled.button<SidebarDetailProps>`
 export default function SideBar() {
   return (
     <>
-      <SidebarDiv>
+      <SidebarContainer>
         <LogoImg src={logo} alt={'TaskUp'} />
         <DetailDiv>
           <ProfileImg src={tempPhoto} alt={'프로필 사진'} />
@@ -71,7 +71,7 @@ export default function SideBar() {
           <SideBarButton bottom={'140px'}>새 프로젝트</SideBarButton>
           <SideBarButton bottom={'80px'}>알림 확인</SideBarButton>
         </DetailDiv>
-      </SidebarDiv>
+      </SidebarContainer>
     </>
   );
 }
