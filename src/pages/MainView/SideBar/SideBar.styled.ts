@@ -4,19 +4,27 @@ import SidebarDetailProps from '../../../types/SidebarDetailType';
 //사이드 바 기본
 export const SidebarContainer = styled.div`
   background: #2d3f63;
-  height: 100vh;
+  height: 100%;
   width: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
-//사이드 바 기본 확장 - 이름, 아이콘
-export const NameDiv = styled.div`
+//사이드 바 기본 확장 - 사진, 이름, 아이콘
+export const ProfileBox = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
   color: white;
+  position: absolute;
+  flex-direction: column;
 `;
+export const NameBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
 //로고 이미지
 export const LogoImg = styled.img`
   width: 300px;
@@ -29,13 +37,14 @@ export const ProfileImg = styled.img`
   width: 150px;
   height: 150px;
   border-radius: 50%;
+  //position: absolute;
 `;
 
 // 사이드 바 내용 Div
 export const DetailDiv = styled.div`
   display: flex;
   height: 100%;
-  width: 100%;
+  width: 300px;
   flex-direction: column;
   align-items: center;
   margin-top: 150px;

@@ -4,7 +4,8 @@ import { HiPencilSquare } from 'react-icons/hi2';
 import {
   DetailDiv,
   LogoImg,
-  NameDiv,
+  NameBox,
+  ProfileBox,
   ProfileImg,
   SideBarButton,
   SidebarContainer,
@@ -16,11 +17,13 @@ export default function SideBar() {
       <SidebarContainer>
         <LogoImg src={logo} alt={'TaskUp'} />
         <DetailDiv>
-          <ProfileImg src={tempPhoto} alt={'프로필 사진'} />
-          <NameDiv>
-            <p>이름</p>
-            <HiPencilSquare />
-          </NameDiv>
+          <ProfileBox>
+            <ProfileImg src={tempPhoto} alt={'프로필 사진'} />
+            <NameBox>
+              <p>이름</p>
+              <HiPencilSquare />
+            </NameBox>
+          </ProfileBox>
           <SideBarButton bottom={'540px'}>로그아웃</SideBarButton>
           <SideBarButton bottom={'140px'}>새 프로젝트</SideBarButton>
           <SideBarButton bottom={'80px'}>알림 확인</SideBarButton>
