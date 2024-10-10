@@ -5,7 +5,7 @@ import MainPage from './pages/MainView/MainPage/MainPage';
 import { ModalPortal } from './pages/Modal/ModalPortal/ModalPortal';
 import ModalView from './pages/Modal/ModalView/ModalView';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import CreateProject from './pages/\bCreateProject/CreateProject';
+import CreateProject from './pages/CreateProject/CreateProject';
 import ViewProject from './pages/ViewProject/ViewProject';
 
 const MainDiv = styled.div`
