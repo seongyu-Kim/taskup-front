@@ -6,9 +6,24 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
 import { FaCalendarAlt } from 'react-icons/fa';
 
+interface ProjectData {
+  title: string;
+  subtitle: string;
+  author: string;
+  description: string;
+  startDate: string | null;
+  endDate: string | null;
+  participants: string;
+}
+
 const CreateProject: React.FC = () => {
+  const [title, setTitle] = useState<string>('');
+  const [subtitle, setSubtitle] = useState<string>('');
+  const [author, setAuthor] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [participants, setParticipants] = useState<string>('');
 
   const handleStartDateChange = (date: Date | null) => {
     setStartDate(date);
@@ -16,6 +31,8 @@ const CreateProject: React.FC = () => {
   const handleEndDateChange = (date: Date | null) => {
     setEndDate(date);
   };
+
+  const handleSubmit = async () => {};
 
   return (
     <Styled.Container>
