@@ -10,6 +10,9 @@ export const MainPageContainer = styled.div`
   align-items: center;
   gap: 15px;
   border-bottom: 1px solid black;
+  @media (max-width: 760px) {
+    margin-bottom: 30px;
+  }
 `;
 
 // 프로젝트 리스트 박스
@@ -38,7 +41,7 @@ export const ProjectListTitle = styled.div`
 export const ProjectListTitleName = styled(ProjectListTitle)`
   border-right: 1px solid #9c9c9c;
   border-left: 1px solid #9c9c9c;
-  flex: 2;
+  flex: 5;
 `;
 
 // 제목 부분
@@ -65,6 +68,11 @@ export const ProjectListItem = styled.li<MainPageDetailProps>`
   list-style-type: none;
   display: flex;
   align-items: center;
+  .detail {
+    @media (max-width: 760px) {
+      display: none;
+    }
+  }
 `;
 
 // li 태그 아래 리스트 테이블
@@ -78,6 +86,9 @@ export const ListTableBox = styled.div`
   border-bottom: 1px solid #9c9c9c;
 
   height: 80px;
+  @media (max-width: 760px) {
+    height: 50%;
+  }
 `;
 
 // 프로젝트 리스트 항목 이름 아이디/내용/체크박스
@@ -85,17 +96,23 @@ export const ListTextValue = styled.p`
   flex: 1;
   margin: 5px 0 5px 0;
   text-align: center;
+  @media (max-width: 760px) {
+    font-size: 14px;
+  }
 `;
 
 // 이름 필드
 export const ListTextNameAreaBox = styled(ListTableBox)`
   border-left: 1px solid #9c9c9c;
   border-right: 1px solid #9c9c9c;
-  flex: 2;
+  flex: 5;
 
   display: flex;
   flex-direction: column;
   height: 80px;
+  @media (max-width: 760px) {
+    height: 50%;
+  }
 `;
 
 // 페이지 네이션 부분

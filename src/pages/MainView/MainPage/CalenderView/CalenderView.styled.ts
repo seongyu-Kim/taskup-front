@@ -2,6 +2,9 @@ import styled from 'styled-components';
 
 export const CalenderBox = styled.div`
   width: 70%;
+  max-width: 1134px;
+  height: 50%;
+  overflow: hidden;
 
   z-index: 1;
   // toolbar container
@@ -69,5 +72,24 @@ export const CalenderBox = styled.div`
     border-radius: 4px;
     font-weight: 500;
     font-size: 14px;
+  }
+  @media (max-width: 480px) {
+    .fc .fc-toolbar.fc-header-toolbar {
+      padding: 0 10px; // 패딩 감소
+      font-size: 8px; // 폰트 크기 조정
+    }
+
+    .fc .fc-button-primary span {
+      font-size: 20px; // 버튼 텍스트 크기 조정
+    }
+
+    .fc-theme-standard th {
+      font-size: 12px; // 요일 폰트 크기 조정
+    }
+
+    .fc-event {
+      font-size: 10px; // 이벤트 폰트 크기 조정
+      padding: 3px 4px; // 이벤트 패딩 감소
+    }
   }
 `;

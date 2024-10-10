@@ -130,7 +130,7 @@ export default function TaskList() {
                 </ListTableBox>
                 <ListTextNameAreaBox>
                   <ListTextValue>{item.title}</ListTextValue>
-                  <ListTextValue>{item.detail}</ListTextValue>
+                  <ListTextValue className="detail">{item.detail}</ListTextValue>
                 </ListTextNameAreaBox>
                 <ListTableBox>
                   <ListTextValue>{item.checkBox.toString()}</ListTextValue>
