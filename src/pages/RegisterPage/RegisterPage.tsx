@@ -6,9 +6,21 @@ import {
   InputBox,
   Form,
   SubmitButton,
+  ErrorText,
 } from './RegisterPage.styled';
+import { useForm } from 'react-hook-form';
+
+interface RegisterFormData {
+  email: string;
+  name: string;
+  password: string;
+}
 
 export default function LoginPage() {
+  const {
+    register,
+    formState: { errors },
+  } = useForm<RegisterFormData>();
   return (
     <Container>
       <LoginView>
@@ -22,14 +34,24 @@ export default function LoginPage() {
           <Form action="">
             <InputBox>
               <label htmlFor="email">이메일</label>
-              <input type="email" name="email" id="email" placeholder="이메일을 입력하세요." />
-              <p>이미 존재하는 이메일 입니다.</p>
+              <input
+                type="email"
+                id="email"
+                placeholder="이메일을 입력하세요."
+                {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
+              />
             </InputBox>
+            <ErrorText>이미 존재하는 이메일 입니다.</ErrorText>
 
             <InputBox>
-              <label htmlFor="name">이메일</label>
-              <input type="text" name="name" id="name" placeholder="이메일을 입력하세요." />
-              <p>이미 존재하는 이메일 입니다.</p>
+              <label htmlFor="name">이름</label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                placeholder="이름을 입력하세요."
+                maxLength={10}
+              />
             </InputBox>
 
             <InputBox>
@@ -38,7 +60,7 @@ export default function LoginPage() {
                 type="password"
                 name="password"
                 id="password"
-                maxLength={10}
+                minLength={6}
                 placeholder="비밀번호를 입력하세요."
               />
             </InputBox>
@@ -49,17 +71,17 @@ export default function LoginPage() {
                 type="password"
                 name="password_check"
                 id="password_check"
-                maxLength={10}
+                minLength={6}
                 placeholder="비밀번호를 다시 입력하세요."
               />
-              <p>비밀번호가 일치하지 않습니다.</p>
             </InputBox>
+            <ErrorText>비밀번호가 일치하지 않습니다.</ErrorText>
 
             <InputBox>
               <label htmlFor="number">인증번호</label>
               <input type="number" name="number" id="number" placeholder="인증번호를 입력하세요." />
-              <p>인증번호가 일치하지 않습니다.</p>
             </InputBox>
+            <ErrorText>인증번호가 일치하지 않습니다.</ErrorText>
 
             <SubmitButton type="submit">회원가입 하기</SubmitButton>
           </Form>

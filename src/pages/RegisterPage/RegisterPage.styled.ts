@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 
+const breakpoints = {
+  desktop: '1024px',
+  tablet: '768px',
+  mobile: '480px',
+};
+
 export const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -7,25 +13,49 @@ export const Container = styled.div`
   background-color: #d9d9d9;
   width: 100%;
   height: 100vh;
+  padding: 0 1rem;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 0;
+  }
 `;
 
 export const LoginView = styled.div`
-  width: 964px;
-  height: 599px;
+  width: 80%;
+  height: 80%;
   display: flex;
   align-items: center;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   overflow: hidden;
+
+  @media (max-width: ${breakpoints.desktop}) {
+    width: 90%;
+    height: 85%;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    flex-direction: column;
+    height: auto;
+  }
 `;
 
 export const Sidebar = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 33%;
   height: 100%;
   background-color: #2d3f63;
+
   img {
     width: 100%;
+    max-width: 200px;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    height: auto;
+    padding: 1rem 0;
   }
 `;
 
@@ -35,15 +65,29 @@ export const MainView = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1.5rem;
-  width: 100%;
+  width: 67%;
   height: 100%;
   background-color: #fff;
+  padding: 2rem;
+
   h1 {
     font-size: 1.5rem;
     font-weight: bold;
+
+    @media (max-width: ${breakpoints.tablet}) {
+      font-size: 1.3rem;
+      text-align: center;
+    }
+
     span {
       color: #9aa308;
     }
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    padding: 1.5rem;
+    box-sizing: border-box;
   }
 `;
 
@@ -51,55 +95,107 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
   width: 55%;
+
+  @media (max-width: ${breakpoints.desktop}) {
+    width: 70%;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 90%;
+  }
 `;
 
 export const ErrorText = styled.p`
   width: 100%;
   font-size: 0.7rem;
   text-align: left;
-  margin-left: 10px;
+  margin-left: 0.5rem;
+  margin-bottom: 0.6rem;
   color: #f93737;
-  text-decoration: underline;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 0.6rem;
+    margin-left: 0.2rem;
+  }
 `;
 
 export const InputBox = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
   border: 1px solid #222;
   box-sizing: border-box;
   position: relative;
+  margin-bottom: 0.6rem;
+
   label {
-    width: 60px;
-    font-size: 13px;
+    width: 20%;
+    font-size: 0.8rem;
     font-weight: bold;
+
+    @media (max-width: ${breakpoints.tablet}) {
+      width: 25%; /* 모바일에서 라벨 너비 조정 */
+      font-size: 0.7rem;
+    }
+
+    @media (max-width: ${breakpoints.mobile}) {
+      width: 30%;
+    }
   }
+
   input {
     margin-left: 0.2rem;
     border: none;
     outline: none;
-    width: calc(100% - 60px);
+    width: 100%;
+    &::placeholder {
+      font-size: 0.7rem;
+    }
+
+    @media (max-width: ${breakpoints.mobile}) {
+      font-size: 0.65rem;
+    }
   }
+
   p {
     font-size: 0.6rem;
     color: #f93737;
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 0.75rem;
+    right: 0.75rem;
+
+    @media (max-width: ${breakpoints.mobile}) {
+      top: 0.5rem;
+      right: 0.5rem;
+    }
   }
 `;
 
 export const SubmitButton = styled.button`
   width: 100%;
-  padding: 8px 0;
-  border-radius: 8px;
+  padding: 0.5rem 0;
+  border-radius: 0.5rem;
   border: none;
   font-weight: bold;
   background-color: #2d3f63;
   color: #fff;
   border: 1px solid #2d3f63;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #3c4e78;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    padding: 0.6rem 0;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 0.8rem 0;
+  }
 `;
