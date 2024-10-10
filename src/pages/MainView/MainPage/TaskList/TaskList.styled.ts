@@ -54,7 +54,7 @@ export const TitleText = styled.p`
 // ul 태그 스크롤 추가
 export const ProjectList = styled.ul`
   overflow-y: auto;
-  height: 14.3rem;
+  height: 16.1rem;
   margin: 0;
   padding: 0;
   &::-webkit-scrollbar {
