@@ -7,6 +7,10 @@ import ModalView from './pages/Modal/ModalView/ModalView';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import CreateProject from './pages/CreateProject/CreateProject';
 import ViewProject from './pages/ViewProject/ViewProject';
+import LoginPage from './pages/LoginPage/LoginPage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
+import PasswordResetPage from './pages/PasswordResetFormPage/PasswordResetFormPage';
+import PasswordResetLinkPage from './pages/PasswordResetLinkPage/PasswordResetLinkPage';
 
 const MainDiv = styled.div`
   display: flex;
@@ -29,6 +33,11 @@ function App() {
             </MainDiv>
           }
         />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/password-reset" element={<PasswordResetPage />} />
+        <Route path="/password-reset/confirm" element={<PasswordResetLinkPage />} />
         <Route path="/create" element={<CreateProject />} />
         <Route path="/view" element={<ViewProject />} />
       </Routes>
