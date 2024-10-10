@@ -3,8 +3,8 @@ import { MainPageDetailProps } from '../../../../types/MainPageDetailType';
 
 // 페이지 리스트 컨테이너
 export const MainPageContainer = styled.div`
-  height: 380px;
-  width: 1300px;
+  height: 40%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,8 +16,8 @@ export const MainPageContainer = styled.div`
 export const ProjectListContainer = styled.div`
   margin-top: 50px;
   background: white;
-  width: 70rem;
-  height: 15rem;
+  width: 100%;
+  height: 100%;
   border: 1px solid #9c9c9c;
 `;
 
@@ -51,7 +51,7 @@ export const TitleText = styled.p`
 // ul 태그 스크롤 추가
 export const ProjectList = styled.ul`
   overflow-y: auto;
-  height: 13.2rem;
+  height: 14.3rem;
   margin: 0;
   padding: 0;
   &::-webkit-scrollbar {
@@ -71,10 +71,13 @@ export const ProjectListItem = styled.li<MainPageDetailProps>`
 export const ListTableBox = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   margin: 0;
   flex: 1;
   border-bottom: 1px solid #9c9c9c;
+
+  height: 80px;
 `;
 
 // 프로젝트 리스트 항목 이름 아이디/내용/체크박스
@@ -89,6 +92,10 @@ export const ListTextNameAreaBox = styled(ListTableBox)`
   border-left: 1px solid #9c9c9c;
   border-right: 1px solid #9c9c9c;
   flex: 2;
+
+  display: flex;
+  flex-direction: column;
+  height: 80px;
 `;
 
 // 페이지 네이션 부분
@@ -107,5 +114,5 @@ export const PaginationButton = styled.button`
 
 export const PageNumText = styled.p<{ isActive: boolean }>`
   cursor: pointer;
-  fontweight: ${(props) => (props.isActive ? 'bold' : 'normal')};
+  color: ${(props) => (props.isActive ? 'black' : 'gray')};
 `;
