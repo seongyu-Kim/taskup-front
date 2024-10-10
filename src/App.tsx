@@ -4,13 +4,14 @@ import styled from 'styled-components';
 import MainPage from './pages/MainView/MainPage/MainPage';
 import { ModalPortal } from './pages/Modal/ModalPortal/ModalPortal';
 import ModalView from './pages/Modal/ModalView/ModalView';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import CreateProject from './pages/CreateProject/CreateProject';
 import ViewProject from './pages/ViewProject/ViewProject';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import PasswordResetPage from './pages/PasswordResetFormPage/PasswordResetFormPage';
 import PasswordResetLinkPage from './pages/PasswordResetLinkPage/PasswordResetLinkPage';
+import { useUserStore } from './stores/UserStore/userStore';
 
 const MainDiv = styled.div`
   display: flex;
@@ -20,6 +21,8 @@ const MainDiv = styled.div`
 `;
 
 function App() {
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+
   return (
     <BrowserRouter>
       <GlobalStyleStyled />
@@ -33,7 +36,7 @@ function App() {
             </MainDiv>
           }
         />
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<Navigate to={isLoggedIn ? '/main' : '/login'}></Navigate>} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/password-reset" element={<PasswordResetPage />} />

@@ -9,8 +9,9 @@ import {
   ButtonBox,
   ErrorText,
 } from './LoginPage.styled';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useUserStore, UserState } from '../../stores/UserStore/userStore';
 interface LoginFormData {
   email: string;
   password: string;
@@ -22,9 +23,28 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>();
+  const navigate = useNavigate();
+  const login = useUserStore((state: UserState) => state.login);
+
+  const getUserData = () => {
+    const storeUserData = localStorage.getItem('userData');
+    return storeUserData ? JSON.parse(storeUserData) : null;
+  };
 
   const onSubmit = (data: LoginFormData) => {
-    console.log('로그인 데이터:', data);
+    const userData = getUserData();
+
+    if (!userData) {
+      alert('회원 정보가 존재하지 않습니다. 회원가입을 먼저 진행해주세요.');
+      return;
+    }
+
+    if (data.email === userData.email && data.password === userData.password) {
+      login(userData.email, userData.name);
+      navigate('/main');
+    } else {
+      alert('이메일 또는 비밀번호가 일치하지 않습니다.');
+    }
   };
   return (
     <Container>
