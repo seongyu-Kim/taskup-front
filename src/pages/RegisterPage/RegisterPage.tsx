@@ -15,13 +15,22 @@ interface RegisterFormData {
   email: string;
   name: string;
   password: string;
+  password_check: string;
+  number: string;
 }
 
 export default function RegisterPage() {
   const {
     register,
+    handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<RegisterFormData>();
+
+  const onSubmit = (data: RegisterFormData) => {
+    console.log('회원가입 데이터:', data);
+  };
+
   return (
     <Container>
       <LoginView>
@@ -33,26 +42,37 @@ export default function RegisterPage() {
             <span>TaskUp</span>과 함께하게 되신 걸 환영합니다.
           </h3>
           <h1>회원가입</h1>
-          <Form action="">
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <InputBox>
               <label htmlFor="email">이메일</label>
               <input
                 type="email"
                 id="email"
                 placeholder="이메일을 입력하세요."
-                {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
+                {...register('email', {
+                  required: '이메일을 입력해주세요.',
+                  pattern: {
+                    value: /^\S+@\S+$/i,
+                    message: '유효한 이메일 주소를 입력하세요.',
+                  },
+                })}
               />
             </InputBox>
-            {errors.email && <ErrorText>이미 존재하는 이메일 입니다.</ErrorText>}
+            {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
 
             <InputBox>
               <label htmlFor="name">이름</label>
               <input
                 type="text"
-                name="name"
                 id="name"
                 placeholder="이름을 입력하세요."
-                maxLength={10}
+                {...register('name', {
+                  required: '이름을 입력해주세요.',
+                  maxLength: {
+                    value: 10,
+                    message: '이름은 최대 10자까지 입력 가능합니다.',
+                  },
+                })}
               />
             </InputBox>
 
@@ -60,30 +80,50 @@ export default function RegisterPage() {
               <label htmlFor="password">비밀번호</label>
               <input
                 type="password"
-                name="password"
                 id="password"
-                minLength={6}
                 placeholder="비밀번호를 입력하세요."
+                {...register('password', {
+                  required: '비밀번호를 입력해주세요.',
+                  minLength: {
+                    value: 6,
+                    message: '비밀번호는 최소 6자 이상이어야 합니다.',
+                  },
+                })}
               />
             </InputBox>
+            {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
 
             <InputBox>
               <label htmlFor="password_check">비밀번호</label>
               <input
                 type="password"
-                name="password_check"
                 id="password_check"
-                minLength={6}
                 placeholder="비밀번호를 다시 입력하세요."
+                {...register('password_check', {
+                  required: '비밀번호 확인을 입력해주세요.',
+                  validate: (value) =>
+                    value === watch('password') || '비밀번호가 일치하지 않습니다.',
+                })}
               />
             </InputBox>
-            <ErrorText>비밀번호가 일치하지 않습니다.</ErrorText>
+            {errors.password_check && <ErrorText>{errors.password_check.message}</ErrorText>}
 
             <InputBox>
               <label htmlFor="number">인증번호</label>
-              <input type="number" name="number" id="number" placeholder="인증번호를 입력하세요." />
+              <input
+                type="number"
+                id="number"
+                placeholder="인증번호를 입력하세요."
+                {...register('number', {
+                  required: '인증번호를 입력해주세요.',
+                  minLength: {
+                    value: 4,
+                    message: '인증번호는 최소 4자 이상이어야 합니다.',
+                  },
+                })}
+              />
             </InputBox>
-            <ErrorText>인증번호가 일치하지 않습니다.</ErrorText>
+            {errors.number && <ErrorText>{errors.number.message}</ErrorText>}
 
             <SubmitButton type="submit">회원가입 하기</SubmitButton>
           </Form>
