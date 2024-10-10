@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 export const CalenderBox = styled.div`
   width: 70%;
+
+  z-index: 1;
   // toolbar container
   .fc .fc-toolbar.fc-header-toolbar {
     margin: 0;
