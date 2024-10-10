@@ -55,7 +55,7 @@ const CreateProject: React.FC = () => {
 
             <Styled.MarginTop top={20} />
 
-            <Styled.TextArea rows={8} placeholder="프로젝트 내용" />
+            <Styled.TextArea rows={12} placeholder="프로젝트 내용" />
 
             <Styled.MarginTop top={30} />
 
@@ -101,7 +101,7 @@ const CreateProject: React.FC = () => {
 
             <Styled.Input type="text" placeholder="참가자를 입력하세요" />
 
-            <Styled.MarginTop top={70} />
+            <Styled.MarginTop top={30} />
 
             <Styled.BtnBox>
               <Styled.GreenBtn1>등록하기</Styled.GreenBtn1>
