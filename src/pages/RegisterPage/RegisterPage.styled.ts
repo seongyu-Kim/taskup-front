@@ -205,6 +205,37 @@ export const SubmitButton = styled.button`
   }
 `;
 
+export const AuthButton = styled.button`
+  width: 100%;
+  padding: 0.5rem 0;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: bold;
+  background-color: #9aa308;
+  color: #fff;
+  border: 1px solid #9aa308;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 0.8rem;
+
+  &:hover {
+    background-color: #c3c86e;
+  }
+
+  &:disabled {
+    background-color: #c3c86e;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    padding: 0.6rem 0;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 0.8rem 0;
+  }
+`;
+
 export const ButtonBox = styled.div`
   font-size: 10px;
   display: flex;
