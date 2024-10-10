@@ -7,16 +7,17 @@ import {
   Form,
   SubmitButton,
   ErrorText,
+  ButtonBox,
 } from './RegisterPage.styled';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-
 interface RegisterFormData {
   email: string;
   name: string;
   password: string;
 }
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const {
     register,
     formState: { errors },
@@ -28,9 +29,10 @@ export default function LoginPage() {
           <img src="./logo_color.png" alt="TaskUp logo" />
         </Sidebar>
         <MainView>
-          <h1>
+          <h3>
             <span>TaskUp</span>과 함께하게 되신 걸 환영합니다.
-          </h1>
+          </h3>
+          <h1>회원가입</h1>
           <Form action="">
             <InputBox>
               <label htmlFor="email">이메일</label>
@@ -41,7 +43,7 @@ export default function LoginPage() {
                 {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
               />
             </InputBox>
-            <ErrorText>이미 존재하는 이메일 입니다.</ErrorText>
+            {errors.email && <ErrorText>이미 존재하는 이메일 입니다.</ErrorText>}
 
             <InputBox>
               <label htmlFor="name">이름</label>
@@ -85,6 +87,9 @@ export default function LoginPage() {
 
             <SubmitButton type="submit">회원가입 하기</SubmitButton>
           </Form>
+          <ButtonBox>
+            <Link to="/login">로그인 페이지로 돌아가기</Link>
+          </ButtonBox>
         </MainView>
       </LoginView>
     </Container>

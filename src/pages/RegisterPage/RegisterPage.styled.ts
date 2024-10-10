@@ -13,7 +13,6 @@ export const Container = styled.div`
   background-color: #d9d9d9;
   width: 100%;
   height: 100vh;
-  padding: 0 1rem;
 
   @media (max-width: ${breakpoints.tablet}) {
     padding: 0;
@@ -64,7 +63,7 @@ export const MainView = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
   width: 67%;
   height: 100%;
   background-color: #fff;
@@ -72,6 +71,12 @@ export const MainView = styled.div`
 
   h1 {
     font-size: 1.5rem;
+    font-weight: bold;
+    color: #2d3f63;
+  }
+
+  h3 {
+    font-size: 1.2rem;
     font-weight: bold;
 
     @media (max-width: ${breakpoints.tablet}) {
@@ -197,5 +202,17 @@ export const SubmitButton = styled.button`
 
   @media (max-width: ${breakpoints.mobile}) {
     padding: 0.8rem 0;
+  }
+`;
+
+export const ButtonBox = styled.div`
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+  a {
+    color: #8c9499;
+    text-decoration: none;
   }
 `;

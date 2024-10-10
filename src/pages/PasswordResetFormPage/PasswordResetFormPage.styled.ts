@@ -13,28 +13,10 @@ export const Container = styled.div`
   background-color: #d9d9d9;
   width: 100%;
   height: 100vh;
+  padding: 0 1rem;
 
   @media (max-width: ${breakpoints.tablet}) {
     padding: 0;
-  }
-`;
-
-export const LoginView = styled.div`
-  width: 80%;
-  height: 80%;
-  display: flex;
-  align-items: center;
-  border-radius: 0.5rem;
-  overflow: hidden;
-
-  @media (max-width: ${breakpoints.desktop}) {
-    width: 90%;
-    height: 85%;
-  }
-
-  @media (max-width: ${breakpoints.tablet}) {
-    flex-direction: column;
-    height: auto;
   }
 `;
 
@@ -58,34 +40,54 @@ export const Sidebar = styled.div`
   }
 `;
 
+export const PasswordResetView = styled.div`
+  width: 70%;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: ${breakpoints.desktop}) {
+    width: 70%;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 90%;
+    flex-direction: column;
+    height: auto;
+  }
+`;
+
 export const MainView = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1.5rem;
-  width: 67%;
-  height: 100%;
-  background-color: #fff;
+  width: 100%;
   padding: 2rem;
 
   h1 {
     font-size: 1.5rem;
     font-weight: bold;
     color: #2d3f63;
+
+    @media (max-width: ${breakpoints.mobile}) {
+      font-size: 1.2rem;
+    }
   }
 
-  h3 {
-    font-size: 1.2rem;
-    font-weight: bold;
+  p {
+    text-align: center;
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 1rem;
 
-    @media (max-width: ${breakpoints.tablet}) {
-      font-size: 1.3rem;
-      text-align: center;
-    }
-
-    span {
-      color: #9aa308;
+    @media (max-width: ${breakpoints.mobile}) {
+      font-size: 0.9rem;
     }
   }
 
@@ -100,28 +102,10 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 55%;
-
-  @media (max-width: ${breakpoints.desktop}) {
-    width: 70%;
-  }
+  width: 80%;
 
   @media (max-width: ${breakpoints.tablet}) {
     width: 90%;
-  }
-`;
-
-export const ErrorText = styled.p`
-  width: 100%;
-  font-size: 0.7rem;
-  text-align: left;
-  margin-left: 0.5rem;
-  margin-bottom: 0.6rem;
-  color: #f93737;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 0.6rem;
-    margin-left: 0.2rem;
   }
 `;
 
@@ -133,22 +117,13 @@ export const InputBox = styled.div`
   border-radius: 0.5rem;
   border: 1px solid #222;
   box-sizing: border-box;
-  position: relative;
   margin-bottom: 0.6rem;
+  position: relative;
 
   label {
     width: 20%;
     font-size: 0.8rem;
     font-weight: bold;
-
-    @media (max-width: ${breakpoints.tablet}) {
-      width: 25%; /* 모바일에서 라벨 너비 조정 */
-      font-size: 0.7rem;
-    }
-
-    @media (max-width: ${breakpoints.mobile}) {
-      width: 30%;
-    }
   }
 
   input {
@@ -159,24 +134,16 @@ export const InputBox = styled.div`
     &::placeholder {
       font-size: 0.7rem;
     }
-
-    @media (max-width: ${breakpoints.mobile}) {
-      font-size: 0.65rem;
-    }
   }
+`;
 
-  p {
-    font-size: 0.6rem;
-    color: #f93737;
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-
-    @media (max-width: ${breakpoints.mobile}) {
-      top: 0.5rem;
-      right: 0.5rem;
-    }
-  }
+export const ErrorText = styled.p`
+  width: 100%;
+  font-size: 0.7rem;
+  text-align: left;
+  margin-left: 0.5rem;
+  margin-bottom: 0.6rem;
+  color: #f93737;
 `;
 
 export const SubmitButton = styled.button`
@@ -194,25 +161,25 @@ export const SubmitButton = styled.button`
   &:hover {
     background-color: #3c4e78;
   }
-
-  @media (max-width: ${breakpoints.tablet}) {
-    width: 100%;
-    padding: 0.6rem 0;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 0.8rem 0;
-  }
 `;
 
-export const ButtonBox = styled.div`
-  font-size: 10px;
+export const LinkBox = styled.div`
   display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-top: 0.6rem;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 1rem;
+
   a {
-    color: #8c9499;
+    font-size: 0.8rem;
+    color: #2d3f63;
     text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: ${breakpoints.mobile}) {
+      font-size: 0.7rem;
+    }
   }
 `;

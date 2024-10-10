@@ -19,9 +19,10 @@ export default function LoginPage() {
           <img src="./logo_color.png" alt="TaskUp logo" />
         </Sidebar>
         <MainView>
-          <h1>
+          <h3>
             <span>TaskUp</span>과 함께하게 되신 걸 환영합니다.
-          </h1>
+          </h3>
+          <h1>로그인</h1>
           <Form action="">
             <InputBox>
               <label htmlFor="email">이메일</label>
@@ -31,7 +32,7 @@ export default function LoginPage() {
 
             <InputBox>
               <label htmlFor="password">비밀번호</label>
-              <input type="password" name="password" id="password" maxLength={10} />
+              <input type="password" name="password" id="password" minLength={6} />
             </InputBox>
 
             <ErrorText>이메일과 비밀번호가 일치하지 않습니다.</ErrorText>
@@ -39,7 +40,7 @@ export default function LoginPage() {
             <SubmitButton type="submit">로그인 하기</SubmitButton>
             <ButtonBox>
               <Link to={'/register'}>회원가입</Link>
-              <a href="#">비밀번호 찾기</a>
+              <Link to={'/password-reset'}>비밀번호 찾기</Link>
             </ButtonBox>
           </Form>
         </MainView>
