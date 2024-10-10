@@ -7,6 +7,7 @@ export const Container = styled.div`
   justify-content: center;
   height: 100vh;
   background-color: #d9d9d9;
+  padding: 20px;
 `;
 
 export const ContentContainer = styled.div`
@@ -25,7 +26,11 @@ export const BackBtn = styled.button`
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 10px;
-  margin-right: 1100px;
+  align-self: flex-start;
+
+  @media (max-width: 768px) {
+    margin-right: auto;
+  }
 `;
 
 export const BackBtnText = styled.div`
@@ -41,6 +46,17 @@ export const Content = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 20px;
+  }
 `;
 
 export const ContentBox = styled.div`
@@ -48,6 +64,15 @@ export const ContentBox = styled.div`
   flex-direction: column;
   height: 35rem;
   width: 55rem;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const Input = styled.input`
@@ -55,6 +80,10 @@ export const Input = styled.input`
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const TextArea = styled.textarea`
@@ -62,11 +91,24 @@ export const TextArea = styled.textarea`
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const DateBox = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const DateText = styled.div`
@@ -84,6 +126,10 @@ export const DateInput = styled.div`
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #ffffff;
+
+  @media (max-width: 768px) {
+    width: 80%;
+  }
 `;
 
 export const DateDisplay = styled.div`
@@ -102,6 +148,7 @@ export const BtnBox = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 5px;
+  flex-wrap: wrap;
 `;
 
 export const GreenBtn1 = styled.button`
@@ -112,6 +159,10 @@ export const GreenBtn1 = styled.button`
   border-radius: 4px;
   color: white;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const GreenBtn2 = styled.button`
@@ -122,11 +173,16 @@ export const GreenBtn2 = styled.button`
   border-radius: 4px;
   color: white;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const MarginTop = styled.div<{ top: number }>`
   margin-top: ${({ top }) => top}px;
 `;
+
 export const MarginLeft = styled.div<{ left: number }>`
   margin-left: ${({ left }) => left}px;
 `;
