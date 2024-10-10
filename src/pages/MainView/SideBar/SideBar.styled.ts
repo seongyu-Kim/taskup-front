@@ -23,6 +23,7 @@ export const NameBox = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
+  cursor: pointer;
 `;
 
 //로고 이미지

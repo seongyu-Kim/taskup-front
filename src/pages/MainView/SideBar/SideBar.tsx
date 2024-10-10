@@ -10,8 +10,11 @@ import {
   SideBarButton,
   SidebarContainer,
 } from './SideBar.styled';
+import { useModal, useModalState } from '../../../stores/ModalStore/ModalStore';
 
 export default function SideBar() {
+  const { setIsOpen } = useModal();
+  const { setModalState } = useModalState();
   return (
     <>
       <SidebarContainer>
@@ -19,14 +22,25 @@ export default function SideBar() {
         <DetailDiv>
           <ProfileBox>
             <ProfileImg src={tempPhoto} alt={'프로필 사진'} />
-            <NameBox>
+            <NameBox
+              onClick={() => {
+                setModalState('Profile');
+                setIsOpen(true);
+              }}>
               <p>이름</p>
               <HiPencilSquare />
             </NameBox>
           </ProfileBox>
-          <SideBarButton bottom={'540px'}>로그아웃</SideBarButton>
+
           <SideBarButton bottom={'140px'}>새 프로젝트</SideBarButton>
-          <SideBarButton bottom={'80px'}>알림 확인</SideBarButton>
+          <SideBarButton
+            bottom={'80px'}
+            onClick={() => {
+              setModalState('Notice');
+              setIsOpen(true);
+            }}>
+            알림 확인
+          </SideBarButton>
         </DetailDiv>
       </SidebarContainer>
     </>
