@@ -6,7 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
 import { FaCalendarAlt } from 'react-icons/fa';
 
-const CreateProject: React.FC = () => {
+const ViewProject: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -93,4 +93,4 @@ const CreateProject: React.FC = () => {
   );
 };
 
-export default CreateProject;
+export default ViewProject;
