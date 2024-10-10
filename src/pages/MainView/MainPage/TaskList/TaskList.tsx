@@ -15,6 +15,7 @@ import {
   PaginationButton,
   PageNumText,
 } from './TaskList.styled';
+import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
 
 // 임시 데이터
 const testArr = [
@@ -140,7 +141,7 @@ export default function TaskList() {
         </ProjectListContainer>
         <PaginationBox>
           <PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
-            [이전]
+            <GrFormPrevious className="icons" />
           </PaginationButton>
           {[...Array(totalPages)].map((_, index) => (
             <PageNumText
@@ -151,7 +152,7 @@ export default function TaskList() {
             </PageNumText>
           ))}
           <PaginationButton onClick={goToNextPage} disabled={currentPage === totalPages}>
-            [다음]
+            <GrFormNext className="icons" />
           </PaginationButton>
         </PaginationBox>
       </MainPageContainer>

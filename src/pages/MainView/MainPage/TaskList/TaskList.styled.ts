@@ -101,7 +101,9 @@ export const ListTextNameAreaBox = styled(ListTableBox)`
 // 페이지 네이션 부분
 export const PaginationBox = styled.div`
   display: flex;
-  gap: 5px;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
 `;
 
 // 페이지 네이션 버튼
@@ -110,6 +112,11 @@ export const PaginationButton = styled.button`
   cursor: pointer;
   background-color: transparent;
   font-size: 16px;
+  .icons {
+    width: 25px;
+    height: 25px;
+    margin-top: 5px;
+  }
 `;
 
 export const PageNumText = styled.p<{ isActive: boolean }>`
