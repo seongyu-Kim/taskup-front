@@ -57,7 +57,7 @@ export default function TaskList() {
     const paginatedData = testArr.slice(startIdx, endIdx);
 
     setCurrentData(paginatedData);
-  }, [currentPage, currentData]);
+  }, [currentPage]);
 
   return (
     <>

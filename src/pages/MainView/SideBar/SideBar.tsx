@@ -24,7 +24,7 @@ export default function SideBar() {
 
   useEffect(() => {
     const saveImg = localStorage.getItem('profileImage');
-    if (!saveImg) {
+    if (saveImg === null) {
       setLocalImg(imageUrl);
     }
   }, []);
