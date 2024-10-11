@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   MainPageContainer,
   ProjectListContainer,
@@ -11,11 +11,8 @@ import {
   ListTableBox,
   ListTextValue,
   ListTextNameAreaBox,
-  PaginationBox,
-  PaginationButton,
-  PageNumText,
 } from './TaskList.styled';
-import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
+import Pagination from '../../../../components/Pagination/Pagination';
 
 // 임시 데이터
 const testArr = [
@@ -41,30 +38,26 @@ const testArr = [
   { id: 20, title: '바', detail: '내용입니다20', checkBox: false },
   { id: 21, title: '사', detail: '내용입니다21', checkBox: false },
 ];
-const itemsPerPage = 10;
 
 export default function TaskList() {
-  const totalItems = testArr.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
+  const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
-  const currentData = testArr.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const [currentData, setCurrentData] = useState<
+    Array<{
+      id: number;
+      title: string;
+      detail: string;
+      checkBox: boolean;
+    }>
+  >([]);
 
-  const goToPreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  useEffect(() => {
+    const startIdx = (currentPage - 1) * itemsPerPage;
+    const endIdx = startIdx + itemsPerPage;
+    const paginatedData = testArr.slice(startIdx, endIdx);
 
-  const goToNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const goToPage = (index: number) => {
-    setCurrentPage(index + 1);
-  };
+    setCurrentData(paginatedData);
+  }, [currentPage, currentData]);
 
   return (
     <>
@@ -100,22 +93,12 @@ export default function TaskList() {
             ))}
           </ProjectList>
         </ProjectListContainer>
-        <PaginationBox>
-          <PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
-            <GrFormPrevious className="icons" />
-          </PaginationButton>
-          {[...Array(totalPages)].map((_, index) => (
-            <PageNumText
-              onClick={() => goToPage(index)}
-              key={index}
-              isActive={currentPage === index + 1}>
-              {index + 1}
-            </PageNumText>
-          ))}
-          <PaginationButton onClick={goToNextPage} disabled={currentPage === totalPages}>
-            <GrFormNext className="icons" />
-          </PaginationButton>
-        </PaginationBox>
+        <Pagination
+          arr={testArr}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </MainPageContainer>
     </>
   );
