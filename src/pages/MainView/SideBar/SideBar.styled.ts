@@ -39,6 +39,7 @@ export const ProfileImg = styled.img`
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
+  background: #222127;
   //position: absolute;
 `;
 
