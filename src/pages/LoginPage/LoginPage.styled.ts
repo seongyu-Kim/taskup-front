@@ -6,64 +6,12 @@ const breakpoints = {
   mobile: '480px',
 };
 
-export const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #d9d9d9;
-  width: 100%;
-  height: 100vh;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    padding: 0;
-  }
-`;
-
-export const LoginView = styled.div`
-  width: 80%;
-  height: 80%;
-  display: flex;
-  align-items: center;
-  border-radius: 0.5rem;
-  overflow: hidden;
-
-  @media (max-width: ${breakpoints.desktop}) {
-    width: 90%;
-    height: 85%;
-  }
-
-  @media (max-width: ${breakpoints.tablet}) {
-    flex-direction: column;
-    height: auto;
-  }
-`;
-
-export const Sidebar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 33%;
-  height: 100%;
-  background-color: #2d3f63;
-
-  img {
-    width: 100%;
-    max-width: 200px;
-  }
-
-  @media (max-width: ${breakpoints.tablet}) {
-    width: 100%;
-    height: auto;
-    padding: 1rem 0;
-  }
-`;
-
 export const MainView = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 67%;
   height: 100%;
   background-color: #fff;
@@ -73,11 +21,13 @@ export const MainView = styled.div`
     font-size: 1.5rem;
     font-weight: bold;
     color: #2d3f63;
+    margin: 0;
   }
 
   h3 {
     font-size: 1.2rem;
     font-weight: bold;
+    margin: 0;
 
     @media (max-width: ${breakpoints.tablet}) {
       font-size: 1.3rem;
@@ -100,7 +50,7 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 55%;
+  width: 60%;
 
   @media (max-width: ${breakpoints.desktop}) {
     width: 70%;
@@ -142,7 +92,7 @@ export const InputBox = styled.div`
     font-weight: bold;
 
     @media (max-width: ${breakpoints.tablet}) {
-      width: 25%; /* 모바일에서 라벨 너비 조정 */
+      width: 25%;
       font-size: 0.7rem;
     }
 
@@ -206,11 +156,11 @@ export const SubmitButton = styled.button`
 `;
 
 export const ButtonBox = styled.div`
-  font-size: 10px;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  margin-top: 0.6rem;
+  margin-top: 1rem;
   a {
     color: #8c9499;
     text-decoration: none;
