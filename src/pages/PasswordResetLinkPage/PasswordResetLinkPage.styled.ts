@@ -6,20 +6,6 @@ const breakpoints = {
   mobile: '480px',
 };
 
-export const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #d9d9d9;
-  width: 100%;
-  height: 100vh;
-  padding: 0 1rem;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    padding: 0;
-  }
-`;
-
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -32,27 +18,6 @@ export const Form = styled.form`
 
   @media (max-width: ${breakpoints.tablet}) {
     width: 90%;
-  }
-`;
-
-export const ResetLinkView = styled.div`
-  width: 80%;
-  height: 80%;
-  display: flex;
-  align-items: center;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  @media (max-width: ${breakpoints.desktop}) {
-    width: 90%;
-    height: 85%;
-  }
-
-  @media (max-width: ${breakpoints.tablet}) {
-    flex-direction: column;
-    height: auto;
   }
 `;
 
@@ -89,6 +54,7 @@ export const MainView = styled.div`
 
   @media (max-width: ${breakpoints.tablet}) {
     width: 100%;
+    height: 100%;
     padding: 1.5rem;
     box-sizing: border-box;
   }

@@ -14,6 +14,7 @@ import PasswordResetLinkPage from './pages/PasswordResetLinkPage/PasswordResetLi
 import ProtectedRoute from './pages/ProtectedRoute/ProtectedRoute';
 import { useUserStore } from './stores/UserStore/userStore';
 import { useEffect } from 'react';
+import AuthLayout from './layouts/AuthLayout';
 
 const MainDiv = styled.div`
   display: flex;
@@ -46,13 +47,15 @@ function App() {
             }
           />
         </Route>
-        <Route
-          path="/login"
-          element={isLoggedIn ? <Navigate to="/main" replace /> : <LoginPage />}
-        />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/password-reset" element={<PasswordResetPage />} />
-        <Route path="/password-reset/confirm" element={<PasswordResetLinkPage />} />
+        <Route element={<AuthLayout />}>
+          <Route
+            path="/login"
+            element={isLoggedIn ? <Navigate to="/main" replace /> : <LoginPage />}
+          />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/password-reset" element={<PasswordResetPage />} />
+          <Route path="/password-reset/confirm" element={<PasswordResetLinkPage />} />
+        </Route>
         <Route path="/create" element={<CreateProject />} />
         <Route path="/view" element={<ViewProject />} />
       </Routes>

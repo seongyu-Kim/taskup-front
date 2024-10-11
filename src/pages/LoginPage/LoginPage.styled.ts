@@ -6,59 +6,6 @@ const breakpoints = {
   mobile: '480px',
 };
 
-export const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #d9d9d9;
-  width: 100%;
-  height: 100vh;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    padding: 0;
-  }
-`;
-
-export const LoginView = styled.div`
-  width: 80%;
-  height: 80%;
-  display: flex;
-  align-items: center;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  @media (max-width: ${breakpoints.desktop}) {
-    width: 90%;
-    height: 85%;
-  }
-
-  @media (max-width: ${breakpoints.tablet}) {
-    flex-direction: column;
-    height: auto;
-  }
-`;
-
-export const Sidebar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 33%;
-  height: 100%;
-  background-color: #2d3f63;
-
-  img {
-    width: 100%;
-    max-width: 200px;
-  }
-
-  @media (max-width: ${breakpoints.tablet}) {
-    width: 100%;
-    height: auto;
-    padding: 1rem 0;
-  }
-`;
-
 export const MainView = styled.div`
   display: flex;
   flex-direction: column;
@@ -103,7 +50,7 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 55%;
+  width: 60%;
 
   @media (max-width: ${breakpoints.desktop}) {
     width: 70%;
@@ -145,7 +92,7 @@ export const InputBox = styled.div`
     font-weight: bold;
 
     @media (max-width: ${breakpoints.tablet}) {
-      width: 25%; /* 모바일에서 라벨 너비 조정 */
+      width: 25%;
       font-size: 0.7rem;
     }
 
