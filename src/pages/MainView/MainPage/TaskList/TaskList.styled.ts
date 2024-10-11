@@ -85,7 +85,7 @@ export const ListTableBox = styled.div`
   flex: 1;
   border-bottom: 1px solid #9c9c9c;
 
-  height: 80px;
+  height: 50px;
   @media (max-width: 760px) {
     height: 50%;
   }
@@ -109,7 +109,13 @@ export const ListTextNameAreaBox = styled(ListTableBox)`
 
   display: flex;
   flex-direction: column;
-  height: 80px;
+  height: 50px;
+  align-content: center;
+  justify-content: center;
+  ${ListTextValue} {
+    padding: 0;
+    margin: 0;
+  }
   @media (max-width: 760px) {
     height: 50%;
   }
