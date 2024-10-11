@@ -7,8 +7,8 @@ import {
   Form,
   SubmitButton,
   ErrorText,
-  LinkBox,
   Sidebar,
+  ButtonBox,
 } from './PasswordResetFormPage.styled';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -48,10 +48,10 @@ export default function PasswordResetPage() {
             {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
             <SubmitButton type="submit">재설정 링크 보내기</SubmitButton>
           </Form>
-          <LinkBox>
+          <ButtonBox>
             <Link to="/login">로그인으로 돌아가기</Link>
             <Link to="/register">계정이 없으신가요? 회원가입</Link>
-          </LinkBox>
+          </ButtonBox>
         </MainView>
       </PasswordResetView>
     </Container>

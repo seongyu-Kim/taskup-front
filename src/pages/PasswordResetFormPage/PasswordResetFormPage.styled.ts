@@ -13,7 +13,6 @@ export const Container = styled.div`
   background-color: #d9d9d9;
   width: 100%;
   height: 100vh;
-  padding: 0 1rem;
 
   @media (max-width: ${breakpoints.tablet}) {
     padding: 0;
@@ -41,8 +40,8 @@ export const Sidebar = styled.div`
 `;
 
 export const PasswordResetView = styled.div`
-  width: 70%;
-  height: 60%;
+  width: 80%;
+  height: 80%;
   display: flex;
   align-items: center;
   border-radius: 0.5rem;
@@ -51,11 +50,11 @@ export const PasswordResetView = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
   @media (max-width: ${breakpoints.desktop}) {
-    width: 70%;
+    width: 90%;
+    height: 85%;
   }
 
   @media (max-width: ${breakpoints.tablet}) {
-    width: 90%;
     flex-direction: column;
     height: auto;
   }
@@ -67,13 +66,14 @@ export const MainView = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1.5rem;
-  width: 100%;
+  width: 67%;
   padding: 2rem;
 
   h1 {
     font-size: 1.5rem;
     font-weight: bold;
     color: #2d3f63;
+    margin: 0;
 
     @media (max-width: ${breakpoints.mobile}) {
       font-size: 1.2rem;
@@ -84,7 +84,7 @@ export const MainView = styled.div`
     text-align: center;
     color: #666;
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin: 0;
 
     @media (max-width: ${breakpoints.mobile}) {
       font-size: 0.9rem;
@@ -102,7 +102,11 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
+  width: 55%;
+
+  @media (max-width: ${breakpoints.desktop}) {
+    width: 70%;
+  }
 
   @media (max-width: ${breakpoints.tablet}) {
     width: 90%;
@@ -163,12 +167,11 @@ export const SubmitButton = styled.button`
   }
 `;
 
-export const LinkBox = styled.div`
+export const ButtonBox = styled.div`
+  font-size: 0.8rem;
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 1rem;
-
+  align-items: center;
+  gap: 0.8rem;
   a {
     font-size: 0.8rem;
     color: #2d3f63;

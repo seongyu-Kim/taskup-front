@@ -15,6 +15,7 @@ import { useModal, useModalState } from '../../../stores/ModalStore/ModalStore';
 export default function SideBar() {
   const { setIsOpen } = useModal();
   const { setModalState } = useModalState();
+
   return (
     <>
       <SidebarContainer>

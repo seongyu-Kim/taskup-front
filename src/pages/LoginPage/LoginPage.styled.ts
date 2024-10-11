@@ -26,6 +26,7 @@ export const LoginView = styled.div`
   align-items: center;
   border-radius: 0.5rem;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
   @media (max-width: ${breakpoints.desktop}) {
     width: 90%;
@@ -63,7 +64,7 @@ export const MainView = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 67%;
   height: 100%;
   background-color: #fff;
@@ -73,11 +74,13 @@ export const MainView = styled.div`
     font-size: 1.5rem;
     font-weight: bold;
     color: #2d3f63;
+    margin: 0;
   }
 
   h3 {
     font-size: 1.2rem;
     font-weight: bold;
+    margin: 0;
 
     @media (max-width: ${breakpoints.tablet}) {
       font-size: 1.3rem;
@@ -206,11 +209,11 @@ export const SubmitButton = styled.button`
 `;
 
 export const ButtonBox = styled.div`
-  font-size: 10px;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  margin-top: 0.6rem;
+  margin-top: 1rem;
   a {
     color: #8c9499;
     text-decoration: none;

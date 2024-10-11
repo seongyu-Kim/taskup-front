@@ -73,11 +73,13 @@ export const MainView = styled.div`
     font-size: 1.5rem;
     font-weight: bold;
     color: #2d3f63;
+    margin: 0;
   }
 
   h3 {
     font-size: 1.2rem;
     font-weight: bold;
+    margin: 0;
 
     @media (max-width: ${breakpoints.tablet}) {
       font-size: 1.3rem;
@@ -237,11 +239,10 @@ export const AuthButton = styled.button`
 `;
 
 export const ButtonBox = styled.div`
-  font-size: 10px;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  margin-top: 0.6rem;
   a {
     color: #8c9499;
     text-decoration: none;

@@ -18,11 +18,22 @@ import {
 import { handleModalCloseClick } from '../../../../utils/HandleModalCloseClick';
 import tempPhoto from '../../../../assets/임시 프로필사진.png';
 import { handleFileSelectorClick } from '../../../../utils/HandleFileSelectorClick';
+import { useUserStore } from '../../../../stores/UserStore/userStore';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProfileModal() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { isOpen, setIsOpen } = useModal();
   const { setModalState } = useModalState();
+
+  // 로그아웃 기능 구현
+  const logout = useUserStore((state) => state.logout);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    alert('로그아웃되었습니다.');
+    navigate('/login');
+  };
   return isOpen ? (
     <>
       <ProfileModalContainer onClick={() => setIsOpen(false)}>
@@ -56,6 +67,7 @@ export default function ProfileModal() {
                 onClick={() => {
                   setIsOpen(false);
                   setModalState('');
+                  handleLogout();
                 }}>
                 로그아웃
               </ProfileLogOutButton>
