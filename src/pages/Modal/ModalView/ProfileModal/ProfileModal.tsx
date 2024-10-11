@@ -18,11 +18,13 @@ import {
 import { handleModalCloseClick } from '../../../../utils/HandleModalCloseClick';
 import tempPhoto from '../../../../assets/임시 프로필사진.png';
 import { handleFileSelectorClick } from '../../../../utils/HandleFileSelectorClick';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProfileModal() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { isOpen, setIsOpen } = useModal();
   const { setModalState } = useModalState();
+  const navigate = useNavigate();
   return isOpen ? (
     <>
       <ProfileModalContainer onClick={() => setIsOpen(false)}>
@@ -56,6 +58,7 @@ export default function ProfileModal() {
                 onClick={() => {
                   setIsOpen(false);
                   setModalState('');
+                  navigate('/');
                 }}>
                 로그아웃
               </ProfileLogOutButton>

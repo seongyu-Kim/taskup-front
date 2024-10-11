@@ -11,10 +11,12 @@ import {
   SidebarContainer,
 } from './SideBar.styled';
 import { useModal, useModalState } from '../../../stores/ModalStore/ModalStore';
+import { useNavigate } from 'react-router-dom';
 
 export default function SideBar() {
   const { setIsOpen } = useModal();
   const { setModalState } = useModalState();
+  const navigate = useNavigate();
   return (
     <>
       <SidebarContainer>
@@ -32,7 +34,13 @@ export default function SideBar() {
             </NameBox>
           </ProfileBox>
 
-          <SideBarButton bottom={'140px'}>새 프로젝트</SideBarButton>
+          <SideBarButton
+            bottom={'140px'}
+            onClick={() => {
+              navigate('/create'); //////
+            }}>
+            새 프로젝트
+          </SideBarButton>
           <SideBarButton
             bottom={'80px'}
             onClick={() => {
