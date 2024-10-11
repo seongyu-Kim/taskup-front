@@ -15,29 +15,26 @@ import {
   ProfileModalImgBox,
   ProfileImgChangeCameraIcon,
 } from './ProfileModal.styled';
-import tempImg from '../../../../assets/임시 프로필사진.png';
 import { handleModalCloseClick } from '../../../../utils/HandleModalCloseClick';
 import { handleFileSelectorClick } from '../../../../utils/HandleFileSelectorClick';
 import { useNavigate } from 'react-router-dom';
-import { useProfileImgStore } from '../../../../stores/ProfileImgStore/ProfileImgStore';
+import {
+  useProfileImgStore,
+  useSaveState,
+} from '../../../../stores/ProfileImgStore/ProfileImgStore';
 
 export default function ProfileModal() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { isOpen, setIsOpen } = useModal();
   const { setModalState } = useModalState();
   const navigate = useNavigate();
-  //프로필 사진 변경 기능
   const { imageUrl, setImageUrl } = useProfileImgStore();
-  const [saveState, setSaveState] = useState(false);
+  const { saveState, setSaveState } = useSaveState();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [tempImgUrl, setTempImgUrl] = useState<string | null>(localStorage.getItem('profileImage'));
+  const localImg = localStorage.getItem('profileImg');
 
-  useEffect(() => {
-    if (imageUrl) {
-      localStorage.setItem('profileImage', imageUrl);
-      console.log('로컬스토리지에 사진 저장!!!!', imageUrl);
-    }
-  }, [imageUrl]);
+  useEffect(() => {}, []);
 
   // 이미지 변경
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,58 +46,46 @@ export default function ProfileModal() {
         const base64Image = reader.result as string;
         setTempImgUrl(base64Image);
         localStorage.setItem('profileImage', base64Image);
-        if (saveState) {
-          // localStorage.setItem('profileImage', base64Image);
-          setImageUrl(base64Image);
-          setSaveState(false);
-        } else {
-          localStorage.setItem('profileImage', tempImgUrl!);
-        }
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleImageSave = (saveState: boolean) => {
-    console.log('이미지 세이브 실행');
-    console.log(selectedFile);
-    if (selectedFile === null) {
+  const handleImageSave = () => {
+    if (!tempImgUrl && selectedFile === null) {
       alert('파일을 선택해 주세요');
       return;
     }
     if (saveState) {
       setImageUrl(tempImgUrl!);
+      localStorage.setItem('profileImage', tempImgUrl!);
       setSaveState(false);
-      console.log('이미지 변경 버튼 눌림', imageUrl);
-      localStorage.setItem('profileImage', imageUrl);
-      console.log('로컬스토리지에 사진 저장');
     }
   };
 
   return isOpen ? (
     <>
-      <ProfileModalContainer onClick={() => setIsOpen(false)}>
+      <ProfileModalContainer
+        onClick={() => {
+          setIsOpen(false);
+          setSaveState(!saveState);
+          setTempImgUrl(localImg);
+        }}>
         <RiCloseLargeFill className="closeIcon" />
-        <ProfileModalBox onClick={handleModalCloseClick}>
+        <ProfileModalBox
+          onClick={(e) => {
+            handleModalCloseClick(e);
+          }}>
           <ProfileModalHeaderBox>
             <p>프로필</p>
-            <button
-              onClick={() => {
-                console.log(selectedFile);
-                console.log('선택한 임시 이미지', tempImgUrl);
-                console.log('현재 저장된 이미지 값', imageUrl);
-              }}>
-              콘솔
-            </button>
             <ProfileCompleteButton
               onClick={() => {
                 setIsOpen(false);
-                console.log('모달 닫기 실행');
                 setModalState('');
-                console.log('모달 상태 초기화');
                 setSaveState(true);
-                console.log('저장 상태: True 변경');
-                handleImageSave(true);
+                handleImageSave();
+                const savedImageUrl = localStorage.getItem('profileImage');
+                setImageUrl(savedImageUrl!);
               }}>
               완료
             </ProfileCompleteButton>
@@ -109,8 +94,12 @@ export default function ProfileModal() {
             <ProfileModalImgBox>
               <ProfileImg
                 id={'profile_img'}
-                src={tempImgUrl === null ? imageUrl : tempImgUrl}
-                onClick={() => handleFileSelectorClick(fileInputRef)}
+                src={tempImgUrl === null ? (localImg === null ? imageUrl : null)! : tempImgUrl}
+                onClick={() => {
+                  handleFileSelectorClick(fileInputRef);
+                  setSaveState(!saveState);
+                  setTempImgUrl(localImg);
+                }}
                 alt={'프로필 사진'}
               />
               <ProfileImgChangeCameraIcon className="icons" />

@@ -11,25 +11,43 @@ import {
 } from './SideBar.styled';
 import { useModal, useModalState } from '../../../stores/ModalStore/ModalStore';
 import { useNavigate } from 'react-router-dom';
-import { useProfileImgStore } from '../../../stores/ProfileImgStore/ProfileImgStore';
-// import { useEffect } from 'react';
+import { useProfileImgStore, useSaveState } from '../../../stores/ProfileImgStore/ProfileImgStore';
+import { useEffect, useState } from 'react';
 
 export default function SideBar() {
   const { setIsOpen } = useModal();
   const { setModalState } = useModalState();
   const navigate = useNavigate();
   const { imageUrl } = useProfileImgStore();
+  const { saveState, setSaveState } = useSaveState();
+  const [localImg, setLocalImg] = useState<string | null>(null);
+
+  useEffect(() => {
+    const saveImg = localStorage.getItem('profileImage');
+    if (!saveImg) {
+      setLocalImg(imageUrl);
+    }
+  }, []);
+
+  useEffect(() => {
+    const saveImg = localStorage.getItem('profileImage');
+    if (saveImg) {
+      setLocalImg(saveImg);
+    }
+  }, [imageUrl]);
+
   return (
     <>
       <SidebarContainer>
         <LogoImg src={logo} alt={'TaskUp'} />
         <DetailDiv>
           <ProfileBox>
-            <ProfileImg src={imageUrl} alt={'프로필 사진'} />
+            <ProfileImg src={localImg!} alt={'프로필 사진'} />
             <NameBox
               onClick={() => {
                 setModalState('Profile');
                 setIsOpen(true);
+                setSaveState(!saveState);
               }}>
               <p>이름</p>
               <HiPencilSquare />
