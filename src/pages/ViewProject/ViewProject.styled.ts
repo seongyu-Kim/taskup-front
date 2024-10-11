@@ -2,20 +2,16 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
+  width: 100%;
   background-color: #d9d9d9;
-  padding: 20px;
 `;
 
 export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  position: relative;
-  align-items: center;
-  width: 100%;
+  justify-content: center;
+  margin: 0 auto;
 `;
 
 export const BackBtn = styled.button`
@@ -27,7 +23,6 @@ export const BackBtn = styled.button`
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 10px;
-  margin-right: 1100px;
 
   @media (max-width: 1024px) {
     margin-right: auto;
@@ -45,22 +40,22 @@ export const BackBtnText = styled.div`
 
 export const Content = styled.div`
   width: 70rem;
-  height: auto;
+  height: 43.75rem;
   background-color: #ffffff;
   border-radius: 9px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 
   @media (max-width: 1024px) {
-    width: 90%;
+    width: 100%;
+    height: auto;
+    padding: 20px;
   }
 
   @media (max-width: 768px) {
-    flex-direction: column;
     width: 100%;
-    padding: 15px;
+    padding: 20px;
   }
 `;
 
