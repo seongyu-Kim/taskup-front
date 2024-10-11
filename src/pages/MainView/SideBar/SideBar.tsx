@@ -24,7 +24,7 @@ export default function SideBar() {
   //로컬스토리지에서 유저 데이터 가져오기
   const userData = localStorage.getItem('userData');
   const { email, name }: { email: string; name: string } = JSON.parse(userData!);
-
+  //초기 프로필 사진 없을 때 기본 사진
   useEffect(() => {
     const saveImg = localStorage.getItem('profileImage');
     if (saveImg === null) {
