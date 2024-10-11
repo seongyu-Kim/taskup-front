@@ -2,19 +2,16 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
+  width: 100%;
   background-color: #d9d9d9;
-  padding: 20px;
 `;
 
 export const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  position: relative;
-  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 `;
 
 export const BackBtn = styled.button`
