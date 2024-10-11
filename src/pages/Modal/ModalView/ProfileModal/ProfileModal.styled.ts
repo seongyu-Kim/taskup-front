@@ -115,6 +115,7 @@ export const ProfileImg = styled.img`
   border-radius: 50%;
   border: 1px solid gray;
   cursor: pointer;
+  object-fit: cover;
   z-index: 200;
   &:hover {
     opacity: 15%;
