@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Container,
   ResetLinkView,
@@ -7,10 +6,11 @@ import {
   Form,
   SubmitButton,
   ErrorText,
-  SuccessText,
 } from './PasswordResetLinkPage.styled';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useUserStore } from '../../stores/UserStore/userStore';
 
 interface PasswordResetFormData {
   newPassword: string;
@@ -24,14 +24,47 @@ export default function PasswordResetLinkPage() {
     watch,
     formState: { errors },
   } = useForm<PasswordResetFormData>();
-
   const [resetSuccess, setResetSuccess] = useState(false);
+  const [isTokenValid, setIsTokenValid] = useState(false);
+  const resetPassword = useUserStore((state) => state.resetPassword);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  const onSubmit = (data: PasswordResetFormData) => {
-    if (data.newPassword !== data.confirmPassword) {
+  const email = decodeURIComponent(searchParams.get('email') || '');
+  const token = decodeURIComponent(searchParams.get('token') || '');
+
+  useEffect(() => {
+    console.log('URL Email:', email);
+    console.log('URL Token:', token);
+    if (!email || !token) {
+      alert('유효하지 않은 접근입니다.');
+      navigate('/login');
       return;
     }
+
+    const storedToken = localStorage.getItem(`resetToken-${email}`);
+    if (storedToken === token) {
+      setIsTokenValid(true);
+    } else {
+      alert('유효하지 않은 링크입니다.');
+      navigate('/login');
+    }
+  }, [email, token, navigate]);
+
+  const onSubmit = (data: PasswordResetFormData) => {
+    if (!isTokenValid) {
+      alert('유효하지 않은 접근입니다.');
+      return;
+    }
+
+    if (data.newPassword !== data.confirmPassword) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    resetPassword(email!, data.newPassword);
     setResetSuccess(true);
+    alert('비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.');
+    navigate('/login');
   };
 
   return (
@@ -39,7 +72,7 @@ export default function PasswordResetLinkPage() {
       <ResetLinkView>
         <MainView>
           <h1>비밀번호 재설정</h1>
-          {!resetSuccess ? (
+          {isTokenValid ? (
             <>
               <p>새로운 비밀번호를 설정하세요.</p>
               <Form onSubmit={handleSubmit(onSubmit)}>
@@ -47,7 +80,6 @@ export default function PasswordResetLinkPage() {
                   <label htmlFor="newPassword">새 비밀번호</label>
                   <input
                     type="password"
-                    id="newPassword"
                     placeholder="새 비밀번호를 입력하세요."
                     {...register('newPassword', {
                       required: '비밀번호를 입력해주세요.',
@@ -79,11 +111,9 @@ export default function PasswordResetLinkPage() {
               </Form>
             </>
           ) : (
-            <SuccessText>
-              비밀번호가 성공적으로 재설정되었습니다. <br />
-              <a href="/login">로그인 페이지로 이동하기</a>
-            </SuccessText>
+            <p>유효하지 않은 링크입니다.</p>
           )}
+          {resetSuccess && <p>비밀번호가 성공적으로 변경되었습니다!</p>}
         </MainView>
       </ResetLinkView>
     </Container>

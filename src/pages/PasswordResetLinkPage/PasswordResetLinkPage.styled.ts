@@ -16,8 +16,7 @@ export const Container = styled.div`
   padding: 0 1rem;
 
   @media (max-width: ${breakpoints.tablet}) {
-    height: auto;
-    padding: 2rem 1rem;
+    padding: 0;
   }
 `;
 
@@ -37,8 +36,8 @@ export const Form = styled.form`
 `;
 
 export const ResetLinkView = styled.div`
-  width: 50%;
-  height: 50%;
+  width: 80%;
+  height: 80%;
   display: flex;
   align-items: center;
   border-radius: 0.5rem;
@@ -47,11 +46,13 @@ export const ResetLinkView = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
   @media (max-width: ${breakpoints.desktop}) {
-    width: 70%;
+    width: 90%;
+    height: 85%;
   }
 
   @media (max-width: ${breakpoints.tablet}) {
-    width: 90%;
+    flex-direction: column;
+    height: auto;
   }
 `;
 
@@ -61,13 +62,14 @@ export const MainView = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1.5rem;
-  width: 100%;
+  width: 67%;
   padding: 2rem;
 
   h1 {
     font-size: 1.5rem;
     font-weight: bold;
     color: #2d3f63;
+    margin: 0;
 
     @media (max-width: ${breakpoints.mobile}) {
       font-size: 1.2rem;
@@ -78,11 +80,17 @@ export const MainView = styled.div`
     text-align: center;
     color: #666;
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin: 0;
 
     @media (max-width: ${breakpoints.mobile}) {
       font-size: 0.9rem;
     }
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    padding: 1.5rem;
+    box-sizing: border-box;
   }
 `;
 
@@ -97,7 +105,7 @@ export const InputBox = styled.div`
   margin-bottom: 0.6rem;
 
   label {
-    width: 20%;
+    width: 40%;
     font-size: 0.8rem;
     font-weight: bold;
   }
