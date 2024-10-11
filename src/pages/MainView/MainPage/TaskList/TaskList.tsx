@@ -11,6 +11,8 @@ import {
   ListTableBox,
   ListTextValue,
   ListTextNameAreaBox,
+  StyledFaCircleCheck,
+  StyledFaRegCheckCircle,
 } from './TaskList.styled';
 import Pagination from '../../../../components/Pagination/Pagination';
 
@@ -59,6 +61,12 @@ export default function TaskList() {
     setCurrentData(paginatedData);
   }, [currentPage]);
 
+  const handleCompleteClick = (id: number) => {
+    setCurrentData((prevData) =>
+      prevData.map((item) => (item.id === id ? { ...item, checkBox: !item.checkBox } : item)),
+    );
+  };
+
   return (
     <>
       <MainPageContainer>
@@ -87,7 +95,12 @@ export default function TaskList() {
                   <ListTextValue className="detail">{item.detail}</ListTextValue>
                 </ListTextNameAreaBox>
                 <ListTableBox>
-                  <ListTextValue>{item.checkBox.toString()}</ListTextValue>
+                  <ListTextValue
+                    onClick={() => {
+                      handleCompleteClick(item.id);
+                    }}>
+                    {item.checkBox ? <StyledFaCircleCheck /> : <StyledFaRegCheckCircle />}
+                  </ListTextValue>
                 </ListTableBox>
               </ProjectListItem>
             ))}
