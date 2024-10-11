@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
 import { FaCalendarAlt } from 'react-icons/fa';
+import SideBar from '../MainView/SideBar/SideBar';
 
 const ViewProject: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -19,6 +20,7 @@ const ViewProject: React.FC = () => {
 
   return (
     <Styled.Container>
+      <SideBar />
       <Styled.ContentContainer>
         <Styled.BackBtn>
           <MdOutlineArrowBackIosNew />
