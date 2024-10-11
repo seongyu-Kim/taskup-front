@@ -21,6 +21,9 @@ export default function SideBar() {
   const { imageUrl } = useProfileImgStore();
   const { saveState, setSaveState } = useSaveState();
   const [localImg, setLocalImg] = useState<string | null>(null);
+  //로컬스토리지에서 유저 데이터 가져오기
+  const userData = localStorage.getItem('userData');
+  const { email, name }: { email: string; name: string } = JSON.parse(userData!);
 
   useEffect(() => {
     const saveImg = localStorage.getItem('profileImage');
@@ -49,9 +52,10 @@ export default function SideBar() {
                 setIsOpen(true);
                 setSaveState(!saveState);
               }}>
-              <p>이름</p>
+              <p>{name}</p>
               <HiPencilSquare />
             </NameBox>
+            <p>{email}</p>
           </ProfileBox>
 
           <SideBarButton

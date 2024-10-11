@@ -34,6 +34,10 @@ export default function ProfileModal() {
   const [tempImgUrl, setTempImgUrl] = useState<string | null>(localStorage.getItem('profileImage'));
   const localImg = localStorage.getItem('profileImg');
 
+  //로컬 스토리지에서 유저 데이터 가져오기
+  const userData = localStorage.getItem('userData');
+  const { name }: { email: string; name: string } = JSON.parse(userData!);
+
   // 이미지 변경
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -115,7 +119,7 @@ export default function ProfileModal() {
               onChange={(e) => handleImageChange(e)}
             />
             <ProfileModalMainBox>
-              <ProfileNameText>이름</ProfileNameText>
+              <ProfileNameText>{name}</ProfileNameText>
               <ProfileLogOutButton
                 onClick={() => {
                   setIsOpen(false);
