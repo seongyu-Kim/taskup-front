@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useModal, useModalState } from '../../../../stores/ModalStore/ModalStore';
 import { FaCamera } from 'react-icons/fa';
 import { RiCloseLargeFill } from 'react-icons/ri';
@@ -33,8 +33,6 @@ export default function ProfileModal() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [tempImgUrl, setTempImgUrl] = useState<string | null>(localStorage.getItem('profileImage'));
   const localImg = localStorage.getItem('profileImg');
-
-  useEffect(() => {}, []);
 
   // 이미지 변경
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
