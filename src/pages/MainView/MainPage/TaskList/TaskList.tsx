@@ -44,6 +44,7 @@ const testArr = [
 export default function TaskList() {
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
+  const [allData, setAllData] = useState(testArr);
   const [currentData, setCurrentData] = useState<
     Array<{
       id: number;
@@ -56,13 +57,13 @@ export default function TaskList() {
   useEffect(() => {
     const startIdx = (currentPage - 1) * itemsPerPage;
     const endIdx = startIdx + itemsPerPage;
-    const paginatedData = testArr.slice(startIdx, endIdx);
+    const paginatedData = allData.slice(startIdx, endIdx);
 
     setCurrentData(paginatedData);
-  }, [currentPage]);
+  }, [currentPage, allData]);
 
   const handleCompleteClick = (id: number) => {
-    setCurrentData((prevData) =>
+    setAllData((prevData) =>
       prevData.map((item) => (item.id === id ? { ...item, checkBox: !item.checkBox } : item)),
     );
   };
