@@ -37,6 +37,10 @@ export default function ProfileModal() {
   // 이미지 변경
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    if (file!.size >= 2000000) {
+      alert('크기가 2MB 이상인 파일은 올릴 수 없습니다.');
+      return;
+    }
     setSelectedFile(file!);
     if (file) {
       const reader = new FileReader();
