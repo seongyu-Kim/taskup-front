@@ -1,5 +1,4 @@
 import logo from '../../../assets/logo_color.webp';
-import tempPhoto from '../../../assets/임시 프로필사진.png';
 import { HiPencilSquare } from 'react-icons/hi2';
 import {
   DetailDiv,
@@ -12,18 +11,21 @@ import {
 } from './SideBar.styled';
 import { useModal, useModalState } from '../../../stores/ModalStore/ModalStore';
 import { useNavigate } from 'react-router-dom';
+import { useProfileImgStore } from '../../../stores/ProfileImgStore/ProfileImgStore';
+// import { useEffect } from 'react';
 
 export default function SideBar() {
   const { setIsOpen } = useModal();
   const { setModalState } = useModalState();
   const navigate = useNavigate();
+  const { imageUrl } = useProfileImgStore();
   return (
     <>
       <SidebarContainer>
         <LogoImg src={logo} alt={'TaskUp'} />
         <DetailDiv>
           <ProfileBox>
-            <ProfileImg src={tempPhoto} alt={'프로필 사진'} />
+            <ProfileImg src={imageUrl} alt={'프로필 사진'} />
             <NameBox
               onClick={() => {
                 setModalState('Profile');
