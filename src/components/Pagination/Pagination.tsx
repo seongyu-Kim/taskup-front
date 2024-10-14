@@ -14,7 +14,6 @@ export default function Pagination({
 }: PaginationProps) {
   const totalItems = arr.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
   const goToPreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -36,14 +35,18 @@ export default function Pagination({
       <PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
         <GrFormPrevious className="icons" />
       </PaginationButton>
-      {[...Array(totalPages)].map((_, index) => (
-        <PageNumText
-          onClick={() => goToPage(index)}
-          key={index}
-          isActive={currentPage === index + 1}>
-          {index + 1}
-        </PageNumText>
-      ))}
+      {arr.length == 0 ? (
+        <div></div>
+      ) : (
+        [...Array(totalPages)].map((_, index) => (
+          <PageNumText
+            onClick={() => goToPage(index)}
+            key={index}
+            isActive={currentPage === index + 1}>
+            {index + 1}
+          </PageNumText>
+        ))
+      )}
       <PaginationButton onClick={goToNextPage} disabled={currentPage === totalPages}>
         <GrFormNext className="icons" />
       </PaginationButton>
