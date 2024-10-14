@@ -112,7 +112,6 @@ export default function ProfileModal() {
                 onClick={() => {
                   handleFileSelectorClick(fileInputRef);
                   setSaveState(!saveState);
-                  setTempImgUrl(localImg);
                 }}
                 alt={'프로필 사진'}
               />
