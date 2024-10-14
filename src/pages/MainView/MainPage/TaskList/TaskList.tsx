@@ -142,7 +142,7 @@ export default function TaskList() {
           </ProjectList>
         </ProjectListContainer>
         <Pagination
-          arr={allData}
+          pageLength={allData.length}
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

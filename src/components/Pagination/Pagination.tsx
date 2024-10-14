@@ -7,13 +7,12 @@ import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import { PaginationProps } from '../../types/PaginationType';
 
 export default function Pagination({
-  arr,
+  pageLength,
   itemsPerPage,
   currentPage,
   setCurrentPage,
 }: PaginationProps) {
-  const totalItems = arr.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(pageLength / itemsPerPage);
   const goToPreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -35,15 +34,15 @@ export default function Pagination({
       <PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
         <GrFormPrevious className="icons" />
       </PaginationButton>
-      {arr.length == 0 ? (
+      {pageLength == 0 ? (
         <div></div>
       ) : (
-        [...Array(totalPages)].map((_, index) => (
+        [...Array(totalPages)].map((_, page) => (
           <PageNumText
-            onClick={() => goToPage(index)}
-            key={index}
-            isActive={currentPage === index + 1}>
-            {index + 1}
+            onClick={() => goToPage(page)}
+            key={page}
+            isActive={currentPage === page + 1}>
+            {page + 1}
           </PageNumText>
         ))
       )}
