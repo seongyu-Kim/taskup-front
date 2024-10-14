@@ -37,6 +37,9 @@ export const ProjectListTitle = styled.div`
   background-color: #647ea1;
   margin: 0;
   flex: 1;
+  @media (max-width: 760px) {
+    width: 1px;
+  }
 `;
 
 // 리스트 Name 타이틀 영역 크기
@@ -51,6 +54,9 @@ export const TitleText = styled.p`
   margin: 2px;
   color: white;
   text-align: center;
+  @media (max-width: 760px) {
+    font-size: 14px;
+  }
 `;
 
 // ul 태그 스크롤 추가
@@ -59,6 +65,7 @@ export const ProjectList = styled.ul`
   height: 16.1rem;
   margin: 0;
   padding: 0;
+  text-align: center;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -70,11 +77,6 @@ export const ProjectListItem = styled.li<MainPageDetailProps>`
   list-style-type: none;
   display: flex;
   align-items: center;
-  .detail {
-    @media (max-width: 760px) {
-      display: none;
-    }
-  }
 `;
 
 // li 태그 아래 리스트 테이블
@@ -89,7 +91,7 @@ export const ListTableBox = styled.div`
 
   height: 50px;
   @media (max-width: 760px) {
-    height: 50%;
+    height: 40px;
   }
 `;
 
