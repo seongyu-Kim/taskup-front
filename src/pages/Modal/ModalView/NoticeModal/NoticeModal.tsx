@@ -6,7 +6,7 @@ import {
   NoticeModalCloseButton,
   NoticeText,
 } from './NoticeModal.styled';
-import { useModal, useModalState } from '../../../../stores/ModalStore/ModalStore';
+import { useModal } from '../../../../stores/ModalStore/ModalStore';
 import { RiCloseLargeFill } from 'react-icons/ri';
 import { handleModalCloseClick } from '../../../../utils/HandleModalCloseClick';
 import { useEffect, useState } from 'react';
