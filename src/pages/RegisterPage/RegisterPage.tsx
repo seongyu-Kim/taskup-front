@@ -10,18 +10,21 @@ import {
 } from './RegisterPage.styled';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { sendEmail } from '../../utils/emailService';
+import axios, { AxiosError } from 'axios';
 interface RegisterFormData {
   email: string;
   name: string;
   password: string;
   password_check: string;
   number: string;
+  verificationCode: string;
 }
 
 export default function RegisterPage() {
-  const [sentCode, setSentCode] = useState<string | null>(null);
   const [isCodeSent, setIsCodeSent] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
   const {
     register,
@@ -32,29 +35,77 @@ export default function RegisterPage() {
 
   // 이메일로 인증번호 전송 함수
   const sendVerificationCode = async (email: string) => {
-    const code = Math.floor(1000 + Math.random() * 9000).toString();
-    await sendEmail(email, code);
-    setSentCode(code);
-    setIsCodeSent(true);
-    alert(`인증번호가 ${email}로 전송되었습니다.`);
+    setErrorMessage(null);
+
+    try {
+      const response = await axios.post('/api/send-verification-code', { email });
+      if (response.status === 200) {
+        alert('인증번호가 이메일로 전송되었습니다.');
+        setVerificationCode(response.data.code);
+        setIsCodeSent(true);
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response && axiosError.response.status === 400) {
+        setErrorMessage('이메일 전송 중 오류가 발생했습니다.');
+      } else {
+        setErrorMessage('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    }
+    // const code = Math.floor(1000 + Math.random() * 9000).toString();
+    // await sendEmail(email, code);
+    // setSentCode(code);
+    // setIsCodeSent(true);
+    // alert(`인증번호가 ${email}로 전송되었습니다.`);
   };
 
   // 회원가입 처리 함수
-  const onSubmit = (data: RegisterFormData) => {
-    if (data.number !== sentCode) {
-      alert('인증번호가 일치하지 않습니다.');
+  const onSubmit = async (data: RegisterFormData) => {
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    if (data.password !== data.password_check) {
+      setErrorMessage('비밀번호가 일치하지 않습니다.');
+      setIsSubmitting(false);
       return;
     }
 
-    const userData = {
-      email: data.email,
-      name: data.name,
-      password: data.password,
-    };
-    localStorage.setItem('userData', JSON.stringify(userData));
+    try {
+      const response = await axios.post('/users/sign-up', {
+        email: data.email,
+        name: data.name,
+        password: data.password,
+      });
 
-    alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
-    navigate('/login');
+      if (response.status === 201) {
+        alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+        navigate('/login');
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response && axiosError.response.status === 400) {
+        setErrorMessage('이미 존재하는 이메일입니다.');
+      } else {
+        setErrorMessage('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+
+    // if (data.number !== sentCode) {
+    //   alert('인증번호가 일치하지 않습니다.');
+    //   return;
+    // }
+
+    // const userData = {
+    //   email: data.email,
+    //   name: data.name,
+    //   password: data.password,
+    // };
+    // localStorage.setItem('userData', JSON.stringify(userData));
+
+    // alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
+    // navigate('/login');
   };
 
   return (
@@ -81,10 +132,7 @@ export default function RegisterPage() {
         </InputBox>
         {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
 
-        <AuthButton
-          type="button"
-          onClick={() => sendVerificationCode(watch('email'))}
-          disabled={isCodeSent}>
+        <AuthButton type="button" onClick={() => sendVerificationCode(watch('email'))}>
           인증번호 받기
         </AuthButton>
 
@@ -96,7 +144,7 @@ export default function RegisterPage() {
             placeholder="인증번호를 입력하세요."
             {...register('number', { required: '인증번호를 입력해주세요.' })}
           />
-          {errors.number && <ErrorText>{errors.number.message}</ErrorText>}
+          {errors.verificationCode && <ErrorText>{errors.verificationCode.message}</ErrorText>}
         </InputBox>
 
         <InputBox>
@@ -147,7 +195,9 @@ export default function RegisterPage() {
           {errors.password_check && <ErrorText>{errors.password_check.message}</ErrorText>}
         </InputBox>
 
-        <SubmitButton type="submit">회원가입 하기</SubmitButton>
+        <SubmitButton type="submit" disabled={isSubmitting}>
+          회원가입 하기
+        </SubmitButton>
       </Form>
       <ButtonBox>
         <Link to="/login">로그인 페이지로 돌아가기</Link>

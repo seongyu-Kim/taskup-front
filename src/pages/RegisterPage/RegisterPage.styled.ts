@@ -1,4 +1,3 @@
-import { MarginTop } from './../CreateProject/CreateProject.styled';
 import styled from 'styled-components';
 
 const breakpoints = {
