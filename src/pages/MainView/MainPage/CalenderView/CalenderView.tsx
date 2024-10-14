@@ -2,102 +2,38 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { CalenderBox } from './CalenderView.styled';
 import { handleDayCellContent } from '../../../../utils/CalenderUtils';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const tempData = {
-  message: '조회 완료',
-  data: {
-    total: 6,
-    page: 1,
-    pageSize: 10,
-    data: [
-      {
-        id: 12,
-        title: 'test_title',
-        sub_title: 'test_sub_title',
-        content: 'test_content',
-        status: 2,
-        members: ['elice2', 'elice3'],
-        startDate: '2024-10-11T00:00:00.000Z',
-        endDate: '2024-10-22T00:00:00.000Z',
-        user: {
-          name: 'elice3',
-        },
-      },
-      {
-        id: 13,
-        title: 'test_title',
-        sub_title: 'test_sub_title',
-        content: 'test_content',
-        status: 2,
-        members: ['elice2', 'elice3'],
-        startDate: '2024-10-11T00:00:00.000Z',
-        endDate: '2024-10-22T00:00:00.000Z',
-        user: {
-          name: 'elice3',
-        },
-      },
-      {
-        id: 14,
-        title: 'test_title',
-        sub_title: 'test_sub_title',
-        content: 'test_content',
-        status: 2,
-        members: ['elice2', 'elice3'],
-        startDate: '2024-10-11T00:00:00.000Z',
-        endDate: '2024-10-22T00:00:00.000Z',
-        user: {
-          name: 'elice3',
-        },
-      },
-      {
-        id: 15,
-        title: 'test_title',
-        sub_title: 'test_sub_title',
-        content: 'test_content',
-        status: 2,
-        members: ['elice2', 'elice3'],
-        startDate: '2024-10-11T00:00:00.000Z',
-        endDate: '2024-10-22T00:00:00.000Z',
-        user: {
-          name: 'elice3',
-        },
-      },
-      {
-        id: 16,
-        title: 'test_title',
-        sub_title: 'test_sub_title',
-        content: 'test_content',
-        status: 2,
-        members: ['elice2', 'elice3'],
-        startDate: '2024-10-11T00:00:00.000Z',
-        endDate: '2024-10-22T00:00:00.000Z',
-        user: {
-          name: 'elice3',
-        },
-      },
-      {
-        id: 17,
-        title: 'test_title',
-        sub_title: 'test_sub_title',
-        content: 'test_content',
-        status: 2,
-        members: ['elice2', 'elice3'],
-        startDate: '2024-10-11T00:00:00.000Z',
-        endDate: '2024-10-22T00:00:00.000Z',
-        user: {
-          name: 'elice3',
-        },
-      },
-    ],
-  },
-};
+interface CalenderType {
+  id: number;
+  title: string;
+  startDate: string;
+  endDate: string;
+}
 
 export default function CalenderView() {
+  const [callEvent, setCallEvent] = useState<CalenderType[]>([]);
+  useEffect(() => {
+    const callCalenderEventData = async () => {
+      try {
+        //추후 링크 수정
+        const response = await axios.get('http://localhost:4000/tasks/calender');
+        if (response) {
+          setCallEvent(response.data.data);
+        }
+      } catch (error) {
+        console.log('ERROR', error);
+      }
+    };
+    callCalenderEventData().catch(console.error);
+  }, []);
+
   return (
     <CalenderBox>
       <FullCalendar
         plugins={[dayGridPlugin]}
-        events={tempData.data.data.map((item) => ({
+        events={callEvent.map((item) => ({
           title: item.title,
           start: item.startDate,
           end: item.endDate,

@@ -4,13 +4,39 @@ import {
   NoticeModalBodyBox,
   NoticeModalHeaderBox,
   NoticeModalCloseButton,
+  NoticeText,
 } from './NoticeModal.styled';
-import { useModal } from '../../../../stores/ModalStore/ModalStore';
+import { useModal, useModalState } from '../../../../stores/ModalStore/ModalStore';
 import { RiCloseLargeFill } from 'react-icons/ri';
 import { handleModalCloseClick } from '../../../../utils/HandleModalCloseClick';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+interface NoticeDataType {
+  id: number;
+  title: string;
+  startDate: string;
+  endDate: string;
+}
 
 export default function NoticeModal() {
   const { isOpen, setIsOpen } = useModal();
+  const [noticeData, setNoticeData] = useState<NoticeDataType[]>([]);
+
+  useEffect(() => {
+    const callNoticeData = async () => {
+      try {
+        //추후 주소 변경
+        const response = await axios.get('http://localhost:4000/tasks/calender');
+        if (response) {
+          setNoticeData(response.data.data);
+        }
+      } catch (error) {
+        console.log('ERROR', error);
+      }
+    };
+    callNoticeData().catch(console.error);
+  }, []);
   return isOpen ? (
     <>
       <NoticeModalContainer onClick={() => setIsOpen(false)}>
@@ -21,30 +47,21 @@ export default function NoticeModal() {
           </NoticeModalHeaderBox>
           <NoticeModalBodyBox>
             <ul>
-              <li>
-                <p>프로젝트명: {1}</p>
-                <p>마감일이 {1}일 남았습니다</p>
-              </li>
-              <li>
-                <p>프로젝트명: {2}</p>
-                <p>마감일이 {3}일 남았습니다</p>
-              </li>
-              <li>
-                <p>프로젝트명: {3}</p>
-                <p>마감일이 {4}일 남았습니다</p>
-              </li>
-              <li>
-                <p>프로젝트명: {4}</p>
-                <p>마감일이 {5}일 남았습니다</p>
-              </li>
-              <li>
-                <p>프로젝트명: {6}</p>
-                <p>마감일이 {7}일 남았습니다</p>
-              </li>
-              <li>
-                <p>프로젝트명: {7}</p>
-                <p>마감일이 {8}일 남았습니다</p>
-              </li>
+              {noticeData.map((item) => {
+                const endDate = new Date(item.endDate);
+                const nowDate = Date.now();
+                const dDay = Math.ceil((endDate.getTime() - nowDate) / (1000 * 3600 * 24) + 1);
+                if (dDay <= 7) {
+                  return (
+                    <li key={item.id}>
+                      <p>프로젝트명: {item.title}</p>
+                      <NoticeText color={dDay <= 3 ? 'red' : 'black'}>
+                        마감일이 {dDay}일 남았습니다.
+                      </NoticeText>
+                    </li>
+                  );
+                }
+              })}
             </ul>
           </NoticeModalBodyBox>
           <NoticeModalCloseButton
