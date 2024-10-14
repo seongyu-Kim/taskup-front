@@ -1,15 +1,9 @@
 import { useState } from 'react';
-import {
-  MainView,
-  InputBox,
-  Form,
-  SubmitButton,
-  ErrorText,
-  ButtonBox,
-} from './PasswordResetFormPage.styled';
+import { MainView, InputBox, Form, SubmitButton, ButtonBox } from './PasswordResetFormPage.styled';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { sendResetLink } from '../../utils/emailService';
+import { ErrorMessage } from '@hookform/error-message';
 
 interface PasswordResetFormData {
   email: string;
@@ -20,7 +14,8 @@ export default function PasswordResetPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<PasswordResetFormData>();
+    trigger,
+  } = useForm<PasswordResetFormData>({ mode: 'onChange' });
   const [isEmailSent, setIsEmailSent] = useState(false);
   const navigate = useNavigate();
 
@@ -60,9 +55,13 @@ export default function PasswordResetPage() {
               required: '이메일을 입력해주세요.',
               pattern: /^\S+@\S+$/i,
             })}
+            onBlur={() => trigger('email')}
           />
         </InputBox>
-        {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+        <ErrorMessage
+          errors={errors}
+          name="email"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
         <SubmitButton type="submit">재설정 링크 보내기</SubmitButton>
       </Form>
       {isEmailSent && <p>링크가 전송되었습니다. 이메일을 확인하세요!</p>}

@@ -1,7 +1,8 @@
-import { MainView, InputBox, Form, SubmitButton, ButtonBox, ErrorText } from './LoginPage.styled';
+import { MainView, InputBox, Form, SubmitButton, ButtonBox } from './LoginPage.styled';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useUserStore, UserState } from '../../stores/UserStore/userStore';
+import { ErrorMessage } from '@hookform/error-message';
 interface LoginFormData {
   email: string;
   password: string;
@@ -12,7 +13,8 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>();
+    trigger,
+  } = useForm<LoginFormData>({ mode: 'onChange' });
   const navigate = useNavigate();
   const login = useUserStore((state: UserState) => state.login);
 
@@ -56,9 +58,13 @@ export default function LoginPage() {
                 message: '유효한 이메일 주소를 입력하세요.',
               },
             })}
+            onBlur={() => trigger('email')}
           />
         </InputBox>
-        {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+        <ErrorMessage
+          errors={errors}
+          name="email"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <InputBox>
           <label htmlFor="password">비밀번호</label>
@@ -75,7 +81,10 @@ export default function LoginPage() {
             })}
           />
         </InputBox>
-        {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
+        <ErrorMessage
+          errors={errors}
+          name="password"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <SubmitButton type="submit">로그인 하기</SubmitButton>
         <ButtonBox>

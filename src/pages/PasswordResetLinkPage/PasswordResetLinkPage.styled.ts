@@ -1,10 +1,5 @@
 import styled from 'styled-components';
-
-const breakpoints = {
-  desktop: '1024px',
-  tablet: '768px',
-  mobile: '480px',
-};
+import { breakpoints } from '../../styles/Responsive.styled';
 
 export const Form = styled.form`
   display: flex;
@@ -18,6 +13,21 @@ export const Form = styled.form`
 
   @media (max-width: ${breakpoints.tablet}) {
     width: 90%;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    p {
+      font-size: 0.6rem;
+      margin-left: 0.2rem;
+    }
+  }
+
+  p {
+    width: 100%;
+    font-size: 0.7rem;
+    text-align: left;
+    margin: 0 0 0.6rem 0.5rem;
+    color: #f93737;
   }
 `;
 
@@ -87,14 +97,7 @@ export const InputBox = styled.div`
   }
 `;
 
-export const ErrorText = styled.p`
-  width: 100%;
-  font-size: 0.7rem;
-  text-align: left;
-  margin-left: 0.5rem;
-  margin-bottom: 0.6rem;
-  color: #f93737;
-`;
+export const ErrorText = styled.p``;
 
 export const SubmitButton = styled.button`
   width: 100%;

@@ -4,12 +4,12 @@ import {
   InputBox,
   Form,
   SubmitButton,
-  ErrorText,
   ButtonBox,
   AuthButton,
 } from './RegisterPage.styled';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
 import axios, { AxiosError } from 'axios';
 interface RegisterFormData {
   email: string;
@@ -31,7 +31,8 @@ export default function RegisterPage() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<RegisterFormData>();
+    trigger,
+  } = useForm<RegisterFormData>({ mode: 'onChange' });
 
   // 이메일로 인증번호 전송 함수
   const sendVerificationCode = async (email: string) => {
@@ -127,25 +128,32 @@ export default function RegisterPage() {
                 message: '유효한 이메일 주소를 입력하세요.',
               },
             })}
+            onBlur={() => trigger('email')}
             disabled={isCodeSent}
           />
         </InputBox>
-        {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+        <ErrorMessage
+          errors={errors}
+          name="email"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <AuthButton type="button" onClick={() => sendVerificationCode(watch('email'))}>
           인증번호 받기
         </AuthButton>
 
         <InputBox>
-          <label htmlFor="number">인증번호</label>
+          <label htmlFor="verificationCode">인증번호</label>
           <input
-            type="number"
-            id="number"
+            type="text"
+            id="verificationCode"
             placeholder="인증번호를 입력하세요."
-            {...register('number', { required: '인증번호를 입력해주세요.' })}
+            {...register('verificationCode', { required: '인증번호를 입력해주세요.' })}
           />
-          {errors.verificationCode && <ErrorText>{errors.verificationCode.message}</ErrorText>}
         </InputBox>
+        <ErrorMessage
+          errors={errors}
+          name="verificationCode"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <InputBox>
           <label htmlFor="name">이름</label>
@@ -161,8 +169,11 @@ export default function RegisterPage() {
               },
             })}
           />
-          {errors.name && <ErrorText>{errors.name.message}</ErrorText>}
         </InputBox>
+        <ErrorMessage
+          errors={errors}
+          name="name"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <InputBox>
           <label htmlFor="password">비밀번호</label>
@@ -178,8 +189,11 @@ export default function RegisterPage() {
               },
             })}
           />
-          {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
         </InputBox>
+        <ErrorMessage
+          errors={errors}
+          name="password"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <InputBox>
           <label htmlFor="password_check">비밀번호 확인</label>
@@ -192,8 +206,11 @@ export default function RegisterPage() {
               validate: (value) => value === watch('password') || '비밀번호가 일치하지 않습니다.',
             })}
           />
-          {errors.password_check && <ErrorText>{errors.password_check.message}</ErrorText>}
         </InputBox>
+        <ErrorMessage
+          errors={errors}
+          name="password_check"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <SubmitButton type="submit" disabled={isSubmitting}>
           회원가입 하기

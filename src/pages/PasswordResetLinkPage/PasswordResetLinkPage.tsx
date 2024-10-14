@@ -1,8 +1,9 @@
-import { MainView, InputBox, Form, SubmitButton, ErrorText } from './PasswordResetLinkPage.styled';
+import { MainView, InputBox, Form, SubmitButton } from './PasswordResetLinkPage.styled';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useUserStore } from '../../stores/UserStore/userStore';
+import { ErrorMessage } from '@hookform/error-message';
 
 interface PasswordResetFormData {
   newPassword: string;
@@ -15,7 +16,7 @@ export default function PasswordResetLinkPage() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<PasswordResetFormData>();
+  } = useForm<PasswordResetFormData>({ mode: 'onChange' });
   const [resetSuccess, setResetSuccess] = useState(false);
   const [isTokenValid, setIsTokenValid] = useState(false);
   const resetPassword = useUserStore((state) => state.resetPassword);
@@ -80,7 +81,10 @@ export default function PasswordResetLinkPage() {
                 })}
               />
             </InputBox>
-            {errors.newPassword && <ErrorText>{errors.newPassword.message}</ErrorText>}
+            <ErrorMessage
+              errors={errors}
+              name="newPassword"
+              render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
             <InputBox>
               <label htmlFor="confirmPassword">비밀번호 확인</label>
@@ -95,7 +99,10 @@ export default function PasswordResetLinkPage() {
                 })}
               />
             </InputBox>
-            {errors.confirmPassword && <ErrorText>{errors.confirmPassword.message}</ErrorText>}
+            <ErrorMessage
+              errors={errors}
+              name="confirmPassword"
+              render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
             <SubmitButton type="submit">비밀번호 재설정</SubmitButton>
           </Form>
