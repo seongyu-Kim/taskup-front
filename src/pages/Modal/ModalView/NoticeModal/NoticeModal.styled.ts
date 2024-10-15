@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { zIndex } from '@styles/Zindex';
 
 export const NoticeModalContainer = styled.div`
   position: fixed;
@@ -7,7 +8,7 @@ export const NoticeModalContainer = styled.div`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 16;
+  z-index: ${zIndex.modalBackGround};
 
   display: flex;
   flex-direction: column;
@@ -29,7 +30,7 @@ export const NoticeModalBox = styled.div`
   height: 500px;
   background: #d9d9d9;
   border-radius: 10px;
-  z-index: 16;
+  z-index: ${zIndex.modalBox};
 
   display: flex;
   flex-direction: column;
