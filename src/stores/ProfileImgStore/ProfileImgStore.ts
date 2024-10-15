@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { ProfileImgStoreType, SaveState } from './ProfileImgStoreType';
-import defaultProfileImg from '../../assets/임시 프로필사진.png';
+import defaultProfileImg from '@assets/임시 프로필사진.png';
 
 export const useProfileImgStore = create<ProfileImgStoreType>((set) => ({
   imageUrl: defaultProfileImg,

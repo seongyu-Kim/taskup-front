@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useModal, useModalState } from '../../../../stores/ModalStore/ModalStore';
+import { useModal, useModalState } from '@stores/ModalStore/ModalStore';
 import { FaCamera } from 'react-icons/fa';
 import { RiCloseLargeFill } from 'react-icons/ri';
 import {
@@ -15,14 +15,11 @@ import {
   ProfileModalImgBox,
   ProfileImgChangeCameraIcon,
 } from './ProfileModal.styled';
-import { handleModalCloseClick } from '../../../../utils/HandleModalCloseClick';
-import { handleFileSelectorClick } from '../../../../utils/HandleFileSelectorClick';
-import { useUserStore } from '../../../../stores/UserStore/userStore';
+import { handleModalCloseClick } from '@utils/HandleModalCloseClick';
+import { handleFileSelectorClick } from '@utils/HandleFileSelectorClick';
+import { useUserStore } from '@stores/UserStore/userStore';
 import { useNavigate } from 'react-router-dom';
-import {
-  useProfileImgStore,
-  useSaveState,
-} from '../../../../stores/ProfileImgStore/ProfileImgStore';
+import { useProfileImgStore, useSaveState } from '@stores/ProfileImgStore/ProfileImgStore';
 
 export default function ProfileModal() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -77,7 +74,11 @@ export default function ProfileModal() {
       setSaveState(false);
     }
   };
-  return isOpen ? (
+
+  if (!isOpen) {
+    return null;
+  }
+  return (
     <>
       <ProfileModalContainer
         onClick={() => {
@@ -107,7 +108,7 @@ export default function ProfileModal() {
           <ProfileModalBodyBox>
             <ProfileModalImgBox>
               <ProfileImg
-                id={'profile_img'}
+                id="profile_img"
                 src={tempImgUrl === null ? (localImg === null ? imageUrl : null)! : tempImgUrl}
                 onClick={() => {
                   handleFileSelectorClick(fileInputRef);
@@ -119,8 +120,8 @@ export default function ProfileModal() {
             </ProfileModalImgBox>
             <FaCamera className="camera" />
             <input
-              type={'file'}
-              accept={'image/jpeg, image/png'}
+              type="file"
+              accept="image/jpeg, image/png"
               ref={fileInputRef}
               hidden={true}
               onChange={(e) => handleImageChange(e)}
@@ -140,5 +141,5 @@ export default function ProfileModal() {
         </ProfileModalBox>
       </ProfileModalContainer>
     </>
-  ) : null;
+  );
 }

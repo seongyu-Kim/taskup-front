@@ -1,7 +1,7 @@
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { CalenderBox } from './CalenderView.styled';
-import { handleDayCellContent } from '../../../../utils/CalenderUtils';
+import { handleDayCellContent } from '@utils/CalenderUtils';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -38,10 +38,10 @@ export default function CalenderView() {
           start: item.startDate,
           end: item.endDate,
         }))}
-        initialView={'dayGridMonth'}
-        height={'500px'}
+        initialView="dayGridMonth"
+        height="500px"
         editable={true}
-        locale={'ko'}
+        locale="ko"
         dayCellContent={handleDayCellContent}
       />
     </CalenderBox>

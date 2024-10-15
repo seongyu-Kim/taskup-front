@@ -2,9 +2,9 @@ import {
   PageNumText,
   PaginationBox,
   PaginationButton,
-} from '../../pages/MainView/MainPage/TaskList/TaskList.styled';
+} from '@pages/MainView/MainPage/TaskList/TaskList.styled';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
-import { PaginationProps } from '../../types/PaginationType';
+import { PaginationProps } from '@/type/PaginationType';
 
 export default function Pagination({
   pageLength,

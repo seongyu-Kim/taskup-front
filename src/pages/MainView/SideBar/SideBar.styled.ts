@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import SidebarDetailProps from '../../../types/SidebarDetailType';
+import SidebarDetailProps from '@/type/SidebarDetailType';
 
 //사이드 바 기본
 export const SidebarContainer = styled.div`
