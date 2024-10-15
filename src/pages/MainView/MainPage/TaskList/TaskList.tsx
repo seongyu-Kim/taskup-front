@@ -46,8 +46,6 @@ export default function TaskList() {
         const response = await axios.get('http://localhost:4000/tasks');
         if (response && response.data) {
           setCallTaskListData(response.data.data.data);
-          // setAllData(response.data.data);
-          console.log(response.data.data.data);
         }
       } catch (error) {
         console.log('ERROR', error);
