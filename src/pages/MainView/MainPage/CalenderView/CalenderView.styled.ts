@@ -6,7 +6,6 @@ export const CalenderBox = styled.div`
   height: 50%;
   overflow: hidden;
 
-  z-index: 1;
   // toolbar container
   .fc .fc-toolbar.fc-header-toolbar {
     margin: 0;
