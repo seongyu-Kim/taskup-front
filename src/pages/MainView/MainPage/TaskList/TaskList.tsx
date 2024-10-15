@@ -16,6 +16,7 @@ import {
 } from './TaskList.styled';
 import Pagination from '@components/Pagination/Pagination';
 import axios from 'axios';
+import { useUserStore } from '@stores/UserStore/userStore';
 
 interface Task {
   id: number;
@@ -32,6 +33,7 @@ interface Task {
 }
 
 export default function TaskList() {
+  const { user } = useUserStore();
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -55,6 +57,18 @@ export default function TaskList() {
     callTaskListData().catch(console.error);
   }, []);
 
+  //유저가 멤버로 들어가 있는 목록 필터링해서 넣어주기~
+  if (!user) {
+    return null;
+  }
+
+  const userTaskList = callTaskListData.filter((item) => item.members.includes(user.name));
+  const currentTasks = userTaskList.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
+
+  //체크박스
   const handleCompleteClick = (id: number) => {
     setCallTaskListData((prevData) =>
       prevData.map((item) =>
@@ -63,7 +77,11 @@ export default function TaskList() {
     );
   };
 
-  return Object.keys(callTaskListData).length == 0 ? (
+  if (!user) {
+    return null;
+  }
+
+  return userTaskList.length == 0 ? (
     <>
       <MainPageContainer>
         <ProjectListContainer>
@@ -100,31 +118,33 @@ export default function TaskList() {
             </ProjectListTitle>
           </ProjectListArea>
           <ProjectList>
-            {callTaskListData.map((item) => (
-              <ProjectListItem
-                backgroundColor={item.id % 2 === 0 ? '#e0e0e0' : 'white'}
-                key={item.id}>
-                <ListTableBox>
-                  <ListTextValue>{item.id}</ListTextValue>
-                </ListTableBox>
-                <ListTextNameAreaBox>
-                  <ListTextValue>{item.title}</ListTextValue>
-                  <ListTextValue className="content">{`${item.content.slice(0, 10)}...`}</ListTextValue>
-                </ListTextNameAreaBox>
-                <ListTableBox>
-                  <ListTextValue
-                    onClick={() => {
-                      handleCompleteClick(item.id);
-                    }}>
-                    {item.status === 1 ? <StyledFaCircleCheck /> : <StyledFaRegCheckCircle />}
-                  </ListTextValue>
-                </ListTableBox>
-              </ProjectListItem>
-            ))}
+            {currentTasks
+              .filter((item) => item.members.includes(user.name))
+              .map((item) => (
+                <ProjectListItem
+                  backgroundColor={item.id % 2 === 0 ? '#e0e0e0' : 'white'}
+                  key={item.id}>
+                  <ListTableBox>
+                    <ListTextValue>{item.id}</ListTextValue>
+                  </ListTableBox>
+                  <ListTextNameAreaBox>
+                    <ListTextValue>{item.title}</ListTextValue>
+                    <ListTextValue className="content">{`${item.content.slice(0, 10)}...`}</ListTextValue>
+                  </ListTextNameAreaBox>
+                  <ListTableBox>
+                    <ListTextValue
+                      onClick={() => {
+                        handleCompleteClick(item.id);
+                      }}>
+                      {item.status === 1 ? <StyledFaCircleCheck /> : <StyledFaRegCheckCircle />}
+                    </ListTextValue>
+                  </ListTableBox>
+                </ProjectListItem>
+              ))}
           </ProjectList>
         </ProjectListContainer>
         <Pagination
-          pageLength={callTaskListData.length}
+          pageLength={userTaskList.length}
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
