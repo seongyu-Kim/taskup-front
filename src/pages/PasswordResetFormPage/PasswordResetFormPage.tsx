@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { sendResetLink } from '../../utils/emailService';
 import { ErrorMessage } from '@hookform/error-message';
+import { UserPaths } from '../../routes/userPath';
 
 interface PasswordResetFormData {
   email: string;
@@ -66,8 +67,8 @@ export default function PasswordResetPage() {
       </Form>
       {isEmailSent && <p>링크가 전송되었습니다. 이메일을 확인하세요!</p>}
       <ButtonBox>
-        <Link to="/login">로그인으로 돌아가기</Link>
-        <Link to="/register">계정이 없으신가요? 회원가입</Link>
+        <Link to={UserPaths.login}>로그인으로 돌아가기</Link>
+        <Link to={UserPaths.register}>계정이 없으신가요? 회원가입</Link>
       </ButtonBox>
     </MainView>
   );

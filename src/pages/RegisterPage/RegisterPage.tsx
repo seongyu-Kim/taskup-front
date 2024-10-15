@@ -11,6 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import axios, { AxiosError } from 'axios';
+import { UserPaths } from '../../routes/userPath';
 interface RegisterFormData {
   email: string;
   name: string;
@@ -80,7 +81,7 @@ export default function RegisterPage() {
 
       if (response.status === 201) {
         alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
-        navigate('/login');
+        navigate(UserPaths.login);
       }
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -217,7 +218,7 @@ export default function RegisterPage() {
         </SubmitButton>
       </Form>
       <ButtonBox>
-        <Link to="/login">로그인 페이지로 돌아가기</Link>
+        <Link to={UserPaths.login}>로그인 페이지로 돌아가기</Link>
       </ButtonBox>
     </MainView>
   );

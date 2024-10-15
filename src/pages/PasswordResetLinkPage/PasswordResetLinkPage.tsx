@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useUserStore } from '../../stores/UserStore/userStore';
 import { ErrorMessage } from '@hookform/error-message';
-
+import { UserPaths } from '../../routes/userPath';
 interface PasswordResetFormData {
   newPassword: string;
   confirmPassword: string;
@@ -31,7 +31,7 @@ export default function PasswordResetLinkPage() {
     console.log('URL Token:', token);
     if (!email || !token) {
       alert('유효하지 않은 접근입니다.');
-      navigate('/login');
+      navigate(UserPaths.login);
       return;
     }
 
@@ -40,7 +40,7 @@ export default function PasswordResetLinkPage() {
       setIsTokenValid(true);
     } else {
       alert('유효하지 않은 링크입니다.');
-      navigate('/login');
+      navigate(UserPaths.login);
     }
   }, [email, token, navigate]);
 
@@ -57,7 +57,7 @@ export default function PasswordResetLinkPage() {
     resetPassword(email!, data.newPassword);
     setResetSuccess(true);
     alert('비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.');
-    navigate('/login');
+    navigate(UserPaths.login);
   };
 
   return (

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useUserStore, UserState } from '../../stores/UserStore/userStore';
 import { ErrorMessage } from '@hookform/error-message';
+import { UserPaths } from '../../routes/userPath';
 interface LoginFormData {
   email: string;
   password: string;
@@ -33,7 +34,7 @@ export default function LoginPage() {
 
     if (data.email === userData.email && data.password === userData.password) {
       login(userData.email, userData.name);
-      navigate('/main');
+      navigate(UserPaths.main);
     } else {
       alert('이메일 또는 비밀번호가 일치하지 않습니다.');
     }
@@ -88,8 +89,8 @@ export default function LoginPage() {
 
         <SubmitButton type="submit">로그인 하기</SubmitButton>
         <ButtonBox>
-          <Link to={'/register'}>회원가입</Link>
-          <Link to={'/password-reset'}>비밀번호 찾기</Link>
+          <Link to={UserPaths.register}>회원가입</Link>
+          <Link to={UserPaths.passwordReset}>비밀번호 찾기</Link>
         </ButtonBox>
       </Form>
     </MainView>
