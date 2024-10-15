@@ -20,7 +20,7 @@ export default function NoticeModal() {
     const callNoticeData = async () => {
       try {
         //추후 주소 변경
-        const response = await axios.get('http://localhost:4000/tasks/calender');
+        const response = await axios.get('http://localhost:8080/tasks/calender');
         if (response) {
           setNoticeData(response.data.data);
         }

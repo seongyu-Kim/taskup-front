@@ -31,7 +31,7 @@ export default function TaskList() {
     const callTaskListData = async () => {
       try {
         //나중에 주소 변경
-        const response = await axios.get('http://localhost:4000/tasks');
+        const response = await axios.get('http://localhost:8080/tasks');
         if (response && response.data) {
           setCallTaskListData(response.data.data.data);
         }

@@ -18,7 +18,7 @@ export default function CalenderView() {
     const callCalenderEventData = async () => {
       try {
         //추후 링크 수정
-        const response = await axios.get('http://localhost:4000/tasks/calender');
+        const response = await axios.get('http://localhost:8080/tasks/calender');
         if (response) {
           setCallEvent(response.data.data);
         }
