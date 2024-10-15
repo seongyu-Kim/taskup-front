@@ -13,6 +13,10 @@ export default function Pagination({
   setCurrentPage,
 }: PaginationProps) {
   const totalPages = Math.ceil(pageLength / itemsPerPage);
+  const pageGroup = Math.ceil(currentPage / itemsPerPage); // 페이지 그룹 계산
+  const viewPageFirst = (pageGroup - 1) * itemsPerPage + 1; // 페이지 그룹의 첫번째 페이지 번호
+  const viewPageLast = Math.min(pageGroup * itemsPerPage, totalPages); // 페이지 그룹의 마지막 페이지 번호
+
   const goToPreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -37,14 +41,17 @@ export default function Pagination({
       {pageLength == 0 ? (
         <div></div>
       ) : (
-        [...Array(totalPages)].map((_, page) => (
-          <PageNumText
-            onClick={() => goToPage(page)}
-            key={page}
-            isActive={currentPage === page + 1}>
-            {page + 1}
-          </PageNumText>
-        ))
+        [...Array(viewPageLast - viewPageFirst + 1)].map((_, index) => {
+          const page = viewPageFirst + index;
+          return (
+            <PageNumText
+              onClick={() => goToPage(page - 1)}
+              key={page}
+              isActive={currentPage === page}>
+              {page}
+            </PageNumText>
+          );
+        })
       )}
       <PaginationButton onClick={goToNextPage} disabled={currentPage === totalPages}>
         <GrFormNext className="icons" />
