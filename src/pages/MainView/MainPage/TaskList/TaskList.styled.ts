@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MainPageDetailProps } from '../../../../types/MainPageDetailType';
+import { MainPageDetailProps } from '@/type/MainPageDetailType';
 import { FaCircleCheck } from 'react-icons/fa6';
 import { FaRegCheckCircle } from 'react-icons/fa';
 
@@ -54,8 +54,8 @@ export const TitleText = styled.p`
   margin: 2px;
   color: white;
   text-align: center;
-  @media (max-width: 760px) {
-    font-size: 14px;
+  @media (min-width: 300px) and (max-width: 1200px) {
+    font-size: 10px;
   }
 `;
 
@@ -132,10 +132,18 @@ export const ListTextNameAreaBox = styled(ListTableBox)`
 export const StyledFaCircleCheck = styled(FaCircleCheck)`
   width: 30px;
   height: 30px;
+  @media (max-width: 760px) {
+    width: 15px;
+    height: 15px;
+  }
 `;
 export const StyledFaRegCheckCircle = styled(FaRegCheckCircle)`
   width: 30px;
   height: 30px;
+  @media (max-width: 760px) {
+    width: 15px;
+    height: 15px;
+  }
 `;
 
 // 페이지 네이션 부분
