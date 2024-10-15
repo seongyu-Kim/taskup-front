@@ -14,7 +14,7 @@ import {
   StyledFaCircleCheck,
   StyledFaRegCheckCircle,
 } from './TaskList.styled';
-import Pagination from '../../../../components/Pagination/Pagination';
+import Pagination from '@components/Pagination/Pagination';
 import axios from 'axios';
 
 interface Task {
@@ -34,17 +34,9 @@ interface Task {
 export default function TaskList() {
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentData, setCurrentData] = useState<
-    Array<{
-      id: number;
-      title: string;
-      content: string;
-      status: number;
-    }>
-  >([]);
 
   //데이터 요청 값 저장
-  const [allData, setAllData] = useState<Task[]>([]);
+  const [callTaskListData, setCallTaskListData] = useState<Task[]>([]);
 
   //데이터 요청
   useEffect(() => {
@@ -53,7 +45,7 @@ export default function TaskList() {
         //나중에 주소 변경
         const response = await axios.get('http://localhost:4000/tasks');
         if (response && response.data) {
-          setAllData(response.data.data.data);
+          setCallTaskListData(response.data.data.data);
           // setAllData(response.data.data);
           console.log(response.data.data.data);
         }
@@ -65,23 +57,15 @@ export default function TaskList() {
     callTaskListData().catch(console.error);
   }, []);
 
-  useEffect(() => {
-    const startIdx = (currentPage - 1) * itemsPerPage;
-    const endIdx = startIdx + itemsPerPage;
-    const paginatedData = allData.slice(startIdx, endIdx);
-
-    setCurrentData(paginatedData);
-  }, [currentPage, allData]);
-
   const handleCompleteClick = (id: number) => {
-    setAllData((prevData) =>
+    setCallTaskListData((prevData) =>
       prevData.map((item) =>
         item.id === id ? { ...item, status: item.status == 1 ? 2 : 1 } : item,
       ),
     );
   };
 
-  return Object.keys(allData).length == 0 ? (
+  return Object.keys(callTaskListData).length == 0 ? (
     <>
       <MainPageContainer>
         <ProjectListContainer>
@@ -118,7 +102,7 @@ export default function TaskList() {
             </ProjectListTitle>
           </ProjectListArea>
           <ProjectList>
-            {allData.map((item) => (
+            {callTaskListData.map((item) => (
               <ProjectListItem
                 backgroundColor={item.id % 2 === 0 ? '#e0e0e0' : 'white'}
                 key={item.id}>
@@ -142,7 +126,7 @@ export default function TaskList() {
           </ProjectList>
         </ProjectListContainer>
         <Pagination
-          pageLength={allData.length}
+          pageLength={callTaskListData.length}
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
