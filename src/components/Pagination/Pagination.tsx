@@ -1,8 +1,4 @@
-import {
-  PageNumText,
-  PaginationBox,
-  PaginationButton,
-} from '@components/Pagination/Pagination.styled';
+import * as Styled from '@components/Pagination/Pagination.styled';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import { PaginationProps } from '@/type/PaginationType';
 
@@ -34,28 +30,28 @@ export default function Pagination({
   };
 
   return (
-    <PaginationBox>
-      <PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
+    <Styled.PaginationBox>
+      <Styled.PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
         <GrFormPrevious className="icons" />
-      </PaginationButton>
+      </Styled.PaginationButton>
       {pageLength == 0 ? (
         <div></div>
       ) : (
         [...Array(viewPageLast - viewPageFirst + 1)].map((_, index) => {
           const page = viewPageFirst + index;
           return (
-            <PageNumText
+            <Styled.PageNumText
               onClick={() => goToPage(page - 1)}
               key={page}
               isActive={currentPage === page}>
               {page}
-            </PageNumText>
+            </Styled.PageNumText>
           );
         })
       )}
-      <PaginationButton onClick={goToNextPage} disabled={currentPage === totalPages}>
+      <Styled.PaginationButton onClick={goToNextPage} disabled={currentPage === totalPages}>
         <GrFormNext className="icons" />
-      </PaginationButton>
-    </PaginationBox>
+      </Styled.PaginationButton>
+    </Styled.PaginationBox>
   );
 }

@@ -2,19 +2,7 @@ import { useRef, useState } from 'react';
 import { useModal, useModalState } from '@stores/ModalStore/ModalStore';
 import { FaCamera } from 'react-icons/fa';
 import { RiCloseLargeFill } from 'react-icons/ri';
-import {
-  ProfileImg,
-  ProfileModalBodyBox,
-  ProfileModalBox,
-  ProfileModalContainer,
-  ProfileModalHeaderBox,
-  ProfileLogOutButton,
-  ProfileModalMainBox,
-  ProfileNameText,
-  ProfileCompleteButton,
-  ProfileModalImgBox,
-  ProfileImgChangeCameraIcon,
-} from './ProfileModal.styled';
+import * as Styled from './ProfileModal.styled';
 import { handleModalCloseClick } from '@utils/HandleModalCloseClick';
 import { handleFileSelectorClick } from '@utils/HandleFileSelectorClick';
 import { useUserStore } from '@stores/UserStore/userStore';
@@ -106,26 +94,28 @@ export default function ProfileModal() {
   }
   return (
     <>
-      <ProfileModalContainer onClick={handleModalOutsideClick}>
+      <Styled.ProfileModalContainer onClick={handleModalOutsideClick}>
         <RiCloseLargeFill className="closeIcon" />
-        <ProfileModalBox
+        <Styled.ProfileModalBox
           onClick={(e) => {
             handleModalCloseClick(e);
           }}>
-          <ProfileModalHeaderBox>
+          <Styled.ProfileModalHeaderBox>
             <p>프로필</p>
-            <ProfileCompleteButton onClick={handleCompleteButtonClick}>완료</ProfileCompleteButton>
-          </ProfileModalHeaderBox>
-          <ProfileModalBodyBox>
-            <ProfileModalImgBox>
-              <ProfileImg
+            <Styled.ProfileCompleteButton onClick={handleCompleteButtonClick}>
+              완료
+            </Styled.ProfileCompleteButton>
+          </Styled.ProfileModalHeaderBox>
+          <Styled.ProfileModalBodyBox>
+            <Styled.ProfileModalImgBox>
+              <Styled.ProfileImg
                 id="profile_img"
                 src={tempImgUrl === null ? (localImg === null ? imageUrl : null)! : tempImgUrl}
                 onClick={handleImageChangeClick}
                 alt={'프로필 사진'}
               />
-              <ProfileImgChangeCameraIcon className="icons" />
-            </ProfileModalImgBox>
+              <Styled.ProfileImgChangeCameraIcon className="icons" />
+            </Styled.ProfileModalImgBox>
             <FaCamera className="camera" />
             <input
               type="file"
@@ -134,13 +124,15 @@ export default function ProfileModal() {
               hidden={true}
               onChange={(e) => handleImageChange(e)}
             />
-            <ProfileModalMainBox>
-              <ProfileNameText>{name}</ProfileNameText>
-              <ProfileLogOutButton onClick={handleLogoutClick}>로그아웃</ProfileLogOutButton>
-            </ProfileModalMainBox>
-          </ProfileModalBodyBox>
-        </ProfileModalBox>
-      </ProfileModalContainer>
+            <Styled.ProfileModalMainBox>
+              <Styled.ProfileNameText>{name}</Styled.ProfileNameText>
+              <Styled.ProfileLogOutButton onClick={handleLogoutClick}>
+                로그아웃
+              </Styled.ProfileLogOutButton>
+            </Styled.ProfileModalMainBox>
+          </Styled.ProfileModalBodyBox>
+        </Styled.ProfileModalBox>
+      </Styled.ProfileModalContainer>
     </>
   );
 }

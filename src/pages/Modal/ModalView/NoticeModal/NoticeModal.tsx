@@ -1,11 +1,4 @@
-import {
-  NoticeModalBox,
-  NoticeModalContainer,
-  NoticeModalBodyBox,
-  NoticeModalHeaderBox,
-  NoticeModalCloseButton,
-  NoticeText,
-} from './NoticeModal.styled';
+import * as Styled from './NoticeModal.styled';
 import { useModal } from '@stores/ModalStore/ModalStore';
 import { RiCloseLargeFill } from 'react-icons/ri';
 import { handleModalCloseClick } from '@utils/HandleModalCloseClick';
@@ -44,13 +37,13 @@ export default function NoticeModal() {
 
   return (
     <>
-      <NoticeModalContainer onClick={() => setIsOpen(false)}>
+      <Styled.NoticeModalContainer onClick={() => setIsOpen(false)}>
         <RiCloseLargeFill className="closeIcon" />
-        <NoticeModalBox onClick={handleModalCloseClick}>
-          <NoticeModalHeaderBox>
+        <Styled.NoticeModalBox onClick={handleModalCloseClick}>
+          <Styled.NoticeModalHeaderBox>
             <p>알림</p>
-          </NoticeModalHeaderBox>
-          <NoticeModalBodyBox>
+          </Styled.NoticeModalHeaderBox>
+          <Styled.NoticeModalBodyBox>
             <ul>
               {noticeData.map((item) => {
                 const endDate = new Date(item.endDate);
@@ -60,23 +53,23 @@ export default function NoticeModal() {
                   return (
                     <li key={item.id}>
                       <p>프로젝트명: {item.title}</p>
-                      <NoticeText color={dDay <= 3 ? 'red' : 'black'}>
+                      <Styled.NoticeText color={dDay <= 3 ? 'red' : 'black'}>
                         마감일이 {dDay}일 남았습니다.
-                      </NoticeText>
+                      </Styled.NoticeText>
                     </li>
                   );
                 }
               })}
             </ul>
-          </NoticeModalBodyBox>
-          <NoticeModalCloseButton
+          </Styled.NoticeModalBodyBox>
+          <Styled.NoticeModalCloseButton
             onClick={() => {
               setIsOpen(false);
             }}>
             닫기
-          </NoticeModalCloseButton>
-        </NoticeModalBox>
-      </NoticeModalContainer>
+          </Styled.NoticeModalCloseButton>
+        </Styled.NoticeModalBox>
+      </Styled.NoticeModalContainer>
     </>
   );
 }

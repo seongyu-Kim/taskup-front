@@ -1,14 +1,6 @@
 import logo from '@assets/logo_color.webp';
 import { HiPencilSquare } from 'react-icons/hi2';
-import {
-  DetailDiv,
-  LogoImg,
-  NameBox,
-  ProfileBox,
-  ProfileImg,
-  SideBarButton,
-  SidebarContainer,
-} from './SideBar.styled';
+import * as Styled from './SideBar.styled';
 import { useModal, useModalState } from '@stores/ModalStore/ModalStore';
 import { useNavigate } from 'react-router-dom';
 import { useProfileImgStore } from '@stores/ProfileImgStore/ProfileImgStore';
@@ -43,39 +35,39 @@ export default function SideBar() {
 
   return (
     <>
-      <SidebarContainer>
-        <LogoImg src={logo} alt="TaskUp" />
-        <DetailDiv>
-          <ProfileBox>
-            <ProfileImg src={nowImg || defaultImage} alt="프로필 사진" />
-            <NameBox
+      <Styled.SidebarContainer>
+        <Styled.LogoImg src={logo} alt="TaskUp" />
+        <Styled.DetailDiv>
+          <Styled.ProfileBox>
+            <Styled.ProfileImg src={nowImg || defaultImage} alt="프로필 사진" />
+            <Styled.NameBox
               onClick={() => {
                 setModalState('Profile');
                 setIsOpen(true);
               }}>
               <p>{name}</p>
               <HiPencilSquare />
-            </NameBox>
+            </Styled.NameBox>
             <p>{email}</p>
-          </ProfileBox>
+          </Styled.ProfileBox>
 
-          <SideBarButton
+          <Styled.SideBarButton
             bottom="140px"
             onClick={() => {
               navigate('/create');
             }}>
             새 프로젝트
-          </SideBarButton>
-          <SideBarButton
+          </Styled.SideBarButton>
+          <Styled.SideBarButton
             bottom="80px"
             onClick={() => {
               setModalState('Notice');
               setIsOpen(true);
             }}>
             알림 확인
-          </SideBarButton>
-        </DetailDiv>
-      </SidebarContainer>
+          </Styled.SideBarButton>
+        </Styled.DetailDiv>
+      </Styled.SidebarContainer>
     </>
   );
 }

@@ -1,19 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  MainPageContainer,
-  ProjectListContainer,
-  ProjectListArea,
-  ProjectListTitle,
-  TitleText,
-  ProjectListTitleName,
-  ProjectList,
-  ProjectListItem,
-  ListTableBox,
-  ListTextValue,
-  ListTextNameAreaBox,
-  StyledFaCircleCheck,
-  StyledFaRegCheckCircle,
-} from './TaskList.styled';
+import * as Styled from './TaskList.styled';
 import Pagination from '@components/Pagination/Pagination';
 import axios from 'axios';
 import { useUserStore } from '@stores/UserStore/userStore';
@@ -83,73 +69,77 @@ export default function TaskList() {
 
   return userTaskList.length == 0 ? (
     <>
-      <MainPageContainer>
-        <ProjectListContainer>
-          <ProjectListArea>
-            <ProjectListTitle>
-              <TitleText>Num</TitleText>
-            </ProjectListTitle>
-            <ProjectListTitleName>
-              <TitleText>Name</TitleText>
-            </ProjectListTitleName>
-            <ProjectListTitle>
-              <TitleText>CheckBox</TitleText>
-            </ProjectListTitle>
-          </ProjectListArea>
-          <ProjectList>
+      <Styled.MainPageContainer>
+        <Styled.ProjectListContainer>
+          <Styled.ProjectListArea>
+            <Styled.ProjectListTitle>
+              <Styled.TitleText>Num</Styled.TitleText>
+            </Styled.ProjectListTitle>
+            <Styled.ProjectListTitleName>
+              <Styled.TitleText>Name</Styled.TitleText>
+            </Styled.ProjectListTitleName>
+            <Styled.ProjectListTitle>
+              <Styled.TitleText>CheckBox</Styled.TitleText>
+            </Styled.ProjectListTitle>
+          </Styled.ProjectListArea>
+          <Styled.ProjectList>
             <p>프로젝트가 없습니다</p>
-          </ProjectList>
-        </ProjectListContainer>
-      </MainPageContainer>
+          </Styled.ProjectList>
+        </Styled.ProjectListContainer>
+      </Styled.MainPageContainer>
     </>
   ) : (
     <>
-      <MainPageContainer>
-        <ProjectListContainer>
-          <ProjectListArea>
-            <ProjectListTitle>
-              <TitleText>Num</TitleText>
-            </ProjectListTitle>
-            <ProjectListTitleName>
-              <TitleText>Name</TitleText>
-            </ProjectListTitleName>
-            <ProjectListTitle>
-              <TitleText>CheckBox</TitleText>
-            </ProjectListTitle>
-          </ProjectListArea>
-          <ProjectList>
+      <Styled.MainPageContainer>
+        <Styled.ProjectListContainer>
+          <Styled.ProjectListArea>
+            <Styled.ProjectListTitle>
+              <Styled.TitleText>Num</Styled.TitleText>
+            </Styled.ProjectListTitle>
+            <Styled.ProjectListTitleName>
+              <Styled.TitleText>Name</Styled.TitleText>
+            </Styled.ProjectListTitleName>
+            <Styled.ProjectListTitle>
+              <Styled.TitleText>CheckBox</Styled.TitleText>
+            </Styled.ProjectListTitle>
+          </Styled.ProjectListArea>
+          <Styled.ProjectList>
             {currentTasks
               .filter((item) => item.members.includes(user.name))
               .map((item) => (
-                <ProjectListItem
+                <Styled.ProjectListItem
                   backgroundColor={item.id % 2 === 0 ? '#e0e0e0' : 'white'}
                   key={item.id}>
-                  <ListTableBox>
-                    <ListTextValue>{item.id}</ListTextValue>
-                  </ListTableBox>
-                  <ListTextNameAreaBox>
-                    <ListTextValue>{item.title}</ListTextValue>
-                    <ListTextValue className="content">{`${item.content.slice(0, 10)}...`}</ListTextValue>
-                  </ListTextNameAreaBox>
-                  <ListTableBox>
-                    <ListTextValue
+                  <Styled.ListTableBox>
+                    <Styled.ListTextValue>{item.id}</Styled.ListTextValue>
+                  </Styled.ListTableBox>
+                  <Styled.ListTextNameAreaBox>
+                    <Styled.ListTextValue>{item.title}</Styled.ListTextValue>
+                    <Styled.ListTextValue className="content">{`${item.content.slice(0, 10)}...`}</Styled.ListTextValue>
+                  </Styled.ListTextNameAreaBox>
+                  <Styled.ListTableBox>
+                    <Styled.ListTextValue
                       onClick={() => {
                         handleCompleteClick(item.id);
                       }}>
-                      {item.status === 1 ? <StyledFaCircleCheck /> : <StyledFaRegCheckCircle />}
-                    </ListTextValue>
-                  </ListTableBox>
-                </ProjectListItem>
+                      {item.status === 1 ? (
+                        <Styled.StyledFaCircleCheck />
+                      ) : (
+                        <Styled.StyledFaRegCheckCircle />
+                      )}
+                    </Styled.ListTextValue>
+                  </Styled.ListTableBox>
+                </Styled.ProjectListItem>
               ))}
-          </ProjectList>
-        </ProjectListContainer>
+          </Styled.ProjectList>
+        </Styled.ProjectListContainer>
         <Pagination
           pageLength={userTaskList.length}
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />
-      </MainPageContainer>
+      </Styled.MainPageContainer>
     </>
   );
 }
