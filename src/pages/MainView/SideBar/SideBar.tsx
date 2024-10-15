@@ -11,7 +11,7 @@ import {
 } from './SideBar.styled';
 import { useModal, useModalState } from '@stores/ModalStore/ModalStore';
 import { useNavigate } from 'react-router-dom';
-import { useProfileImgStore, useSaveState } from '@stores/ProfileImgStore/ProfileImgStore';
+import { useProfileImgStore } from '@stores/ProfileImgStore/ProfileImgStore';
 import { useEffect, useState } from 'react';
 import defaultImage from '@assets/임시 프로필사진.png';
 
@@ -19,24 +19,25 @@ export default function SideBar() {
   const { setIsOpen } = useModal();
   const { setModalState } = useModalState();
   const { imageUrl } = useProfileImgStore();
-  const { saveState, setSaveState } = useSaveState();
-  const [localImg, setLocalImg] = useState<string | null>(null);
+  const [nowImg, setNowImg] = useState<string | null>(null);
   const navigate = useNavigate();
   //로컬스토리지에서 유저 데이터 가져오기
   const userData = localStorage.getItem('userData');
   const { email, name }: { email: string; name: string } = JSON.parse(userData!);
   //초기 프로필 사진 없을 때 기본 사진
   useEffect(() => {
-    const saveImg = localStorage.getItem('profileImage');
-    if (saveImg === null) {
-      setLocalImg(imageUrl);
+    if (imageUrl == '/static/media/임시 프로필사진.4d93130773eae276d513.png') {
+      const saveImg = localStorage.getItem('profileImage');
+      if (saveImg === null) {
+        setNowImg(imageUrl);
+      }
     }
   }, []);
 
   useEffect(() => {
     const saveImg = localStorage.getItem('profileImage');
     if (saveImg) {
-      setLocalImg(saveImg);
+      setNowImg(saveImg);
     }
   }, [imageUrl]);
 
@@ -46,12 +47,11 @@ export default function SideBar() {
         <LogoImg src={logo} alt="TaskUp" />
         <DetailDiv>
           <ProfileBox>
-            <ProfileImg src={localImg! || defaultImage} alt="프로필 사진" />
+            <ProfileImg src={nowImg || defaultImage} alt="프로필 사진" />
             <NameBox
               onClick={() => {
                 setModalState('Profile');
                 setIsOpen(true);
-                setSaveState(!saveState);
               }}>
               <p>{name}</p>
               <HiPencilSquare />
