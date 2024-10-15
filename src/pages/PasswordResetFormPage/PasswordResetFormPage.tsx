@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { sendResetLink } from '../../utils/emailService';
 import { ErrorMessage } from '@hookform/error-message';
 import { UserPaths } from '../../routes/userPath';
+import axios, { AxiosError } from 'axios';
 
 interface PasswordResetFormData {
   email: string;
@@ -17,29 +18,51 @@ export default function PasswordResetPage() {
     formState: { errors },
     trigger,
   } = useForm<PasswordResetFormData>({ mode: 'onChange' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
-  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // const [isEmailSent, setIsEmailSent] = useState(false);
+  // const navigate = useNavigate();
 
-  const generateResetToken = () => {
-    return Math.random().toString(36).substring(2, 10);
-  };
+  // const generateResetToken = () => {
+  //   return Math.random().toString(36).substring(2, 10);
+  // };
 
   const onSubmit = async (data: PasswordResetFormData) => {
-    const token = generateResetToken();
-    const resetLink = `http://localhost:3000/password-reset/confirm?email=${encodeURIComponent(data.email)}&token=${encodeURIComponent(token)}`;
-    localStorage.setItem(`resetToken-${data.email}`, token);
-
-    console.log('Generated Reset Link:', resetLink);
-
+    setIsSubmitting(true);
+    setErrorMessage(null);
     try {
-      await sendResetLink(data.email, resetLink);
-      alert(`비밀번호 재설정 링크가 이메일로 전송되었습니다`);
-      navigate(
-        `/password-reset/confirm?email=${encodeURIComponent(data.email)}&token=${encodeURIComponent(token)}`,
-      );
+      const response = await axios.post('/api/password-reset', { email: data.email });
+
+      if (response.status === 200) {
+        setIsEmailSent(true);
+        alert('비밀번호 재설정 링크가 이메일로 전송되었습니다.');
+      }
     } catch (error) {
-      alert(`이메일 전송 중 오류가 발생했습니다. 다시 시도해주세요.: ${error}`);
+      const axiosError = error as AxiosError;
+      if (axiosError.response && axiosError.response.status === 404) {
+        setErrorMessage('등록되지 않은 이메일입니다.');
+      } else {
+        setErrorMessage('이메일 전송 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
+    // const token = generateResetToken();
+    // const resetLink = `http://localhost:3000/password-reset/confirm?email=${encodeURIComponent(data.email)}&token=${encodeURIComponent(token)}`;
+    // localStorage.setItem(`resetToken-${data.email}`, token);
+
+    // console.log('Generated Reset Link:', resetLink);
+
+    // try {
+    //   await sendResetLink(data.email, resetLink);
+    //   alert(`비밀번호 재설정 링크가 이메일로 전송되었습니다`);
+    //   navigate(
+    //     `/password-reset/confirm?email=${encodeURIComponent(data.email)}&token=${encodeURIComponent(token)}`,
+    //   );
+    // } catch (error) {
+    //   alert(`이메일 전송 중 오류가 발생했습니다. 다시 시도해주세요.: ${error}`);
+    // }
   };
 
   return (

@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { MainView, InputBox, Form, SubmitButton, ButtonBox } from './LoginPage.styled';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useUserStore, UserState } from '../../stores/UserStore/userStore';
 import { ErrorMessage } from '@hookform/error-message';
 import { UserPaths } from '../../routes/userPath';
+import axios, { AxiosError } from 'axios';
 interface LoginFormData {
   email: string;
   password: string;
@@ -18,26 +20,52 @@ export default function LoginPage() {
   } = useForm<LoginFormData>({ mode: 'onChange' });
   const navigate = useNavigate();
   const login = useUserStore((state: UserState) => state.login);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const getUserData = () => {
-    const storeUserData = localStorage.getItem('userData');
-    return storeUserData ? JSON.parse(storeUserData) : null;
-  };
+  // const getUserData = () => {
+  //   const storeUserData = localStorage.getItem('userData');
+  //   return storeUserData ? JSON.parse(storeUserData) : null;
+  // };
 
-  const onSubmit = (data: LoginFormData) => {
-    const userData = getUserData();
+  const onSubmit = async (data: LoginFormData) => {
+    // const userData = getUserData();
+    setIsSubmitting(true);
+    setErrorMessage(null);
 
-    if (!userData) {
-      alert('회원 정보가 존재하지 않습니다. 회원가입을 먼저 진행해주세요.');
-      return;
+    try {
+      const response = await axios.post('/user/sign-in', {
+        email: data.email,
+        password: data.password,
+      });
+
+      if (response.status === 200) {
+        const { email, name } = response.data;
+        login(email, name);
+        navigate(UserPaths.main);
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response && axiosError.response.status == 401) {
+        setErrorMessage('이메일 또는 비밀번호가 잘못되었습니다.');
+      } else {
+        setErrorMessage('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
 
-    if (data.email === userData.email && data.password === userData.password) {
-      login(userData.email, userData.name);
-      navigate(UserPaths.main);
-    } else {
-      alert('이메일 또는 비밀번호가 일치하지 않습니다.');
-    }
+    // if (!userData) {
+    //   alert('회원 정보가 존재하지 않습니다. 회원가입을 먼저 진행해주세요.');
+    //   return;
+    // }
+
+    // if (data.email === userData.email && data.password === userData.password) {
+    //   login(userData.email, userData.name);
+    //   navigate(UserPaths.main);
+    // } else {
+    //   alert('이메일 또는 비밀번호가 일치하지 않습니다.');
+    // }
   };
   return (
     <MainView>

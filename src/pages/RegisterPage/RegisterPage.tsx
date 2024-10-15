@@ -40,7 +40,7 @@ export default function RegisterPage() {
     setErrorMessage(null);
 
     try {
-      const response = await axios.post('/api/send-verification-code', { email });
+      const response = await axios.post('/user/email-code', { email });
       if (response.status === 200) {
         alert('인증번호가 이메일로 전송되었습니다.');
         setVerificationCode(response.data.code);
