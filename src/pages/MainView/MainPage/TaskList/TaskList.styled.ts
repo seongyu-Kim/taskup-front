@@ -10,7 +10,7 @@ export const MainPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  //gap: 15px;
   border-bottom: 1px solid black;
   @media (max-width: 760px) {
     margin-bottom: 30px;
@@ -62,12 +62,15 @@ export const TitleText = styled.p`
 // ul 태그 스크롤 추가
 export const ProjectList = styled.ul`
   overflow-y: auto;
-  height: 16.1rem;
+  height: 17.1rem;
   margin: 0;
   padding: 0;
   text-align: center;
   &::-webkit-scrollbar {
     display: none;
+  }
+  @media (min-width: 760px) and (max-width: 1920px) {
+    height: 15.1rem;
   }
 `;
 
