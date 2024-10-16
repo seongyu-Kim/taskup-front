@@ -5,7 +5,9 @@ import SidebarDetailProps from '@/type/SidebarDetailType';
 export const SidebarContainer = styled.div`
   background: #2d3f63;
   height: 100%;
-  width: 350px;
+  width: 300px;
+  padding-left: 25px;
+  padding-right: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,7 +50,7 @@ export const ProfileImg = styled.img`
 export const DetailDiv = styled.div`
   display: flex;
   height: 100%;
-  width: 350px;
+  width: 300px;
   flex-direction: column;
   align-items: center;
   margin-top: 150px;
