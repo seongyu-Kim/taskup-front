@@ -10,8 +10,8 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import axios, { AxiosError } from 'axios';
 import { UserPaths } from '../../routes/userPath';
+import { apiRequest } from '../../apis/apiClient';
 interface RegisterFormData {
   email: string;
   name: string;
@@ -39,75 +39,61 @@ export default function RegisterPage() {
   const sendVerificationCode = async (email: string) => {
     setErrorMessage(null);
 
-    try {
-      const response = await axios.post('/user/email-code', { email });
-      if (response.status === 200) {
-        alert('인증번호가 이메일로 전송되었습니다.');
-        setVerificationCode(response.data.code);
-        setIsCodeSent(true);
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      if (axiosError.response && axiosError.response.status === 400) {
-        setErrorMessage('이메일 전송 중 오류가 발생했습니다.');
-      } else {
-        setErrorMessage('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
-      }
+    // API 호출
+    const { data, error } = await apiRequest<{ code: string }, { email: string }>(
+      'post',
+      '/email-code ',
+      { email },
+    );
+
+    if (error) {
+      setErrorMessage('이메일 전송 중 오류가 발생했습니다.');
+    } else if (data) {
+      alert('인증번호가 이메일로 전송되었습니다.');
+      setVerificationCode(data.code);
+      setIsCodeSent(true);
     }
-    // const code = Math.floor(1000 + Math.random() * 9000).toString();
-    // await sendEmail(email, code);
-    // setSentCode(code);
-    // setIsCodeSent(true);
-    // alert(`인증번호가 ${email}로 전송되었습니다.`);
   };
 
   // 회원가입 처리 함수
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = async (formData: RegisterFormData) => {
+    console.log('폼이 제출되었습니다:', formData);
     setIsSubmitting(true);
     setErrorMessage(null);
+    console.log('isSubmitting 상태:', isSubmitting);
 
-    if (data.password !== data.password_check) {
+    if (formData.password !== formData.password_check) {
       setErrorMessage('비밀번호가 일치하지 않습니다.');
       setIsSubmitting(false);
       return;
     }
 
-    try {
-      const response = await axios.post('/users/sign-up', {
-        email: data.email,
-        name: data.name,
-        password: data.password,
-      });
-
-      if (response.status === 201) {
-        alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
-        navigate(UserPaths.login);
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      if (axiosError.response && axiosError.response.status === 400) {
-        setErrorMessage('이미 존재하는 이메일입니다.');
-      } else {
-        setErrorMessage('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
-      }
-    } finally {
+    if (formData.verificationCode !== verificationCode) {
+      setErrorMessage('인증번호가 일치하지 않습니다.');
       setIsSubmitting(false);
+      return;
     }
 
-    // if (data.number !== sentCode) {
-    //   alert('인증번호가 일치하지 않습니다.');
-    //   return;
-    // }
+    // 회원가입 API 호출
+    const { error } = await apiRequest<null, { email: string; name: string; password: string }>(
+      'post',
+      '/sign-up',
+      {
+        email: formData.email,
+        name: formData.name,
+        password: formData.password,
+      },
+    );
 
-    // const userData = {
-    //   email: data.email,
-    //   name: data.name,
-    //   password: data.password,
-    // };
-    // localStorage.setItem('userData', JSON.stringify(userData));
+    if (error) {
+      setErrorMessage(error);
+      console.error('회원가입 에러:', error);
+    } else {
+      alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+      navigate(UserPaths.login);
+    }
 
-    // alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
-    // navigate('/login');
+    setIsSubmitting(false);
   };
 
   return (

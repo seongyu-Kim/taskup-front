@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { UserPaths } from '../../routes/userPath';
-import axios, { AxiosError } from 'axios';
+import { apiRequest } from '../../apis/apiClient';
 interface PasswordResetFormData {
   newPassword: string;
   confirmPassword: string;
@@ -29,20 +29,6 @@ export default function PasswordResetLinkPage() {
     if (!token) {
       setErrorMessage('유효하지 않은 접근입니다.');
     }
-    // console.log('URL Email:', email);
-    // console.log('URL Token:', token);
-    // if (!email || !token) {
-    //   alert('유효하지 않은 접근입니다.');
-    //   navigate(UserPaths.login);
-    //   return;
-    // }
-    // const storedToken = localStorage.getItem(`resetToken-${email}`);
-    // if (storedToken === token) {
-    //   setIsTokenValid(true);
-    // } else {
-    //   alert('유효하지 않은 링크입니다.');
-    //   navigate(UserPaths.login);
-    // }
   }, [token]);
 
   const onSubmit = async (data: PasswordResetFormData) => {
@@ -57,32 +43,21 @@ export default function PasswordResetLinkPage() {
       return;
     }
 
-    try {
-      const response = await axios.post('/user/reset-pw', {
-        token,
-        newPassword: data.newPassword,
-      });
+    // API 호출
+    const { error } = await apiRequest('post', '/password-reset/confirm', {
+      token,
+      newPassword: data.newPassword,
+    });
 
-      if (response.status === 200) {
-        setIsSuccess(true);
-        alert('비밀번호가 성공적으로 변경되었습니다.');
-        navigate(UserPaths.login);
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      if (axiosError.response && axiosError.response.status === 400) {
-        setErrorMessage('유효하지 않은 링크입니다.');
-      } else {
-        setErrorMessage('비밀번호 변경 중 오류가 발생했습니다. 다시 시도해주세요.');
-      }
-    } finally {
-      setIsSubmitting(false);
+    if (error) {
+      setErrorMessage(error);
+    } else {
+      setIsSuccess(true);
+      alert('비밀번호가 성공적으로 변경되었습니다.');
+      navigate(UserPaths.login);
     }
 
-    // resetPassword(email!, data.newPassword);
-    // setResetSuccess(true);
-    // alert('비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.');
-    // navigate(UserPaths.login);
+    setIsSubmitting(false);
   };
 
   return (
