@@ -100,7 +100,7 @@ export default function TaskList() {
           <Styled.ProjectList>
             {currentTasks.map((item) => (
               <Styled.ProjectListItem
-                backgroundColor={item.id % 2 === 0 ? '#e0e0e0' : 'white'}
+                backgroundColor={item.id % 2 !== 0 ? '#e0e0e0' : 'white'}
                 key={item.id}>
                 <Styled.ListTableBox>
                   <Styled.ListTextValue>{item.id}</Styled.ListTextValue>
