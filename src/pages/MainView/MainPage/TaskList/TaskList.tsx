@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as Styled from './TaskList.styled';
 import Pagination from '@components/Pagination/Pagination';
-import axios from '@api/axios';
+import apiMainPage from '@api/apiMainPage';
 import { useUserStore } from '@stores/UserStore/userStore';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -23,6 +23,7 @@ export default function TaskList() {
   const { user } = useUserStore();
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
+  // const [completedState, setCompletedState] = useState('');
 
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page') || '1', 10);
@@ -43,7 +44,9 @@ export default function TaskList() {
     const callTaskList = async () => {
       try {
         //나중에 주소 변경
-        const response = await axios.get(`/tasks?page=${page}&pageSize=${itemsPerPage}&status`);
+        const response = await apiMainPage.get(
+          `/tasks?page=${page}&pageSize=${itemsPerPage}&status`,
+        );
         if (response && response.data) {
           console.log('TaksList 컴포넌트', response.data.message);
           setCallTaskListData(response.data.data.data);

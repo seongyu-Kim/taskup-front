@@ -3,7 +3,7 @@ import { useModal } from '@stores/ModalStore/ModalStore';
 import { RiCloseLargeFill } from 'react-icons/ri';
 import { handleModalCloseClick } from '@utils/HandleModalCloseClick';
 import { useEffect, useState } from 'react';
-import axios from '@api/axios';
+import apiMainPage from '@api/apiMainPage';
 import MainPageDefaultButton from '@components/MainPageDefaultButton/MainPageDefaultButton';
 import { useUserStore } from '@stores/UserStore/userStore';
 
@@ -54,7 +54,7 @@ export default function NoticeModal() {
     const callNoticeData = async () => {
       try {
         //임시
-        const response = await axios.get('/tasks?page=1&pageSize=10&status');
+        const response = await apiMainPage.get('/tasks?page=1&pageSize=10&status');
         if (response) {
           console.log('알림 컴포넌트', response.data.message);
           setNoticeData(response.data.data.data);

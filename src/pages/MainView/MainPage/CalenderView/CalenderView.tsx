@@ -3,7 +3,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import { CalenderBox } from './CalenderView.styled';
 import { handleDayCellContent } from '@utils/CalenderUtils';
 import { useEffect, useState } from 'react';
-import axios from '@api/axios';
+import apiMainPage from '@api/apiMainPage';
 import { useUserStore } from '@stores/UserStore/userStore';
 
 interface CalenderType {
@@ -53,7 +53,7 @@ export default function CalenderView() {
     const callCalenderEventData = async () => {
       try {
         //임시
-        const response = await axios.get('tasks?page=1&pageSize=10&status');
+        const response = await apiMainPage.get('tasks?page=1&pageSize=10&status');
         if (response) {
           console.log('캘린더 컴포넌트', response.data.message);
           setCallEvent(response.data.data.data);
