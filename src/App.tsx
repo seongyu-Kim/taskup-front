@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import styled from 'styled-components';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { GlobalStyleStyled } from '@styles/GlobalStyles';
 import { useUserStore } from '@stores/UserStore/userStore';
@@ -15,13 +14,6 @@ import PasswordResetLinkPage from './pages/PasswordResetLinkPage/PasswordResetLi
 import ProtectedRoute from './pages/ProtectedRoute/ProtectedRoute';
 import AuthLayout from './layouts/AuthLayout';
 
-const MainDiv = styled.div`
-  display: flex;
-  background-color: #d9d9d9;
-  width: 100%;
-  height: 100vh;
-`;
-
 function App() {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const restoreLogin = useUserStore((state) => state.restoreLogin);
@@ -36,14 +28,7 @@ function App() {
       <Routes>
         <Route path="*" element={<Navigate to={isLoggedIn ? '/main' : '/login'} />} />
         <Route element={<ProtectedRoute />}>
-          <Route
-            path="/main"
-            element={
-              <MainDiv>
-                <MainPage />
-              </MainDiv>
-            }
-          />
+          <Route path="/main" element={<MainPage />} />
         </Route>
         <Route element={<AuthLayout />}>
           <Route
