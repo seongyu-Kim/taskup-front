@@ -57,16 +57,6 @@ export const ProfileLogOutButton = styled.button`
   color: white;
   cursor: pointer;
 `;
-//완료 버튼
-export const ProfileCompleteButton = styled(ProfileLogOutButton)`
-  position: absolute;
-  right: 10px;
-  border: none;
-  border-radius: 8px;
-  width: 50px;
-  background: #9aaa30;
-  color: white;
-`;
 //이름 영역
 export const ProfileNameText = styled.p`
   margin: 0;

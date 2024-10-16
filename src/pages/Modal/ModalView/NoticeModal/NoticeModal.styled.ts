@@ -79,14 +79,3 @@ export const NoticeModalBodyBox = styled.div`
 export const NoticeText = styled.p`
   color: ${(props) => props.color};
 `;
-
-//닫기 버튼
-export const NoticeModalCloseButton = styled.button`
-  width: 70px;
-  height: 30px;
-  border: none;
-  border-radius: 8px;
-  background: #9aa308;
-  color: white;
-  cursor: pointer;
-`;
