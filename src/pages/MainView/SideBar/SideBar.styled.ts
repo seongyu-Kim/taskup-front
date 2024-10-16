@@ -9,6 +9,7 @@ export const SidebarContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.75);
 `;
 //사이드 바 기본 확장 - 사진, 이름, 아이콘
 export const ProfileBox = styled.div`
