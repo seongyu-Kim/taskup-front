@@ -16,6 +16,7 @@ interface CalenderType {
 //임시
 interface Task {
   id: number;
+  author?: string;
   title: string;
   sub_title: string;
   content: string;
@@ -69,7 +70,8 @@ export default function CalenderView() {
     return null;
   }
 
-  const userEventData = callEvent.filter((item) => item.members.includes(user.name));
+  // const userEventData = callEvent.filter((item) => item.members.includes(user.name));
+  const userEventData = callEvent.filter((item) => item.author!.includes('elice1'));
 
   return (
     <CalenderBox>

@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface Task {
   id: number;
+  author?: string;
   title: string;
   sub_title: string;
   content: string;
@@ -48,7 +49,7 @@ export default function TaskList() {
           `/tasks?page=${page}&pageSize=${itemsPerPage}&status`,
         );
         if (response && response.data) {
-          console.log('TaksList 컴포넌트', response.data);
+          console.log('TaskList 컴포넌트', response.data);
           setCallTaskListData(response.data.data.data);
         }
       } catch (error) {
@@ -63,7 +64,8 @@ export default function TaskList() {
     return null;
   }
   //유저가 멤버로 들어가 있는 목록 필터링해서 넣어주기~
-  const userTaskList = callTaskListData.filter((item) => item.members.includes(user.name));
+  // const userTaskList = callTaskListData.filter((item) => item.members.includes(user.name));
+  const userTaskList = callTaskListData.filter((item) => item.author!.includes('elice1'));
   const currentTasks = userTaskList.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
@@ -132,7 +134,7 @@ export default function TaskList() {
                     onClick={() => {
                       handleCompleteClick(item.id);
                     }}>
-                    {item.status === 'IN_PROGRESS' ? (
+                    {item.status === 'COMPLETED' ? (
                       <Styled.StyledFaCircleCheck />
                     ) : (
                       <Styled.StyledFaRegCheckCircle />

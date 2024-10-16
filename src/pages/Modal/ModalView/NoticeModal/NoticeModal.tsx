@@ -16,6 +16,7 @@ interface NoticeDataType {
 //임시
 interface Task {
   id: number;
+  author?: string;
   title: string;
   sub_title: string;
   content: string;
@@ -70,7 +71,8 @@ export default function NoticeModal() {
     return null;
   }
   //사용자 필터링
-  const userNoticeData = noticeData.filter((item) => item.members.includes(user.name));
+  // const userNoticeData = noticeData.filter((item) => item.members.includes(user.name));
+  const userNoticeData = noticeData.filter((item) => item.author!.includes('elice1'));
 
   if (!isOpen) {
     return null;
@@ -85,22 +87,45 @@ export default function NoticeModal() {
             <p>알림</p>
           </Styled.NoticeModalHeaderBox>
           <Styled.NoticeModalBodyBox>
+            {/*<ul>*/}
+            {/*  {userNoticeData.map((item) => {*/}
+            {/*    const endDate = new Date(item.endDate);*/}
+            {/*    const nowDate = Date.now();*/}
+            {/*    const dDay = Math.ceil((endDate.getTime() - nowDate) / (1000 * 3600 * 24) + 1);*/}
+            {/*    if (dDay <= 7) {*/}
+            {/*      return (*/}
+            {/*        <li key={item.id}>*/}
+            {/*          <p>프로젝트명: {item.title}</p>*/}
+            {/*          <Styled.NoticeText color={dDay <= 3 ? 'red' : 'black'}>*/}
+            {/*            마감일이 {dDay}일 남았습니다.*/}
+            {/*          </Styled.NoticeText>*/}
+            {/*        </li>*/}
+            {/*      );*/}
+            {/*    }*/}
+            {/*  })}*/}
+            {/*</ul>*/}
             <ul>
-              {userNoticeData.map((item) => {
-                const endDate = new Date(item.endDate);
-                const nowDate = Date.now();
-                const dDay = Math.ceil((endDate.getTime() - nowDate) / (1000 * 3600 * 24) + 1);
-                if (dDay <= 7) {
-                  return (
-                    <li key={item.id}>
-                      <p>프로젝트명: {item.title}</p>
-                      <Styled.NoticeText color={dDay <= 3 ? 'red' : 'black'}>
-                        마감일이 {dDay}일 남았습니다.
-                      </Styled.NoticeText>
-                    </li>
-                  );
-                }
-              })}
+              {userNoticeData
+                .map((item) => ({
+                  ...item,
+                  dDay: Math.ceil(
+                    (new Date(item.endDate).getTime() - Date.now()) / (1000 * 3600 * 24) + 1,
+                  ),
+                }))
+                .sort((a, b) => a.dDay - b.dDay)
+                .map((item) => {
+                  if (item.dDay <= 7) {
+                    return (
+                      <li key={item.id}>
+                        <p>프로젝트명: {item.title}</p>
+                        <Styled.NoticeText color={item.dDay <= 3 ? 'red' : 'black'}>
+                          마감일이 {item.dDay}일 남았습니다.
+                        </Styled.NoticeText>
+                      </li>
+                    );
+                  }
+                  return null;
+                })}
             </ul>
           </Styled.NoticeModalBodyBox>
           <MainPageDefaultButton
