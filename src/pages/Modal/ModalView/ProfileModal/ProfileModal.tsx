@@ -15,19 +15,21 @@ export default function ProfileModal() {
   const { isOpen, setIsOpen } = useModal();
   const { setModalState } = useModalState();
 
-  // 로그아웃 기능 구현
   const logout = useUserStore((state) => state.logout);
   const navigate = useNavigate();
+
+  // 로그아웃 기능 구현
   const handleLogout = () => {
     logout();
     alert('로그아웃되었습니다.');
     navigate('/login');
   };
+
   const { imageUrl, setImageUrl } = useProfileImgStore();
   const [saveState, setSaveState] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [tempImgUrl, setTempImgUrl] = useState<string | null>(localStorage.getItem('profileImage'));
-  const localImg = localStorage.getItem('profileImg');
+  const localImg = localStorage.getItem('profileImage');
 
   //로컬 스토리지에서 유저 데이터 가져오기
   const userData = localStorage.getItem('userData');
@@ -58,32 +60,29 @@ export default function ProfileModal() {
       reader.onloadend = () => {
         const base64Image = reader.result as string;
         setTempImgUrl(base64Image);
-        localStorage.setItem('profileImage', base64Image);
       };
       reader.readAsDataURL(file);
     }
   };
-  //모달 배경 클릭
+
   const handleModalOutsideClick = () => {
     setIsOpen(false);
-    setSaveState(!saveState);
+    setSaveState(false);
     setTempImgUrl(localImg);
   };
-  //완료 버튼 클릭
+
   const handleCompleteButtonClick = () => {
     setIsOpen(false);
     setModalState('');
     setSaveState(true);
     handleImageSave();
-    const savedImageUrl = localStorage.getItem('profileImage');
-    if (savedImageUrl) setImageUrl(savedImageUrl);
   };
-  //이미지 선택 클릭
+
   const handleImageChangeClick = () => {
     handleFileSelectorClick(fileInputRef);
     setSaveState(!saveState);
   };
-  //로그아웃
+
   const handleLogoutClick = () => {
     setIsOpen(false);
     setModalState('');
@@ -93,14 +92,12 @@ export default function ProfileModal() {
   if (!isOpen) {
     return null;
   }
+
   return (
     <>
       <Styled.ProfileModalContainer onClick={handleModalOutsideClick}>
         <RiCloseLargeFill className="closeIcon" />
-        <Styled.ProfileModalBox
-          onClick={(e) => {
-            handleModalCloseClick(e);
-          }}>
+        <Styled.ProfileModalBox onClick={(e) => handleModalCloseClick(e)}>
           <Styled.ProfileModalHeaderBox>
             <p>프로필</p>
             <MainPageDefaultButton
@@ -115,9 +112,9 @@ export default function ProfileModal() {
             <Styled.ProfileModalImgBox>
               <Styled.ProfileImg
                 id="profile_img"
-                src={tempImgUrl === null ? (localImg === null ? imageUrl : null)! : tempImgUrl}
+                src={tempImgUrl || localImg || imageUrl}
                 onClick={handleImageChangeClick}
-                alt={'프로필 사진'}
+                alt="프로필 사진"
               />
               <Styled.ProfileImgChangeCameraIcon className="icons" />
             </Styled.ProfileModalImgBox>
@@ -126,8 +123,8 @@ export default function ProfileModal() {
               type="file"
               accept="image/jpeg, image/png"
               ref={fileInputRef}
-              hidden={true}
-              onChange={(e) => handleImageChange(e)}
+              hidden
+              onChange={handleImageChange}
             />
             <Styled.ProfileModalMainBox>
               <Styled.ProfileNameText>{name}</Styled.ProfileNameText>
