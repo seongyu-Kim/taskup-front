@@ -3,7 +3,7 @@ import { useModal } from '@stores/ModalStore/ModalStore';
 import { RiCloseLargeFill } from 'react-icons/ri';
 import { handleModalCloseClick } from '@utils/HandleModalCloseClick';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '@api/axios';
 
 interface NoticeDataType {
   id: number;
@@ -20,7 +20,7 @@ export default function NoticeModal() {
     const callNoticeData = async () => {
       try {
         //추후 주소 변경
-        const response = await axios.get('http://localhost:8080/tasks/calender');
+        const response = await axios.get('/tasks/calender');
         if (response) {
           setNoticeData(response.data.data);
         }

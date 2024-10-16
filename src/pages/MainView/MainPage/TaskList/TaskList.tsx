@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as Styled from './TaskList.styled';
 import Pagination from '@components/Pagination/Pagination';
-import axios from 'axios';
+import axios from '@api/axios';
 import { useUserStore } from '@stores/UserStore/userStore';
 
 interface Task {
@@ -28,10 +28,10 @@ export default function TaskList() {
 
   //데이터 요청
   useEffect(() => {
-    const callTaskListData = async () => {
+    const callTaskList = async () => {
       try {
         //나중에 주소 변경
-        const response = await axios.get('http://localhost:8080/tasks');
+        const response = await axios.get('/tasks');
         if (response && response.data) {
           setCallTaskListData(response.data.data.data);
         }
@@ -40,14 +40,13 @@ export default function TaskList() {
       }
     };
 
-    callTaskListData().catch(console.error);
+    callTaskList().catch(console.error);
   }, []);
 
-  //유저가 멤버로 들어가 있는 목록 필터링해서 넣어주기~
   if (!user) {
     return null;
   }
-
+  //유저가 멤버로 들어가 있는 목록 필터링해서 넣어주기~
   const userTaskList = callTaskListData.filter((item) => item.members.includes(user.name));
   const currentTasks = userTaskList.slice(
     (currentPage - 1) * itemsPerPage,
@@ -62,11 +61,6 @@ export default function TaskList() {
       ),
     );
   };
-
-  if (!user) {
-    return null;
-  }
-
   return userTaskList.length == 0 ? (
     <>
       <Styled.MainPageContainer>
@@ -104,33 +98,31 @@ export default function TaskList() {
             </Styled.ProjectListTitle>
           </Styled.ProjectListArea>
           <Styled.ProjectList>
-            {currentTasks
-              .filter((item) => item.members.includes(user.name))
-              .map((item) => (
-                <Styled.ProjectListItem
-                  backgroundColor={item.id % 2 === 0 ? '#e0e0e0' : 'white'}
-                  key={item.id}>
-                  <Styled.ListTableBox>
-                    <Styled.ListTextValue>{item.id}</Styled.ListTextValue>
-                  </Styled.ListTableBox>
-                  <Styled.ListTextNameAreaBox>
-                    <Styled.ListTextValue>{item.title}</Styled.ListTextValue>
-                    <Styled.ListTextValue className="content">{`${item.content.slice(0, 10)}...`}</Styled.ListTextValue>
-                  </Styled.ListTextNameAreaBox>
-                  <Styled.ListTableBox>
-                    <Styled.ListTextValue
-                      onClick={() => {
-                        handleCompleteClick(item.id);
-                      }}>
-                      {item.status === 1 ? (
-                        <Styled.StyledFaCircleCheck />
-                      ) : (
-                        <Styled.StyledFaRegCheckCircle />
-                      )}
-                    </Styled.ListTextValue>
-                  </Styled.ListTableBox>
-                </Styled.ProjectListItem>
-              ))}
+            {currentTasks.map((item) => (
+              <Styled.ProjectListItem
+                backgroundColor={item.id % 2 === 0 ? '#e0e0e0' : 'white'}
+                key={item.id}>
+                <Styled.ListTableBox>
+                  <Styled.ListTextValue>{item.id}</Styled.ListTextValue>
+                </Styled.ListTableBox>
+                <Styled.ListTextNameAreaBox>
+                  <Styled.ListTextValue>{item.title}</Styled.ListTextValue>
+                  <Styled.ListTextValue className="content">{`${item.content.slice(0, 10)}...`}</Styled.ListTextValue>
+                </Styled.ListTextNameAreaBox>
+                <Styled.ListTableBox>
+                  <Styled.ListTextValue
+                    onClick={() => {
+                      handleCompleteClick(item.id);
+                    }}>
+                    {item.status === 1 ? (
+                      <Styled.StyledFaCircleCheck />
+                    ) : (
+                      <Styled.StyledFaRegCheckCircle />
+                    )}
+                  </Styled.ListTextValue>
+                </Styled.ListTableBox>
+              </Styled.ProjectListItem>
+            ))}
           </Styled.ProjectList>
         </Styled.ProjectListContainer>
         <Pagination
