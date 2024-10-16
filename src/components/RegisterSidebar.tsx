@@ -20,7 +20,6 @@ const SidebarContainer = styled.div`
 
   @media (max-width: ${breakpoints.tablet}) {
     width: 100%;
-    /* height: auto; */
     height: 20%;
     padding: 1rem 0;
   }
