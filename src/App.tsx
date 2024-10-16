@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { GlobalStyleStyled } from '@styles/GlobalStyles';
 import { useUserStore } from '@stores/UserStore/userStore';
-import SideBar from '@pages/MainView/SideBar/SideBar';
 import MainPage from '@pages/MainView/MainPage/MainPage';
 import ModalView from '@pages/Modal/ModalView/ModalView';
 import { ModalPortal } from '@pages/Modal/ModalPortal/ModalPortal';
@@ -41,7 +40,6 @@ function App() {
             path="/main"
             element={
               <MainDiv>
-                <SideBar />
                 <MainPage />
               </MainDiv>
             }
