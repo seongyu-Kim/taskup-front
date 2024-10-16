@@ -6,6 +6,12 @@ export const CalenderBox = styled.div`
   height: 50%;
   overflow: hidden;
 
+  @media (min-width: 300px) and (max-width: 1500px) {
+    margin-top: 100px;
+    width: 70%;
+    height: 30%;
+  }
+
   // toolbar container
   .fc .fc-toolbar.fc-header-toolbar {
     margin: 0;

@@ -52,8 +52,10 @@ export default function CalenderView() {
   useEffect(() => {
     const callCalenderEventData = async () => {
       try {
-        const response = await axios.get('/tasks');
+        //임시
+        const response = await axios.get('tasks?page=1&pageSize=10&status');
         if (response) {
+          console.log('캘린더 컴포넌트', response.data.message);
           setCallEvent(response.data.data.data);
         }
       } catch (error) {

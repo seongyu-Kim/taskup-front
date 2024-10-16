@@ -14,6 +14,7 @@ export const MainPageContainer = styled.div`
   border-bottom: 1px solid black;
   @media (max-width: 760px) {
     margin-bottom: 30px;
+    height: 30%;
   }
 `;
 

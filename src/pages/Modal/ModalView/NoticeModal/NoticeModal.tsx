@@ -50,12 +50,13 @@ export default function NoticeModal() {
   //   callNoticeData().catch(console.error);
   // }, []);
 
-  //임시 전체 데이터 가져오기
   useEffect(() => {
     const callNoticeData = async () => {
       try {
-        const response = await axios.get('/tasks');
+        //임시
+        const response = await axios.get('/tasks?page=1&pageSize=10&status');
         if (response) {
+          console.log('알림 컴포넌트', response.data.message);
           setNoticeData(response.data.data.data);
         }
       } catch (error) {
@@ -64,6 +65,7 @@ export default function NoticeModal() {
     };
     callNoticeData().catch(console.error);
   }, []);
+
   if (!user) {
     return null;
   }

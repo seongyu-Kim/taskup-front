@@ -3,6 +3,7 @@ import * as Styled from './TaskList.styled';
 import Pagination from '@components/Pagination/Pagination';
 import axios from '@api/axios';
 import { useUserStore } from '@stores/UserStore/userStore';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface Task {
   id: number;
@@ -23,6 +24,17 @@ export default function TaskList() {
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get('page') || '1', 10);
+
+  const navigate = useNavigate();
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    setSearchParams({ page: newPage.toString() });
+    navigate(`/main/tasks?page=${newPage}&pageSize=${itemsPerPage}&status`);
+  };
+
   //데이터 요청 값 저장
   const [callTaskListData, setCallTaskListData] = useState<Task[]>([]);
 
@@ -31,8 +43,9 @@ export default function TaskList() {
     const callTaskList = async () => {
       try {
         //나중에 주소 변경
-        const response = await axios.get('/tasks');
+        const response = await axios.get(`/tasks?page=${page}&pageSize=${itemsPerPage}&status`);
         if (response && response.data) {
+          console.log('TaksList 컴포넌트', response.data.message);
           setCallTaskListData(response.data.data.data);
         }
       } catch (error) {
@@ -41,7 +54,7 @@ export default function TaskList() {
     };
 
     callTaskList().catch(console.error);
-  }, []);
+  }, [page]);
 
   if (!user) {
     return null;
@@ -129,7 +142,7 @@ export default function TaskList() {
           pageLength={userTaskList.length}
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
+          setCurrentPage={handlePageChange}
         />
       </Styled.MainPageContainer>
     </>
