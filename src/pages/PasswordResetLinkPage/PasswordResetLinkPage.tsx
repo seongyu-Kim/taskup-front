@@ -1,9 +1,10 @@
-import { MainView, InputBox, Form, SubmitButton, ErrorText } from './PasswordResetLinkPage.styled';
+import { MainView, InputBox, Form, SubmitButton } from './PasswordResetLinkPage.styled';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useUserStore } from '../../stores/UserStore/userStore';
-
+import { ErrorMessage } from '@hookform/error-message';
+import { UserPaths } from '../../routes/userPath';
+import { apiRequest } from '../../apis/apiClient';
 interface PasswordResetFormData {
   newPassword: string;
   confirmPassword: string;
@@ -15,54 +16,56 @@ export default function PasswordResetLinkPage() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<PasswordResetFormData>();
-  const [resetSuccess, setResetSuccess] = useState(false);
-  const [isTokenValid, setIsTokenValid] = useState(false);
-  const resetPassword = useUserStore((state) => state.resetPassword);
+  } = useForm<PasswordResetFormData>({ mode: 'onChange' });
   const [searchParams] = useSearchParams();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const email = decodeURIComponent(searchParams.get('email') || '');
-  const token = decodeURIComponent(searchParams.get('token') || '');
+  const token = searchParams.get('token');
 
   useEffect(() => {
-    console.log('URL Email:', email);
-    console.log('URL Token:', token);
-    if (!email || !token) {
-      alert('유효하지 않은 접근입니다.');
-      navigate('/login');
-      return;
+    if (!token) {
+      setErrorMessage('유효하지 않은 접근입니다.');
     }
+  }, [token]);
 
-    const storedToken = localStorage.getItem(`resetToken-${email}`);
-    if (storedToken === token) {
-      setIsTokenValid(true);
-    } else {
-      alert('유효하지 않은 링크입니다.');
-      navigate('/login');
-    }
-  }, [email, token, navigate]);
+  const onSubmit = async (data: PasswordResetFormData) => {
+    if (!token) return;
 
-  const onSubmit = (data: PasswordResetFormData) => {
-    if (!isTokenValid) {
-      alert('유효하지 않은 접근입니다.');
-      return;
-    }
+    setIsSubmitting(true);
+    setErrorMessage(null);
 
     if (data.newPassword !== data.confirmPassword) {
-      alert('비밀번호가 일치하지 않습니다.');
+      setErrorMessage('비밀번호가 일치하지 않습니다.');
+      setIsSubmitting(false);
       return;
     }
-    resetPassword(email!, data.newPassword);
-    setResetSuccess(true);
-    alert('비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.');
-    navigate('/login');
+
+    // API 호출
+    const { error } = await apiRequest('post', '/password-reset/confirm', {
+      token,
+      newPassword: data.newPassword,
+    });
+
+    if (error) {
+      setErrorMessage(error);
+    } else {
+      setIsSuccess(true);
+      alert('비밀번호가 성공적으로 변경되었습니다.');
+      navigate(UserPaths.login);
+    }
+
+    setIsSubmitting(false);
   };
 
   return (
     <MainView>
       <h1>비밀번호 재설정</h1>
-      {isTokenValid ? (
+      {isSuccess ? (
+        <p>비밀번호가 성공적으로 변경되었습니다!</p>
+      ) : (
         <>
           <p>새로운 비밀번호를 설정하세요.</p>
           <Form onSubmit={handleSubmit(onSubmit)}>
@@ -80,7 +83,10 @@ export default function PasswordResetLinkPage() {
                 })}
               />
             </InputBox>
-            {errors.newPassword && <ErrorText>{errors.newPassword.message}</ErrorText>}
+            <ErrorMessage
+              errors={errors}
+              name="newPassword"
+              render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
             <InputBox>
               <label htmlFor="confirmPassword">비밀번호 확인</label>
@@ -95,15 +101,15 @@ export default function PasswordResetLinkPage() {
                 })}
               />
             </InputBox>
-            {errors.confirmPassword && <ErrorText>{errors.confirmPassword.message}</ErrorText>}
+            <ErrorMessage
+              errors={errors}
+              name="confirmPassword"
+              render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
             <SubmitButton type="submit">비밀번호 재설정</SubmitButton>
           </Form>
         </>
-      ) : (
-        <p>유효하지 않은 링크입니다.</p>
       )}
-      {resetSuccess && <p>비밀번호가 성공적으로 변경되었습니다!</p>}
     </MainView>
   );
 }
