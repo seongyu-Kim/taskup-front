@@ -4,6 +4,7 @@ import { RiCloseLargeFill } from 'react-icons/ri';
 import { handleModalCloseClick } from '@utils/HandleModalCloseClick';
 import { useEffect, useState } from 'react';
 import axios from '@api/axios';
+import MainPageDefaultButton from '@components/MainPageDefaultButton/MainPageDefaultButton';
 
 interface NoticeDataType {
   id: number;
@@ -62,12 +63,12 @@ export default function NoticeModal() {
               })}
             </ul>
           </Styled.NoticeModalBodyBox>
-          <Styled.NoticeModalCloseButton
+          <MainPageDefaultButton
             onClick={() => {
               setIsOpen(false);
             }}>
             닫기
-          </Styled.NoticeModalCloseButton>
+          </MainPageDefaultButton>
         </Styled.NoticeModalBox>
       </Styled.NoticeModalContainer>
     </>

@@ -8,6 +8,7 @@ import { handleFileSelectorClick } from '@utils/HandleFileSelectorClick';
 import { useUserStore } from '@stores/UserStore/userStore';
 import { useNavigate } from 'react-router-dom';
 import { useProfileImgStore } from '@stores/ProfileImgStore/ProfileImgStore';
+import MainPageDefaultButton from '@components/MainPageDefaultButton/MainPageDefaultButton';
 
 export default function ProfileModal() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -102,9 +103,13 @@ export default function ProfileModal() {
           }}>
           <Styled.ProfileModalHeaderBox>
             <p>프로필</p>
-            <Styled.ProfileCompleteButton onClick={handleCompleteButtonClick}>
+            <MainPageDefaultButton
+              onClick={handleCompleteButtonClick}
+              position="absolute"
+              right="10px"
+              width="50px">
               완료
-            </Styled.ProfileCompleteButton>
+            </MainPageDefaultButton>
           </Styled.ProfileModalHeaderBox>
           <Styled.ProfileModalBodyBox>
             <Styled.ProfileModalImgBox>
@@ -126,9 +131,9 @@ export default function ProfileModal() {
             />
             <Styled.ProfileModalMainBox>
               <Styled.ProfileNameText>{name}</Styled.ProfileNameText>
-              <Styled.ProfileLogOutButton onClick={handleLogoutClick}>
+              <MainPageDefaultButton onClick={handleLogoutClick} backgroundColor="red" width="100%">
                 로그아웃
-              </Styled.ProfileLogOutButton>
+              </MainPageDefaultButton>
             </Styled.ProfileModalMainBox>
           </Styled.ProfileModalBodyBox>
         </Styled.ProfileModalBox>
