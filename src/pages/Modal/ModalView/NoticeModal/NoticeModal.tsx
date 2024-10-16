@@ -78,7 +78,6 @@ export default function NoticeModal() {
     <>
       <Styled.NoticeModalContainer onClick={() => setIsOpen(false)}>
         <RiCloseLargeFill className="closeIcon" />
-        <button onClick={() => console.log(noticeData)}>데이터 확인</button>
         <Styled.NoticeModalBox onClick={handleModalCloseClick}>
           <Styled.NoticeModalHeaderBox>
             <p>알림</p>
