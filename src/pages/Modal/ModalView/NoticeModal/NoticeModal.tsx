@@ -56,7 +56,7 @@ export default function NoticeModal() {
         //임시
         const response = await apiMainPage.get('/tasks?page=1&pageSize=10&status');
         if (response) {
-          console.log('알림 컴포넌트', response.data.message);
+          console.log('알림 컴포넌트', response.data);
           setNoticeData(response.data.data.data);
         }
       } catch (error) {

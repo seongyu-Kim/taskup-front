@@ -48,7 +48,7 @@ export default function TaskList() {
           `/tasks?page=${page}&pageSize=${itemsPerPage}&status`,
         );
         if (response && response.data) {
-          console.log('TaksList 컴포넌트', response.data.message);
+          console.log('TaksList 컴포넌트', response.data);
           setCallTaskListData(response.data.data.data);
         }
       } catch (error) {

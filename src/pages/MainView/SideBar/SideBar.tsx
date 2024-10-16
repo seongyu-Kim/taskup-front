@@ -50,7 +50,6 @@ export default function SideBar() {
             </Styled.NameBox>
             <p>{email}</p>
           </Styled.ProfileBox>
-
           <Styled.SideBarButton
             bottom="140px"
             onClick={() => {

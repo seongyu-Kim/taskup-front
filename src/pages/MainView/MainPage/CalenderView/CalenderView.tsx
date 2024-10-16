@@ -55,7 +55,7 @@ export default function CalenderView() {
         //임시
         const response = await apiMainPage.get('tasks?page=1&pageSize=10&status');
         if (response) {
-          console.log('캘린더 컴포넌트', response.data.message);
+          console.log('캘린더 컴포넌트', response.data);
           setCallEvent(response.data.data.data);
         }
       } catch (error) {

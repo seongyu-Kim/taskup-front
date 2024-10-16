@@ -34,7 +34,7 @@ export default function MainPageDefaultButton({
   return (
     <Styled.BaseButton
       onClick={onClick}
-      color={textColor}
+      textColor={textColor}
       backgroundColor={backgroundColor}
       border={border}
       borderRadius={borderRadius}
