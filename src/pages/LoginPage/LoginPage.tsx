@@ -29,7 +29,6 @@ export default function LoginPage() {
 
     // API 호출
     const { data: responseData, error } = await apiRequest<{
-      token: string;
       email: string;
       name: string;
     }>('post', '/sign-in', { email: data.email, password: data.password });
@@ -38,8 +37,8 @@ export default function LoginPage() {
       setErrorMessage(error);
       console.error('로그인 에러:', error);
     } else if (responseData) {
-      const { token, email, name } = responseData;
-      login(email, name, token, true);
+      const { email, name } = responseData;
+      login(email, name, true);
       navigate(UserPaths.main);
     }
 

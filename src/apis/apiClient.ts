@@ -8,6 +8,7 @@ export interface ApiResponse<T> {
 const apiClient = axios.create({
   baseURL: 'http://kdt-react-node-1-team03.elicecoding.com:5000/user',
   timeout: 10000,
+  withCredentials: true,
 });
 
 // 타입 가드 함수: `message` 속성이 있는지 확인
