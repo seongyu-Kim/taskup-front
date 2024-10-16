@@ -10,7 +10,7 @@ interface Task {
   title: string;
   sub_title: string;
   content: string;
-  status: number;
+  status: string;
   members: string[];
   startDate: string;
   endDate: string;
@@ -70,7 +70,9 @@ export default function TaskList() {
   const handleCompleteClick = (id: number) => {
     setCallTaskListData((prevData) =>
       prevData.map((item) =>
-        item.id === id ? { ...item, status: item.status == 1 ? 2 : 1 } : item,
+        item.id === id
+          ? { ...item, status: item.status == 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS' }
+          : item,
       ),
     );
   };
@@ -127,7 +129,7 @@ export default function TaskList() {
                     onClick={() => {
                       handleCompleteClick(item.id);
                     }}>
-                    {item.status === 1 ? (
+                    {item.status === 'IN_PROGRESS' ? (
                       <Styled.StyledFaCircleCheck />
                     ) : (
                       <Styled.StyledFaRegCheckCircle />
