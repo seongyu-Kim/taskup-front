@@ -1,10 +1,5 @@
 import styled from 'styled-components';
-
-const breakpoints = {
-  desktop: '1024px',
-  tablet: '768px',
-  mobile: '480px',
-};
+import { breakpoints } from '../../styles/Responsive.styled';
 
 export const Form = styled.form`
   display: flex;
@@ -101,8 +96,6 @@ export const InputBox = styled.div`
     }
   }
 `;
-
-export const ErrorText = styled.p``;
 
 export const SubmitButton = styled.button`
   width: 100%;
