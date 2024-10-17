@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useUserStore, UserState } from '../../stores/UserStore/userStore';
 import { ErrorMessage } from '@hookform/error-message';
 import { UserPaths } from '../../routes/userPath';
-import { apiRequest } from '../../apis/apiClient';
+import { apiRequest } from '../../apis/authApi';
 interface LoginFormData {
   email: string;
   password: string;
