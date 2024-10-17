@@ -47,7 +47,7 @@ export const ProfileImg = styled.img`
 export const DetailDiv = styled.div`
   display: flex;
   height: 100%;
-  width: 300px;
+  width: 350px;
   flex-direction: column;
   align-items: center;
   margin-top: 150px;

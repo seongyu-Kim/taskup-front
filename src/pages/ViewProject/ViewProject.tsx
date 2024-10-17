@@ -40,7 +40,7 @@ const ViewProject: React.FC = () => {
     }
   };
 
-  //프로젝트 수정...
+  // 프로젝트 수정...
   // const handleUpdate = async () => {
   //   try {
   //     if (projectData) {
@@ -135,7 +135,12 @@ const ViewProject: React.FC = () => {
             </Styled.ContentFlex>
             <Styled.MarginTop top={60} />
             <Styled.BtnBox>
-              <Styled.GreenBtn1>수정하기</Styled.GreenBtn1>
+              <Styled.GreenBtn1
+                onClick={() => {
+                  navigation('/create', { state: projectData });
+                }}>
+                수정하기
+              </Styled.GreenBtn1>
               <Styled.GreenBtn2 onClick={handleDelete}>삭제하기</Styled.GreenBtn2>
             </Styled.BtnBox>
           </Styled.ContentBox>
