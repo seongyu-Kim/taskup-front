@@ -9,56 +9,25 @@ import { useUserStore } from '@stores/UserStore/userStore';
 
 interface NoticeDataType {
   id: number;
-  title: string;
+  name: string;
+  title?: string;
+  status?: string;
   startDate: string;
   endDate: string;
-}
-//임시
-interface Task {
-  id: number;
-  author?: string;
-  title: string;
-  sub_title: string;
-  content: string;
-  status: number;
-  members: string[];
-  startDate: string;
-  endDate: string;
-  user: {
-    name: string;
-  };
 }
 
 export default function NoticeModal() {
   const { isOpen, setIsOpen } = useModal();
-  // const [noticeData, setNoticeData] = useState<NoticeDataType[]>([]);
-  //임시
-  const [noticeData, setNoticeData] = useState<Task[]>([]);
+  const [noticeData, setNoticeData] = useState<NoticeDataType[]>([]);
   const { user } = useUserStore();
-
-  // useEffect(() => {
-  //   const callNoticeData = async () => {
-  //     try {
-  //       //추후 주소 변경
-  //       const response = await axios.get('/tasks/calender');
-  //       if (response) {
-  //         setNoticeData(response.data.data);
-  //       }
-  //     } catch (error) {
-  //       console.log('ERROR', error);
-  //     }
-  //   };
-  //   callNoticeData().catch(console.error);
-  // }, []);
 
   useEffect(() => {
     const callNoticeData = async () => {
       try {
         //임시
-        const response = await apiMainPage.get('/tasks?page=1&pageSize=10&status');
+        const response = await apiMainPage.get('/tasks/calender?startDate=2024-10-01&type=month');
         if (response) {
-          console.log('알림 컴포넌트', response.data);
-          setNoticeData(response.data.data.data);
+          setNoticeData(response.data.data);
         }
       } catch (error) {
         console.log('NOTICE DATA CALL ERROR', error);
@@ -71,9 +40,7 @@ export default function NoticeModal() {
     return null;
   }
   //사용자 필터링
-  const userNoticeData = noticeData.filter(
-    (item) => item.author!.includes(user.name) || item.members.includes(user.name),
-  );
+  const userNoticeData = noticeData.filter((item) => item.name.includes(user.name));
 
   if (!isOpen) {
     return null;
@@ -92,13 +59,13 @@ export default function NoticeModal() {
               {userNoticeData
                 .map((item) => ({
                   ...item,
-                  dDay: Math.ceil(
-                    (new Date(item.endDate).getTime() - Date.now()) / (1000 * 3600 * 24) + 1,
+                  dDay: Math.floor(
+                    (new Date(item.endDate).getTime() - Date.now()) / (1000 * 3600 * 24),
                   ),
                 }))
                 .sort((a, b) => a.dDay - b.dDay)
                 .map((item) => {
-                  if (item.dDay <= 7) {
+                  if (item.dDay <= 7 && item.dDay > 0) {
                     return (
                       <li key={item.id}>
                         <p>프로젝트명: {item.title}</p>

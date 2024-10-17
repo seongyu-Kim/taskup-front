@@ -7,17 +7,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 interface Task {
   id: number;
-  author?: string;
   title: string;
   sub_title: string;
   content: string;
   status: string;
-  members: string[];
   startDate: string;
   endDate: string;
-  user: {
-    name: string;
-  };
+  members: string[];
+  author: string;
 }
 
 export default function TaskList() {

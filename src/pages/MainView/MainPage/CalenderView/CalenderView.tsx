@@ -14,49 +14,26 @@ interface CalenderType {
 }
 
 //임시
-interface Task {
+interface CalenderType {
   id: number;
-  author?: string;
   title: string;
-  sub_title: string;
-  content: string;
-  status: number;
-  members: string[];
+  status?: number;
   startDate: string;
   endDate: string;
-  user: {
-    name: string;
-  };
+  members: string[];
+  author?: string;
 }
 
 export default function CalenderView() {
-  // const [callEvent, setCallEvent] = useState<CalenderType[]>([]);
-  //임시
-  const [callEvent, setCallEvent] = useState<Task[]>([]);
+  const [callEvent, setCallEvent] = useState<CalenderType[]>([]);
   const { user } = useUserStore();
-  // useEffect(() => {
-  //   const callCalenderEventData = async () => {
-  //     try {
-  //       //추후 링크 수정
-  //       const response = await axios.get('/tasks/calender');
-  //       if (response) {
-  //         setCallEvent(response.data.data);
-  //       }
-  //     } catch (error) {
-  //       console.log('ERROR', error);
-  //     }
-  //   };
-  //   callCalenderEventData().catch(console.error);
-  // }, []);
 
-  //임시 전체 데이터 가져오기
   useEffect(() => {
     const callCalenderEventData = async () => {
       try {
         //임시
         const response = await apiMainPage.get('tasks?page=1&pageSize=10&status');
         if (response) {
-          // console.log('캘린더 컴포넌트', response.data);
           setCallEvent(response.data.data.data);
         }
       } catch (error) {
