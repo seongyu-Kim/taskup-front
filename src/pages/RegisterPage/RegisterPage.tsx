@@ -12,15 +12,12 @@ import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { UserPaths } from '../../routes/userPath';
 import { apiRequest } from '../../apis/apiClient';
-// import axios, { AxiosError } from 'axios';
 interface RegisterFormData {
   email: string;
   name: string;
   password: string;
   password_check: string;
-  // number: string;
   verificationCode: string;
-  // code: string;
 }
 
 export default function RegisterPage() {

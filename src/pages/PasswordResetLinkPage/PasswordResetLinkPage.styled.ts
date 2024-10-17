@@ -17,17 +17,17 @@ export const Form = styled.form`
 
   @media (max-width: ${breakpoints.mobile}) {
     p {
-      font-size: 0.6rem;
-      margin-left: 0.2rem;
+      font-size: 0.6rem !important;
+      margin-left: 0.2rem !important;
     }
   }
 
   p {
     width: 100%;
-    font-size: 0.7rem;
-    text-align: left;
-    margin: 0 0 0.6rem 0.5rem;
-    color: #f93737;
+    font-size: 0.7rem !important;
+    text-align: left !important;
+    margin: 0 0 0.6rem 0.5rem !important;
+    color: #f93737 !important;
   }
 `;
 
@@ -96,8 +96,6 @@ export const InputBox = styled.div`
     }
   }
 `;
-
-export const ErrorText = styled.p``;
 
 export const SubmitButton = styled.button`
   width: 100%;
