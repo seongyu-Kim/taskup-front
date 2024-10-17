@@ -1,14 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
-export const GlobalStyleStyled = createGlobalStyle`
-    body {
-        height: 100%;
-        margin: 0;
-    }
-`;
-
-export const GlobalStyles = createGlobalStyle` 
+const GlobalStyles = createGlobalStyle` 
   ${reset} 
 
     a{
@@ -35,3 +28,5 @@ export const GlobalStyles = createGlobalStyle`
       cursor: pointer;
     }
 `;
+
+export default GlobalStyles;
