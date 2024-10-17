@@ -6,9 +6,9 @@ const ProtectedRoute: React.FC = () => {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   if (!isLoggedIn) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace></Navigate>;
   }
-  return <Outlet />;
+  return <Outlet></Outlet>;
 };
 
 export default ProtectedRoute;

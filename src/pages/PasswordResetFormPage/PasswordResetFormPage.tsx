@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import { MainView, InputBox, Form, SubmitButton, ButtonBox } from './PasswordResetFormPage.styled';
+import {
+  MainView,
+  InputBox,
+  Form,
+  SubmitButton,
+  ErrorText,
+  ButtonBox,
+} from './PasswordResetFormPage.styled';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import { ErrorMessage } from '@hookform/error-message';
-import { UserPaths } from '../../routes/userPath';
-// import axios, { AxiosError } from 'axios';
-import { apiRequest } from '../../apis/apiClient';
+import { Link, useNavigate } from 'react-router-dom';
+import { sendResetLink } from '../../utils/emailService';
 
 interface PasswordResetFormData {
   email: string;
@@ -16,28 +20,30 @@ export default function PasswordResetPage() {
     register,
     handleSubmit,
     formState: { errors },
-    trigger,
-  } = useForm<PasswordResetFormData>({ mode: 'onChange' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  } = useForm<PasswordResetFormData>();
   const [isEmailSent, setIsEmailSent] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const generateResetToken = () => {
+    return Math.random().toString(36).substring(2, 10);
+  };
 
   const onSubmit = async (data: PasswordResetFormData) => {
-    setIsSubmitting(true);
-    setErrorMessage(null);
+    const token = generateResetToken();
+    const resetLink = `http://localhost:3000/password-reset/confirm?email=${encodeURIComponent(data.email)}&token=${encodeURIComponent(token)}`;
+    localStorage.setItem(`resetToken-${data.email}`, token);
 
-    const { error } = await apiRequest('post', '/password-reset', {
-      email: data.email,
-    });
+    console.log('Generated Reset Link:', resetLink);
 
-    if (error) {
-      setErrorMessage(error);
-    } else {
-      setIsEmailSent(true);
-      alert('비밀번호 재설정 링크가 이메일로 전송되었습니다.');
+    try {
+      await sendResetLink(data.email, resetLink);
+      alert(`비밀번호 재설정 링크가 이메일로 전송되었습니다`);
+      navigate(
+        `/password-reset/confirm?email=${encodeURIComponent(data.email)}&token=${encodeURIComponent(token)}`,
+      );
+    } catch (error) {
+      alert(`이메일 전송 중 오류가 발생했습니다. 다시 시도해주세요.: ${error}`);
     }
-
-    setIsSubmitting(false);
   };
 
   return (
@@ -54,19 +60,15 @@ export default function PasswordResetPage() {
               required: '이메일을 입력해주세요.',
               pattern: /^\S+@\S+$/i,
             })}
-            onBlur={() => trigger('email')}
           />
         </InputBox>
-        <ErrorMessage
-          errors={errors}
-          name="email"
-          render={({ message }) => <p>{message}</p>}></ErrorMessage>
+        {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
         <SubmitButton type="submit">재설정 링크 보내기</SubmitButton>
       </Form>
       {isEmailSent && <p>링크가 전송되었습니다. 이메일을 확인하세요!</p>}
       <ButtonBox>
-        <Link to={UserPaths.login}>로그인으로 돌아가기</Link>
-        <Link to={UserPaths.register}>계정이 없으신가요? 회원가입</Link>
+        <Link to="/login">로그인으로 돌아가기</Link>
+        <Link to="/register">계정이 없으신가요? 회원가입</Link>
       </ButtonBox>
     </MainView>
   );
