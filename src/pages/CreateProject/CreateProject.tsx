@@ -9,7 +9,6 @@ import SideBar from '../MainView/SideBar/SideBar';
 import { CSSProperties } from 'styled-components';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import apiMainPage from '../../apis/apiMainPage';
-import axios from 'axios';
 
 interface ProjectData {
   title: string;
