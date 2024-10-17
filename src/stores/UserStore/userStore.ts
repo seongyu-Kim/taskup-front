@@ -14,30 +14,24 @@ export const useUserStore = create<UserState>((set) => ({
 
   login: (email: string, name: string) => {
     set({ user: { email, name }, isLoggedIn: true });
-    // const storage = rememberMe ? localStorage : sessionStorage;
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('user', JSON.stringify({ email, name }));
   },
   logout: async () => {
     try {
       await apiRequest('post', '/logout');
+      console.log('로그아웃 성공');
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('user');
     } catch (error) {
       console.error('로그아웃 실패:', error);
     }
     set({ user: null, isLoggedIn: false });
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('user');
-    sessionStorage.removeItem('isLoggedIn');
-    sessionStorage.removeItem('user');
   },
   restoreLogin: async () => {
-    const isLoggedIn =
-      localStorage.getItem('isLoggedIn') === 'true' ||
-      sessionStorage.getItem('isLoggedIn') === 'true';
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-    const storedUser =
-      JSON.parse(localStorage.getItem('user') || 'null') ||
-      JSON.parse(sessionStorage.getItem('user') || 'null');
+    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
 
     if (isLoggedIn && storedUser) {
       set({ user: storedUser, isLoggedIn: true });
