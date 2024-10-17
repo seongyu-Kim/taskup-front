@@ -4,57 +4,90 @@ import {
   InputBox,
   Form,
   SubmitButton,
-  ErrorText,
   ButtonBox,
   AuthButton,
 } from './RegisterPage.styled';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { sendEmail } from '../../utils/emailService';
+import { ErrorMessage } from '@hookform/error-message';
+import { UserPaths } from '../../routes/userPath';
+import { apiRequest } from '../../apis/apiClient';
+// import axios, { AxiosError } from 'axios';
 interface RegisterFormData {
   email: string;
   name: string;
   password: string;
   password_check: string;
-  number: string;
+  // number: string;
+  verificationCode: string;
+  // code: string;
 }
 
 export default function RegisterPage() {
-  const [sentCode, setSentCode] = useState<string | null>(null);
   const [isCodeSent, setIsCodeSent] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<RegisterFormData>();
+    trigger,
+  } = useForm<RegisterFormData>({ mode: 'onChange' });
 
   // 이메일로 인증번호 전송 함수
   const sendVerificationCode = async (email: string) => {
-    const code = Math.floor(1000 + Math.random() * 9000).toString();
-    await sendEmail(email, code);
-    setSentCode(code);
-    setIsCodeSent(true);
-    alert(`인증번호가 ${email}로 전송되었습니다.`);
+    setErrorMessage(null);
+
+    // API 호출
+    const { data, error } = await apiRequest<{ code: string }, { email: string }>(
+      'post',
+      '/email-code ',
+      { email },
+    );
+
+    if (error) {
+      setErrorMessage('이메일 전송 중 오류가 발생했습니다.');
+    } else if (data) {
+      alert('인증번호가 이메일로 전송되었습니다.');
+      setVerificationCode(data.code);
+      setIsCodeSent(true);
+    }
   };
 
   // 회원가입 처리 함수
-  const onSubmit = (data: RegisterFormData) => {
-    if (data.number !== sentCode) {
-      alert('인증번호가 일치하지 않습니다.');
-      return;
+  const onSubmit = async (formData: RegisterFormData) => {
+    try {
+      console.log('폼 제출 데이터:', formData);
+      setIsSubmitting(true);
+      setErrorMessage(null);
+
+      const response = await apiRequest<
+        null,
+        { code: string; email: string; name: string; password: string }
+      >('post', '/sign-up', {
+        code: formData.verificationCode,
+        email: formData.email,
+        name: formData.name,
+        password: formData.password,
+      });
+
+      // API 응답 처리
+      if (response.error) {
+        setErrorMessage(response.error);
+        console.error('회원가입 에러:', response.error);
+      } else {
+        alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+        navigate(UserPaths.login);
+      }
+    } catch (error) {
+      console.error('API 호출 중 오류:', error);
+      setErrorMessage('회원가입 중 문제가 발생했습니다. 다시 시도해 주세요.');
+    } finally {
+      setIsSubmitting(false); 
     }
-
-    const userData = {
-      email: data.email,
-      name: data.name,
-      password: data.password,
-    };
-    localStorage.setItem('userData', JSON.stringify(userData));
-
-    alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
-    navigate('/login');
   };
 
   return (
@@ -76,28 +109,32 @@ export default function RegisterPage() {
                 message: '유효한 이메일 주소를 입력하세요.',
               },
             })}
+            onBlur={() => trigger('email')}
             disabled={isCodeSent}
           />
         </InputBox>
-        {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+        <ErrorMessage
+          errors={errors}
+          name="email"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
-        <AuthButton
-          type="button"
-          onClick={() => sendVerificationCode(watch('email'))}
-          disabled={isCodeSent}>
+        <AuthButton type="button" onClick={() => sendVerificationCode(watch('email'))}>
           인증번호 받기
         </AuthButton>
 
         <InputBox>
-          <label htmlFor="number">인증번호</label>
+          <label htmlFor="verificationCode">인증번호</label>
           <input
-            type="number"
-            id="number"
+            type="text"
+            id="verificationCode"
             placeholder="인증번호를 입력하세요."
-            {...register('number', { required: '인증번호를 입력해주세요.' })}
+            {...register('verificationCode', { required: '인증번호를 입력해주세요.' })}
           />
-          {errors.number && <ErrorText>{errors.number.message}</ErrorText>}
         </InputBox>
+        <ErrorMessage
+          errors={errors}
+          name="verificationCode"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <InputBox>
           <label htmlFor="name">이름</label>
@@ -113,8 +150,11 @@ export default function RegisterPage() {
               },
             })}
           />
-          {errors.name && <ErrorText>{errors.name.message}</ErrorText>}
         </InputBox>
+        <ErrorMessage
+          errors={errors}
+          name="name"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <InputBox>
           <label htmlFor="password">비밀번호</label>
@@ -130,8 +170,11 @@ export default function RegisterPage() {
               },
             })}
           />
-          {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
         </InputBox>
+        <ErrorMessage
+          errors={errors}
+          name="password"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <InputBox>
           <label htmlFor="password_check">비밀번호 확인</label>
@@ -144,13 +187,18 @@ export default function RegisterPage() {
               validate: (value) => value === watch('password') || '비밀번호가 일치하지 않습니다.',
             })}
           />
-          {errors.password_check && <ErrorText>{errors.password_check.message}</ErrorText>}
         </InputBox>
+        <ErrorMessage
+          errors={errors}
+          name="password_check"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
-        <SubmitButton type="submit">회원가입 하기</SubmitButton>
+        <SubmitButton type="submit" disabled={isSubmitting}>
+          회원가입 하기
+        </SubmitButton>
       </Form>
       <ButtonBox>
-        <Link to="/login">로그인 페이지로 돌아가기</Link>
+        <Link to={UserPaths.login}>로그인 페이지로 돌아가기</Link>
       </ButtonBox>
     </MainView>
   );
