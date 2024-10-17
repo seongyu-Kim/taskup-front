@@ -23,6 +23,9 @@ export const CalenderBox = styled.div`
     line-height: 29px;
     color: white;
     border-radius: 10px 10px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   // toolbar 버튼
