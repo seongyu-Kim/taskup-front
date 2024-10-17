@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useProfileImgStore } from '@stores/ProfileImgStore/ProfileImgStore';
 import { useEffect, useState } from 'react';
 import defaultImage from '@assets/임시 프로필사진.png';
+import { useUserStore } from '@stores/UserStore/userStore';
 
 export default function SideBar() {
   const { setIsOpen } = useModal();
@@ -14,8 +15,9 @@ export default function SideBar() {
   const [nowImg, setNowImg] = useState<string | null>(null);
   const navigate = useNavigate();
   //로컬스토리지에서 유저 데이터 가져오기
-  const userData = localStorage.getItem('userData');
-  const { email, name }: { email: string; name: string } = JSON.parse(userData!);
+  // const userData = localStorage.getItem('userData');
+  // const { email, name }: { email: string; name: string } = JSON.parse(userData!);
+  const { user } = useUserStore();
   //초기 프로필 사진 없을 때 기본 사진
   useEffect(() => {
     if (imageUrl == '/static/media/임시 프로필사진.4d93130773eae276d513.png') {
@@ -45,10 +47,10 @@ export default function SideBar() {
                 setModalState('Profile');
                 setIsOpen(true);
               }}>
-              <p>{name}</p>
+              <p>{user!.name}</p>
               <HiPencilSquare />
             </Styled.NameBox>
-            <p>{email}</p>
+            <p>{user!.email}</p>
           </Styled.ProfileBox>
           <Styled.SideBarButton
             bottom="140px"

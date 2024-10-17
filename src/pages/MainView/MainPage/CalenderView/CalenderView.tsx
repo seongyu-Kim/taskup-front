@@ -9,14 +9,6 @@ import { useUserStore } from '@stores/UserStore/userStore';
 interface CalenderType {
   id: number;
   title: string;
-  startDate: string;
-  endDate: string;
-}
-
-//임시
-interface CalenderType {
-  id: number;
-  title: string;
   status?: number;
   startDate: string;
   endDate: string;
