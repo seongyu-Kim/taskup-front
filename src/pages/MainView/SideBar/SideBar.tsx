@@ -1,74 +1,80 @@
-import logo from '@assets/logo_color.webp';
+import logo from '../../../assets/logo_color.webp';
 import { HiPencilSquare } from 'react-icons/hi2';
-import * as Styled from './SideBar.styled';
-import { useModal, useModalState } from '@stores/ModalStore/ModalStore';
+import {
+  DetailDiv,
+  LogoImg,
+  NameBox,
+  ProfileBox,
+  ProfileImg,
+  SideBarButton,
+  SidebarContainer,
+} from './SideBar.styled';
+import { useModal, useModalState } from '../../../stores/ModalStore/ModalStore';
 import { useNavigate } from 'react-router-dom';
-import { useProfileImgStore } from '@stores/ProfileImgStore/ProfileImgStore';
+import { useProfileImgStore, useSaveState } from '../../../stores/ProfileImgStore/ProfileImgStore';
 import { useEffect, useState } from 'react';
-import defaultImage from '@assets/임시 프로필사진.png';
-import { useUserStore } from '@stores/UserStore/userStore';
 
 export default function SideBar() {
   const { setIsOpen } = useModal();
   const { setModalState } = useModalState();
-  const { imageUrl } = useProfileImgStore();
-  const [nowImg, setNowImg] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { imageUrl } = useProfileImgStore();
+  const { saveState, setSaveState } = useSaveState();
+  const [localImg, setLocalImg] = useState<string | null>(null);
   //로컬스토리지에서 유저 데이터 가져오기
-  // const userData = localStorage.getItem('userData');
-  // const { email, name }: { email: string; name: string } = JSON.parse(userData!);
-  const { user } = useUserStore();
+  const userData = localStorage.getItem('userData');
+  const { email, name }: { email: string; name: string } = JSON.parse(userData!);
   //초기 프로필 사진 없을 때 기본 사진
   useEffect(() => {
-    if (imageUrl == '/static/media/임시 프로필사진.4d93130773eae276d513.png') {
-      const saveImg = localStorage.getItem('profileImage');
-      if (saveImg === null) {
-        setNowImg(imageUrl);
-      }
+    const saveImg = localStorage.getItem('profileImage');
+    if (saveImg === null) {
+      setLocalImg(imageUrl);
     }
   }, []);
 
   useEffect(() => {
     const saveImg = localStorage.getItem('profileImage');
     if (saveImg) {
-      setNowImg(saveImg);
+      setLocalImg(saveImg);
     }
   }, [imageUrl]);
 
   return (
     <>
-      <Styled.SidebarContainer>
-        <Styled.LogoImg src={logo} alt="TaskUp" />
-        <Styled.DetailDiv>
-          <Styled.ProfileBox>
-            <Styled.ProfileImg src={nowImg || defaultImage} alt="프로필 사진" />
-            <Styled.NameBox
+      <SidebarContainer>
+        <LogoImg src={logo} alt={'TaskUp'} />
+        <DetailDiv>
+          <ProfileBox>
+            <ProfileImg src={localImg!} alt={'프로필 사진'} />
+            <NameBox
               onClick={() => {
                 setModalState('Profile');
                 setIsOpen(true);
+                setSaveState(!saveState);
               }}>
-              <p>{user!.name}</p>
+              <p>{name}</p>
               <HiPencilSquare />
-            </Styled.NameBox>
-            <p>{user!.email}</p>
-          </Styled.ProfileBox>
-          <Styled.SideBarButton
-            bottom="140px"
+            </NameBox>
+            <p>{email}</p>
+          </ProfileBox>
+
+          <SideBarButton
+            bottom={'140px'}
             onClick={() => {
-              navigate('/create');
+              navigate('/create'); //////
             }}>
             새 프로젝트
-          </Styled.SideBarButton>
-          <Styled.SideBarButton
-            bottom="80px"
+          </SideBarButton>
+          <SideBarButton
+            bottom={'80px'}
             onClick={() => {
               setModalState('Notice');
               setIsOpen(true);
             }}>
             알림 확인
-          </Styled.SideBarButton>
-        </Styled.DetailDiv>
-      </Styled.SidebarContainer>
+          </SideBarButton>
+        </DetailDiv>
+      </SidebarContainer>
     </>
   );
 }

@@ -1,17 +1,14 @@
 import styled from 'styled-components';
-import SidebarDetailProps from '@/type/SidebarDetailType';
+import SidebarDetailProps from '../../../types/SidebarDetailType';
 
 //사이드 바 기본
 export const SidebarContainer = styled.div`
   background: #2d3f63;
   height: 100%;
-  width: 300px;
-  padding-left: 25px;
-  padding-right: 25px;
+  width: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.75);
 `;
 //사이드 바 기본 확장 - 사진, 이름, 아이콘
 export const ProfileBox = styled.div`

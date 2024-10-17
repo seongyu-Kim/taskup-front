@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@craco/craco": "^7.1.0",
     "@eslint/js": "^9.12.0",
     "@fullcalendar/common": "^5.11.5",
     "@fullcalendar/core": "^6.1.15",
@@ -12,7 +11,6 @@
     "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
-    "@hookform/error-message": "^2.0.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -49,8 +47,8 @@
     "zustand": "^5.0.0-rc.2"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -77,8 +75,7 @@
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "prettier": "^3.3.3",
-    "tsconfig-paths-webpack-plugin": "^4.1.0"
+    "prettier": "^3.3.3"
   },
   "type": "module"
 }

@@ -14,9 +14,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": "src",
+    "jsx": "react-jsx"
   },
-  "include": ["src/**/*", "global.d.ts", "fullcalendar.d.ts"],
-  "extends": "./tsconfig.paths.json"
+  "include": ["src/**/*", "global.d.ts", "fullcalendar.d.ts"]
 }

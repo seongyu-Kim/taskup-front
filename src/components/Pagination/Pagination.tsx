@@ -1,17 +1,19 @@
-import * as Styled from '@components/Pagination/Pagination.styled';
+import {
+  PageNumText,
+  PaginationBox,
+  PaginationButton,
+} from '../../pages/MainView/MainPage/TaskList/TaskList.styled';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
-import { PaginationProps } from '@/type/PaginationType';
+import { PaginationProps } from '../../types/PaginationType';
 
 export default function Pagination({
-  totalItems,
+  arr,
   itemsPerPage,
   currentPage,
   setCurrentPage,
 }: PaginationProps) {
-  const totalPages = Math.ceil(totalItems / itemsPerPage); //총 페이지
-  const pageGroup = Math.ceil(currentPage / itemsPerPage); // 페이지 그룹 계산
-  const viewPageFirst = (pageGroup - 1) * itemsPerPage + 1; // 페이지 그룹의 첫번째 페이지 번호
-  const viewPageLast = Math.min(pageGroup * itemsPerPage, totalPages); // 페이지 그룹의 마지막 페이지 번호
+  const totalItems = arr.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const goToPreviousPage = () => {
     if (currentPage > 1) {
@@ -30,28 +32,21 @@ export default function Pagination({
   };
 
   return (
-    <Styled.PaginationBox>
-      <Styled.PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
+    <PaginationBox>
+      <PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
         <GrFormPrevious className="icons" />
-      </Styled.PaginationButton>
-      {totalPages === 0 ? (
-        <div></div>
-      ) : (
-        [...Array(viewPageLast - viewPageFirst + 1)].map((_, index) => {
-          const page = viewPageFirst + index;
-          return (
-            <Styled.PageNumText
-              onClick={() => goToPage(page - 1)}
-              key={page}
-              isActive={currentPage === page}>
-              {page}
-            </Styled.PageNumText>
-          );
-        })
-      )}
-      <Styled.PaginationButton onClick={goToNextPage} disabled={currentPage === totalPages}>
+      </PaginationButton>
+      {[...Array(totalPages)].map((_, index) => (
+        <PageNumText
+          onClick={() => goToPage(index)}
+          key={index}
+          isActive={currentPage === index + 1}>
+          {index + 1}
+        </PageNumText>
+      ))}
+      <PaginationButton onClick={goToNextPage} disabled={currentPage === totalPages}>
         <GrFormNext className="icons" />
-      </Styled.PaginationButton>
-    </Styled.PaginationBox>
+      </PaginationButton>
+    </PaginationBox>
   );
 }
