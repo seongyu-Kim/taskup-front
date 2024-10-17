@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import * as Styled from './TaskList.styled';
 import Pagination from '@components/Pagination/Pagination';
-import apiMainPage from '@api/apiMainPage';
+import apiMainPage from '@apis/apiMainPage';
 import { useUserStore } from '@stores/UserStore/userStore';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface Task {
   id: number;
@@ -23,34 +23,55 @@ interface Task {
 export default function TaskList() {
   const { user } = useUserStore();
   const itemsPerPage = 10;
-  const [currentPage, setCurrentPage] = useState(1);
-  // const [completedState, setCompletedState] = useState('');
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const page = parseInt(searchParams.get('page') || '1', 10);
-
+  const [totalItems, setTotalItems] = useState(0);
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const getPageFromUrl = () => {
+    const params = new URLSearchParams(location.search);
+    return parseInt(params.get('page') || '1', 10);
+  };
+
+  const [currentPage, setCurrentPage] = useState(getPageFromUrl());
+
+  useEffect(() => {
+    setCurrentPage(getPageFromUrl());
+  }, [location.search]);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
-    setSearchParams({ page: newPage.toString() });
-    navigate(`/main/tasks?page=${newPage}&pageSize=${itemsPerPage}&status`);
+    const newSearchParams = new URLSearchParams({
+      page: newPage.toString(),
+      pageSize: itemsPerPage.toString(),
+      status: '',
+    });
+    navigate(
+      {
+        pathname: '/main/tasks',
+        search: newSearchParams.toString(),
+      },
+      { replace: true },
+    );
   };
 
-  //데이터 요청 값 저장
   const [callTaskListData, setCallTaskListData] = useState<Task[]>([]);
 
-  //데이터 요청
   useEffect(() => {
     const callTaskList = async () => {
+      if (!user || !user.name) {
+        return;
+      }
       try {
-        //나중에 주소 변경
         const response = await apiMainPage.get(
-          `/tasks?page=${page}&pageSize=${itemsPerPage}&status`,
+          `/tasks?page=${currentPage}&pageSize=${itemsPerPage}&status`,
         );
         if (response && response.data) {
-          console.log('TaskList 컴포넌트', response.data);
-          setCallTaskListData(response.data.data.data);
+          const allTasks = response.data.data.data;
+          const userTasks = allTasks.filter(
+            (item: Task) => item.author?.includes(user.name) || item.members.includes(user.name),
+          );
+          setCallTaskListData(userTasks);
+          setTotalItems(response.data.data.total);
         }
       } catch (error) {
         console.log('TASKLIST DATA CALL ERROR', error);
@@ -58,100 +79,97 @@ export default function TaskList() {
     };
 
     callTaskList().catch(console.error);
-  }, [page]);
+  }, [currentPage, user]);
 
   if (!user) {
     return null;
   }
-  //유저가 멤버로 들어가 있는 목록 필터링해서 넣어주기~
-  const userTaskList = callTaskListData.filter(
-    (item) => item.author!.includes(user.name) || item.members.includes(user.name),
-  );
-  const currentTasks = userTaskList.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
-  //체크박스
+
+  const currentTasks = callTaskListData;
+
   const handleCompleteClick = (id: number) => {
     setCallTaskListData((prevData) =>
       prevData.map((item) =>
         item.id === id
-          ? { ...item, status: item.status == 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS' }
+          ? {
+              ...item,
+              status: item.status === 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS',
+            }
           : item,
       ),
     );
   };
-  return userTaskList.length == 0 ? (
-    <>
-      <Styled.MainPageContainer>
-        <Styled.ProjectListContainer>
-          <Styled.ProjectListArea>
-            <Styled.ProjectListTitle>
-              <Styled.TitleText>Num</Styled.TitleText>
-            </Styled.ProjectListTitle>
-            <Styled.ProjectListTitleName>
-              <Styled.TitleText>Name</Styled.TitleText>
-            </Styled.ProjectListTitleName>
-            <Styled.ProjectListTitle>
-              <Styled.TitleText>CheckBox</Styled.TitleText>
-            </Styled.ProjectListTitle>
-          </Styled.ProjectListArea>
-          <Styled.ProjectList>
-            <p>프로젝트가 없습니다</p>
-          </Styled.ProjectList>
-        </Styled.ProjectListContainer>
-      </Styled.MainPageContainer>
-    </>
+
+  return callTaskListData.length === 0 ? (
+    <Styled.MainPageContainer>
+      <Styled.ProjectListContainer>
+        <Styled.ProjectListArea>
+          <Styled.ProjectListTitle>
+            <Styled.TitleText>Num</Styled.TitleText>
+          </Styled.ProjectListTitle>
+          <Styled.ProjectListTitleName>
+            <Styled.TitleText>Name</Styled.TitleText>
+          </Styled.ProjectListTitleName>
+          <Styled.ProjectListTitle>
+            <Styled.TitleText>CheckBox</Styled.TitleText>
+          </Styled.ProjectListTitle>
+        </Styled.ProjectListArea>
+        <Styled.ProjectList>
+          <p>프로젝트가 없습니다</p>
+        </Styled.ProjectList>
+      </Styled.ProjectListContainer>
+    </Styled.MainPageContainer>
   ) : (
-    <>
-      <Styled.MainPageContainer>
-        <Styled.ProjectListContainer>
-          <Styled.ProjectListArea>
-            <Styled.ProjectListTitle>
-              <Styled.TitleText>Num</Styled.TitleText>
-            </Styled.ProjectListTitle>
-            <Styled.ProjectListTitleName>
-              <Styled.TitleText>Name</Styled.TitleText>
-            </Styled.ProjectListTitleName>
-            <Styled.ProjectListTitle>
-              <Styled.TitleText>CheckBox</Styled.TitleText>
-            </Styled.ProjectListTitle>
-          </Styled.ProjectListArea>
-          <Styled.ProjectList>
-            {currentTasks.map((item, index) => (
-              <Styled.ProjectListItem
-                backgroundColor={index % 2 == 0 ? '#e0e0e0' : 'white'}
-                key={item.id}>
-                <Styled.ListTableBox>
-                  <Styled.ListTextValue>{item.id}</Styled.ListTextValue>
-                </Styled.ListTableBox>
-                <Styled.ListTextNameAreaBox>
-                  <Styled.ListTextValue>{item.title}</Styled.ListTextValue>
-                  <Styled.ListTextValue className="content">{`${item.content.slice(0, 10)}...`}</Styled.ListTextValue>
-                </Styled.ListTextNameAreaBox>
-                <Styled.ListTableBox>
-                  <Styled.ListTextValue
-                    onClick={() => {
-                      handleCompleteClick(item.id);
-                    }}>
-                    {item.status === 'COMPLETED' ? (
-                      <Styled.StyledFaCircleCheck />
-                    ) : (
-                      <Styled.StyledFaRegCheckCircle />
-                    )}
-                  </Styled.ListTextValue>
-                </Styled.ListTableBox>
-              </Styled.ProjectListItem>
-            ))}
-          </Styled.ProjectList>
-        </Styled.ProjectListContainer>
-        <Pagination
-          pageLength={userTaskList.length}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
-          setCurrentPage={handlePageChange}
-        />
-      </Styled.MainPageContainer>
-    </>
+    <Styled.MainPageContainer>
+      <Styled.ProjectListContainer>
+        <Styled.ProjectListArea>
+          <Styled.ProjectListTitle>
+            <Styled.TitleText>Num</Styled.TitleText>
+          </Styled.ProjectListTitle>
+          <Styled.ProjectListTitleName>
+            <Styled.TitleText>Name</Styled.TitleText>
+          </Styled.ProjectListTitleName>
+          <Styled.ProjectListTitle>
+            <Styled.TitleText>CheckBox</Styled.TitleText>
+          </Styled.ProjectListTitle>
+        </Styled.ProjectListArea>
+        <Styled.ProjectList>
+          {currentTasks.map((item, index) => (
+            <Styled.ProjectListItem
+              backgroundColor={index % 2 === 0 ? '#e0e0e0' : 'white'}
+              key={item.id}>
+              <Styled.ListTableBox>
+                <Styled.ListTextValue>{item.id}</Styled.ListTextValue>
+              </Styled.ListTableBox>
+              <Styled.ListTextNameAreaBox>
+                <Styled.ListTextValue>{item.title}</Styled.ListTextValue>
+                <Styled.ListTextValue className="content">{`${item.content.slice(
+                  0,
+                  10,
+                )}...`}</Styled.ListTextValue>
+              </Styled.ListTextNameAreaBox>
+              <Styled.ListTableBox>
+                <Styled.ListTextValue
+                  onClick={() => {
+                    handleCompleteClick(item.id);
+                  }}>
+                  {item.status === 'COMPLETED' ? (
+                    <Styled.StyledFaCircleCheck />
+                  ) : (
+                    <Styled.StyledFaRegCheckCircle />
+                  )}
+                </Styled.ListTextValue>
+              </Styled.ListTableBox>
+            </Styled.ProjectListItem>
+          ))}
+        </Styled.ProjectList>
+      </Styled.ProjectListContainer>
+      <Pagination
+        totalItems={totalItems}
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        setCurrentPage={handlePageChange}
+      />
+    </Styled.MainPageContainer>
   );
 }

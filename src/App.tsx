@@ -28,7 +28,7 @@ function App() {
       <Routes>
         <Route path="*" element={<Navigate to={isLoggedIn ? '/main' : '/login'} />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/main" element={<MainPage />} />
+          <Route path="/main/*" element={<MainPage />} />
         </Route>
         <Route element={<AuthLayout />}>
           <Route

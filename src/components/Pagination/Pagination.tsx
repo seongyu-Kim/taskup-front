@@ -3,12 +3,12 @@ import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import { PaginationProps } from '@/type/PaginationType';
 
 export default function Pagination({
-  pageLength,
+  totalItems,
   itemsPerPage,
   currentPage,
   setCurrentPage,
 }: PaginationProps) {
-  const totalPages = Math.ceil(pageLength / itemsPerPage); //총 페이지
+  const totalPages = Math.ceil(totalItems / itemsPerPage); //총 페이지
   const pageGroup = Math.ceil(currentPage / itemsPerPage); // 페이지 그룹 계산
   const viewPageFirst = (pageGroup - 1) * itemsPerPage + 1; // 페이지 그룹의 첫번째 페이지 번호
   const viewPageLast = Math.min(pageGroup * itemsPerPage, totalPages); // 페이지 그룹의 마지막 페이지 번호
@@ -34,7 +34,7 @@ export default function Pagination({
       <Styled.PaginationButton onClick={goToPreviousPage} disabled={currentPage === 1}>
         <GrFormPrevious className="icons" />
       </Styled.PaginationButton>
-      {pageLength === 0 ? (
+      {totalPages === 0 ? (
         <div></div>
       ) : (
         [...Array(viewPageLast - viewPageFirst + 1)].map((_, index) => {

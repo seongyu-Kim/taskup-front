@@ -3,7 +3,7 @@ import { useModal } from '@stores/ModalStore/ModalStore';
 import { RiCloseLargeFill } from 'react-icons/ri';
 import { handleModalCloseClick } from '@utils/HandleModalCloseClick';
 import { useEffect, useState } from 'react';
-import apiMainPage from '@api/apiMainPage';
+import apiMainPage from '@apis/apiMainPage';
 import MainPageDefaultButton from '@components/MainPageDefaultButton/MainPageDefaultButton';
 import { useUserStore } from '@stores/UserStore/userStore';
 

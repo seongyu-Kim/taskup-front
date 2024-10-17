@@ -3,7 +3,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import { CalenderBox } from './CalenderView.styled';
 import { handleDayCellContent } from '@utils/CalenderUtils';
 import { useEffect, useState } from 'react';
-import apiMainPage from '@api/apiMainPage';
+import apiMainPage from '@apis/apiMainPage';
 import { useUserStore } from '@stores/UserStore/userStore';
 
 interface CalenderType {
@@ -56,7 +56,7 @@ export default function CalenderView() {
         //임시
         const response = await apiMainPage.get('tasks?page=1&pageSize=10&status');
         if (response) {
-          console.log('캘린더 컴포넌트', response.data);
+          // console.log('캘린더 컴포넌트', response.data);
           setCallEvent(response.data.data.data);
         }
       } catch (error) {
