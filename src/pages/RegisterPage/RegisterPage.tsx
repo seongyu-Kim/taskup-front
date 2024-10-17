@@ -11,7 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { UserPaths } from '../../routes/userPath';
-import { apiRequest } from '../../apis/apiClient';
+import { apiRequest } from '../../apis/authApi';
 interface RegisterFormData {
   email: string;
   name: string;
@@ -83,7 +83,7 @@ export default function RegisterPage() {
       console.error('API 호출 중 오류:', error);
       setErrorMessage('회원가입 중 문제가 발생했습니다. 다시 시도해 주세요.');
     } finally {
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
     }
   };
 

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { apiRequest } from '../../apis/apiClient';
+import { apiRequest } from '../../apis/authApi';
 export interface UserState {
   user: { email: string; name: string } | null;
   isLoggedIn: boolean;

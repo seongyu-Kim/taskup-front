@@ -5,7 +5,7 @@ export interface ApiResponse<T> {
   error: string | null;
 }
 
-const apiClient = axios.create({
+const authApi = axios.create({
   baseURL: 'http://kdt-react-node-1-team03.elicecoding.com:5000/user',
   timeout: 10000,
   withCredentials: true,
@@ -25,7 +25,7 @@ export async function apiRequest<T, D = unknown>(
   data?: D,
 ): Promise<ApiResponse<T>> {
   try {
-    const response = await apiClient({
+    const response = await authApi({
       method,
       url,
       data,
