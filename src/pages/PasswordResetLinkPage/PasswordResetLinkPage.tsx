@@ -1,4 +1,4 @@
-import { MainView, InputBox, Form, SubmitButton, ErrorText } from './PasswordResetLinkPage.styled';
+import { MainView, InputBox, Form, SubmitButton } from './PasswordResetLinkPage.styled';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -16,54 +16,48 @@ export default function PasswordResetLinkPage() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<PasswordResetFormData>();
-  const [resetSuccess, setResetSuccess] = useState(false);
-  const [isTokenValid, setIsTokenValid] = useState(false);
-  const resetPassword = useUserStore((state) => state.resetPassword);
-  const [searchParams] = useSearchParams();
+  } = useForm<PasswordResetFormData>({ mode: 'onChange' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const email = decodeURIComponent(searchParams.get('email') || '');
-  const token = decodeURIComponent(searchParams.get('token') || '');
+  // 쿼리 파라미터에서 email과 token 값 추출
+  const queryParams = new URLSearchParams(location.search);
+  const email = queryParams.get('email');
+  const token = queryParams.get('token');
 
-  useEffect(() => {
-    console.log('URL Email:', email);
-    console.log('URL Token:', token);
-    if (!email || !token) {
-      alert('유효하지 않은 접근입니다.');
-      navigate('/login');
-      return;
-    }
+  const onSubmit = async (data: PasswordResetFormData) => {
+    setIsSubmitting(true);
+    setErrorMessage(null);
 
-    const storedToken = localStorage.getItem(`resetToken-${email}`);
-    if (storedToken === token) {
-      setIsTokenValid(true);
+    // API 호출
+    const { error } = await apiRequest('post', '/password-reset/confirm', {
+      email,
+      token,
+      password: data.newPassword,
+      confirmPassword: data.confirmPassword,
+    });
+
+    if (error) {
+      setErrorMessage(error);
     } else {
-      alert('유효하지 않은 링크입니다.');
-      navigate('/login');
-    }
-  }, [email, token, navigate]);
+      setIsSuccess(true);
+      alert('비밀번호가 성공적으로 변경되었습니다.');
 
-  const onSubmit = (data: PasswordResetFormData) => {
-    if (!isTokenValid) {
-      alert('유효하지 않은 접근입니다.');
-      return;
+      navigate(UserPaths.login);
     }
 
-    if (data.newPassword !== data.confirmPassword) {
-      alert('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-    resetPassword(email!, data.newPassword);
-    setResetSuccess(true);
-    alert('비밀번호가 성공적으로 변경되었습니다. 로그인 페이지로 이동합니다.');
-    navigate('/login');
+    setIsSubmitting(false);
   };
 
   return (
     <MainView>
       <h1>비밀번호 재설정</h1>
-      {isTokenValid ? (
+      {isSuccess ? (
+        <p>비밀번호가 성공적으로 변경되었습니다!</p>
+      ) : (
         <>
           <p>새로운 비밀번호를 설정하세요.</p>
           <Form onSubmit={handleSubmit(onSubmit)}>
@@ -81,7 +75,10 @@ export default function PasswordResetLinkPage() {
                 })}
               />
             </InputBox>
-            {errors.newPassword && <ErrorText>{errors.newPassword.message}</ErrorText>}
+            <ErrorMessage
+              errors={errors}
+              name="newPassword"
+              render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
             <InputBox>
               <label htmlFor="confirmPassword">비밀번호 확인</label>
@@ -96,15 +93,15 @@ export default function PasswordResetLinkPage() {
                 })}
               />
             </InputBox>
-            {errors.confirmPassword && <ErrorText>{errors.confirmPassword.message}</ErrorText>}
+            <ErrorMessage
+              errors={errors}
+              name="confirmPassword"
+              render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
             <SubmitButton type="submit">비밀번호 재설정</SubmitButton>
           </Form>
         </>
-      ) : (
-        <p>유효하지 않은 링크입니다.</p>
       )}
-      {resetSuccess && <p>비밀번호가 성공적으로 변경되었습니다!</p>}
     </MainView>
   );
 }
