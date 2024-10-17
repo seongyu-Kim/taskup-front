@@ -32,8 +32,10 @@ export default function ProfileModal() {
   const localImg = localStorage.getItem('profileImage');
 
   //로컬 스토리지에서 유저 데이터 가져오기
-  const userData = localStorage.getItem('userData');
-  const { name }: { email: string; name: string } = JSON.parse(userData!);
+  // const userData = localStorage.getItem('userData');
+  // const { name }: { email: string; name: string } = JSON.parse(userData!);
+
+  const { user } = useUserStore();
 
   const handleImageSave = () => {
     if (!tempImgUrl && selectedFile === null) {
@@ -127,7 +129,7 @@ export default function ProfileModal() {
               onChange={handleImageChange}
             />
             <Styled.ProfileModalMainBox>
-              <Styled.ProfileNameText>{name}</Styled.ProfileNameText>
+              <Styled.ProfileNameText>{user!.name}</Styled.ProfileNameText>
               <MainPageDefaultButton onClick={handleLogoutClick} backgroundColor="red" width="100%">
                 로그아웃
               </MainPageDefaultButton>
