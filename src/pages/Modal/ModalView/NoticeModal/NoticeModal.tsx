@@ -71,8 +71,9 @@ export default function NoticeModal() {
     return null;
   }
   //사용자 필터링
-  // const userNoticeData = noticeData.filter((item) => item.members.includes(user.name));
-  const userNoticeData = noticeData.filter((item) => item.author!.includes('elice1'));
+  const userNoticeData = noticeData.filter(
+    (item) => item.author!.includes(user.name) || item.members.includes(user.name),
+  );
 
   if (!isOpen) {
     return null;

@@ -71,7 +71,9 @@ export default function CalenderView() {
   }
 
   // const userEventData = callEvent.filter((item) => item.members.includes(user.name));
-  const userEventData = callEvent.filter((item) => item.author!.includes('elice1'));
+  const userEventData = callEvent.filter(
+    (item) => item.author!.includes(user.name) || item.members.includes(user.name),
+  );
 
   return (
     <CalenderBox>

@@ -64,8 +64,9 @@ export default function TaskList() {
     return null;
   }
   //유저가 멤버로 들어가 있는 목록 필터링해서 넣어주기~
-  // const userTaskList = callTaskListData.filter((item) => item.members.includes(user.name));
-  const userTaskList = callTaskListData.filter((item) => item.author!.includes('elice1'));
+  const userTaskList = callTaskListData.filter(
+    (item) => item.author!.includes(user.name) || item.members.includes(user.name),
+  );
   const currentTasks = userTaskList.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
