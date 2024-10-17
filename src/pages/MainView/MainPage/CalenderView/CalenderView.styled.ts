@@ -6,7 +6,12 @@ export const CalenderBox = styled.div`
   height: 50%;
   overflow: hidden;
 
-  z-index: 1;
+  @media (min-width: 300px) and (max-width: 1500px) {
+    margin-top: 100px;
+    width: 70%;
+    height: 30%;
+  }
+
   // toolbar container
   .fc .fc-toolbar.fc-header-toolbar {
     margin: 0;
@@ -70,11 +75,9 @@ export const CalenderBox = styled.div`
   // 각 이벤트 요소
   .fc-event {
     cursor: pointer;
-    padding: 5px 8px;
-    margin-bottom: 5px;
     border-radius: 4px;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 12px;
   }
   @media (max-width: 480px) {
     .fc .fc-toolbar.fc-header-toolbar {

@@ -1,15 +1,14 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import * as Styled from './CreateProject.styled';
 import { MdOutlineArrowBackIosNew } from 'react-icons/md';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
 import { FaCalendarAlt } from 'react-icons/fa';
+import axios from 'axios';
 import SideBar from '../MainView/SideBar/SideBar';
 import { CSSProperties } from 'styled-components';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import apiMainPage from '../../apis/appMainPage';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface ProjectData {
   title: string;
@@ -22,7 +21,6 @@ interface ProjectData {
 }
 
 const CreateProject: React.FC = () => {
-  const { projectId } = useParams<{ projectId: string }>();
   const [title, setTitle] = useState<string>('');
   const [subtitle, setSubtitle] = useState<string>('');
   const [author, setAuthor] = useState<string>('');
@@ -32,8 +30,6 @@ const CreateProject: React.FC = () => {
   const [participants, setParticipants] = useState<string>('');
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const projectData = location.state as ProjectData | undefined;
 
   const handleStartDateChange = (date: Date | null) => {
     setStartDate(date);
@@ -44,65 +40,18 @@ const CreateProject: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      console.log('토큰', token);
-
-      if (!token) {
-        alert('토큰이 없습니다. 다시 로그인 해주세요.');
-        return;
-      }
-
-      // "title": "test_title",
-      // "subTitle": "test_sub_title",
-      // "content": "test_content",
-      // // "status": "COMPLETED",
-      // "members": [
-      // ],
-      // "startDate": "2024-10-11",
-      // "endDate": "2024-10-21"
-
-      const requestData = {
-        title: title,
-        subTitle: subtitle,
-        content: description,
-        members: [],
+      const response = await axios.post('/api/projects', {
+        title,
+        subtitle,
+        author,
+        description,
         startDate: startDate ? format(startDate, 'yyyy-MM-dd') : null,
         endDate: endDate ? format(endDate, 'yyyy-MM-dd') : null,
-      };
-
-      if (projectData) {
-        // 데이터가 있으면 수정
-        await apiMainPage.patch(`/tasks/${projectId}`, requestData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        alert('프로젝트가 수정되었습니다.');
-      } else {
-        // 데이터가 없으면 생성
-        await apiMainPage.post('/tasks', requestData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        alert('프로젝트가 등록되었습니다.');
-      }
-
-      navigate('/main');
+        participants,
+      });
+      console.log('성공:', response.data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Error Response:', error.response?.data);
-        if (error.response?.status === 401) {
-          alert('인증에 실패하였습니다. 다시 로그인 해주세요.');
-        } else {
-          alert('등록에 실패하였습니다.');
-        }
-      } else {
-        console.error('Unknown error:', error);
-        alert('등록에 실패하였습니다.');
-      }
+      console.error('실패:', error);
     }
   };
 

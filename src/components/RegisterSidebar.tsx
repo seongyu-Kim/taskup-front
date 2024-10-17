@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import image from '../assets/logo_color.webp';
 
 const breakpoints = {
   tablet: '768px',
@@ -21,7 +20,6 @@ const SidebarContainer = styled.div`
 
   @media (max-width: ${breakpoints.tablet}) {
     width: 100%;
-    /* height: auto; */
     height: 20%;
     padding: 1rem 0;
   }
@@ -30,7 +28,7 @@ const SidebarContainer = styled.div`
 const RegisterSidebar: React.FC = () => {
   return (
     <SidebarContainer>
-      <img src={image} alt="TaskUp logo" />
+      <img src="./logo_color.png" alt="TaskUp logo" />
     </SidebarContainer>
   );
 };

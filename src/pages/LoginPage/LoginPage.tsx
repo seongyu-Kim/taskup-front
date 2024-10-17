@@ -29,15 +29,15 @@ export default function LoginPage() {
 
     // API 호출
     const { data: responseData, error } = await apiRequest<{
-      user: { email: string; name: string };
+      email: string;
+      name: string;
     }>('post', '/sign-in', { email: data.email, password: data.password });
-    console.log('API 응답 데이터:', responseData);
 
     if (error) {
       setErrorMessage(error);
       console.error('로그인 에러:', error);
     } else if (responseData) {
-      const { email, name } = responseData.user;
+      const { email, name } = responseData;
       login(email, name, true);
       navigate(UserPaths.main);
     }
