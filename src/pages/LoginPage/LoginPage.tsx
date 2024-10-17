@@ -1,7 +1,11 @@
-import { MainView, InputBox, Form, SubmitButton, ButtonBox, ErrorText } from './LoginPage.styled';
+import { useState } from 'react';
+import { MainView, InputBox, Form, SubmitButton, ButtonBox } from './LoginPage.styled';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useUserStore, UserState } from '../../stores/UserStore/userStore';
+import { ErrorMessage } from '@hookform/error-message';
+import { UserPaths } from '../../routes/userPath';
+import { apiRequest } from '../../apis/apiClient';
 interface LoginFormData {
   email: string;
   password: string;
@@ -12,29 +16,33 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>();
+    trigger,
+  } = useForm<LoginFormData>({ mode: 'onChange' });
   const navigate = useNavigate();
   const login = useUserStore((state: UserState) => state.login);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const getUserData = () => {
-    const storeUserData = localStorage.getItem('userData');
-    return storeUserData ? JSON.parse(storeUserData) : null;
-  };
+  const onSubmit = async (data: LoginFormData) => {
+    setIsSubmitting(true);
+    setErrorMessage(null);
 
-  const onSubmit = (data: LoginFormData) => {
-    const userData = getUserData();
+    // API 호출
+    const { data: responseData, error } = await apiRequest<{
+      email: string;
+      name: string;
+    }>('post', '/sign-in', { email: data.email, password: data.password });
 
-    if (!userData) {
-      alert('회원 정보가 존재하지 않습니다. 회원가입을 먼저 진행해주세요.');
-      return;
+    if (error) {
+      setErrorMessage(error);
+      console.error('로그인 에러:', error);
+    } else if (responseData) {
+      const { email, name } = responseData;
+      login(email, name, true);
+      navigate(UserPaths.main);
     }
 
-    if (data.email === userData.email && data.password === userData.password) {
-      login(userData.email, userData.name);
-      navigate('/main');
-    } else {
-      alert('이메일 또는 비밀번호가 일치하지 않습니다.');
-    }
+    setIsSubmitting(false);
   };
   return (
     <MainView>
@@ -56,9 +64,13 @@ export default function LoginPage() {
                 message: '유효한 이메일 주소를 입력하세요.',
               },
             })}
+            onBlur={() => trigger('email')}
           />
         </InputBox>
-        {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+        <ErrorMessage
+          errors={errors}
+          name="email"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <InputBox>
           <label htmlFor="password">비밀번호</label>
@@ -75,12 +87,15 @@ export default function LoginPage() {
             })}
           />
         </InputBox>
-        {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
+        <ErrorMessage
+          errors={errors}
+          name="password"
+          render={({ message }) => <p>{message}</p>}></ErrorMessage>
 
         <SubmitButton type="submit">로그인 하기</SubmitButton>
         <ButtonBox>
-          <Link to={'/register'}>회원가입</Link>
-          <Link to={'/password-reset'}>비밀번호 찾기</Link>
+          <Link to={UserPaths.register}>회원가입</Link>
+          <Link to={UserPaths.passwordReset}>비밀번호 찾기</Link>
         </ButtonBox>
       </Form>
     </MainView>

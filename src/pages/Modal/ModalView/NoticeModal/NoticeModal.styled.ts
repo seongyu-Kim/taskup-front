@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { zIndex } from '@styles/Zindex';
 
 export const NoticeModalContainer = styled.div`
   position: fixed;
@@ -7,7 +8,7 @@ export const NoticeModalContainer = styled.div`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 100;
+  z-index: ${zIndex.modalBackGround};
 
   display: flex;
   flex-direction: column;
@@ -29,7 +30,7 @@ export const NoticeModalBox = styled.div`
   height: 500px;
   background: #d9d9d9;
   border-radius: 10px;
-  z-index: 1000;
+  z-index: ${zIndex.modalBox};
 
   display: flex;
   flex-direction: column;
@@ -75,13 +76,6 @@ export const NoticeModalBodyBox = styled.div`
     }
   }
 `;
-//닫기 버튼
-export const NoticeModalCloseButton = styled.button`
-  width: 70px;
-  height: 30px;
-  border: none;
-  border-radius: 8px;
-  background: #9aa308;
-  color: white;
-  cursor: pointer;
+export const NoticeText = styled.p`
+  color: ${(props) => props.color};
 `;
