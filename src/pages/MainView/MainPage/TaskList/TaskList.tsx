@@ -17,9 +17,10 @@ interface Task {
   author: string;
 }
 
+const itemsPerPage = 10;
+
 export default function TaskList() {
   const { user } = useUserStore();
-  const itemsPerPage = 10;
   const [totalItems, setTotalItems] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
@@ -97,8 +98,8 @@ export default function TaskList() {
     );
   };
 
-  return callTaskListData.length === 0 ? (
-    <Styled.MainPageContainer>
+  return (
+    <Styled.TaskListMainContainer>
       <button
         onClick={() => {
           console.log('user', user);
@@ -114,71 +115,65 @@ export default function TaskList() {
       <Styled.ProjectListContainer>
         <Styled.ProjectListArea>
           <Styled.ProjectListTitle>
-            <Styled.TitleText>Num</Styled.TitleText>
+            <Styled.TitleText>아이디</Styled.TitleText>
           </Styled.ProjectListTitle>
           <Styled.ProjectListTitleName>
-            <Styled.TitleText>Name</Styled.TitleText>
+            <Styled.TitleText>제목</Styled.TitleText>
           </Styled.ProjectListTitleName>
           <Styled.ProjectListTitle>
-            <Styled.TitleText>CheckBox</Styled.TitleText>
+            <Styled.TitleText>완료여부</Styled.TitleText>
           </Styled.ProjectListTitle>
         </Styled.ProjectListArea>
         <Styled.ProjectList>
-          <p>프로젝트가 없습니다</p>
+          <List data={currentTasks} onClick={handleCompleteClick} />
         </Styled.ProjectList>
       </Styled.ProjectListContainer>
-    </Styled.MainPageContainer>
-  ) : (
-    <Styled.MainPageContainer>
-      <Styled.ProjectListContainer>
-        <Styled.ProjectListArea>
-          <Styled.ProjectListTitle>
-            <Styled.TitleText>Num</Styled.TitleText>
-          </Styled.ProjectListTitle>
-          <Styled.ProjectListTitleName>
-            <Styled.TitleText>Name</Styled.TitleText>
-          </Styled.ProjectListTitleName>
-          <Styled.ProjectListTitle>
-            <Styled.TitleText>CheckBox</Styled.TitleText>
-          </Styled.ProjectListTitle>
-        </Styled.ProjectListArea>
-        <Styled.ProjectList>
-          {currentTasks.map((item, index) => (
-            <Styled.ProjectListItem
-              backgroundColor={index % 2 === 0 ? '#e0e0e0' : 'white'}
-              key={item.id}>
-              <Styled.ListTableBox>
-                <Styled.ListTextValue>{item.id}</Styled.ListTextValue>
-              </Styled.ListTableBox>
-              <Styled.ListTextNameAreaBox>
-                <Styled.ListTextValue>{item.title}</Styled.ListTextValue>
-                <Styled.ListTextValue className="content">{`${item.content.slice(
-                  0,
-                  10,
-                )}...`}</Styled.ListTextValue>
-              </Styled.ListTextNameAreaBox>
-              <Styled.ListTableBox>
-                <Styled.ListTextValue
-                  onClick={() => {
-                    handleCompleteClick(item.id);
-                  }}>
-                  {item.status === 'COMPLETED' ? (
-                    <Styled.StyledFaCircleCheck />
-                  ) : (
-                    <Styled.StyledFaRegCheckCircle />
-                  )}
-                </Styled.ListTextValue>
-              </Styled.ListTableBox>
-            </Styled.ProjectListItem>
-          ))}
-        </Styled.ProjectList>
-      </Styled.ProjectListContainer>
-      <Pagination
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-        currentPage={currentPage}
-        setCurrentPage={handlePageChange}
-      />
-    </Styled.MainPageContainer>
+      {currentTasks.length !== 0 && (
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={handlePageChange}
+        />
+      )}
+    </Styled.TaskListMainContainer>
   );
 }
+
+const List = ({ data, onClick }: { data: Task[]; onClick: (id: number) => void }) => {
+  if (data.length === 0) {
+    return <p>프로젝트가 없습니다</p>;
+  }
+
+  return (
+    <>
+      {data.map(({ id, title, content, status }, index) => {
+        const isEven = index % 2 == 0 ? '#e0e0e0' : 'white';
+        const ellipsisContent = `${content.slice(0, 10)}...`;
+        return (
+          <Styled.ProjectListItem backgroundColor={isEven} key={id}>
+            <Styled.ListTableBox>
+              <Styled.ListTextValue>{id}</Styled.ListTextValue>
+            </Styled.ListTableBox>
+            <Styled.ListTextNameAreaBox>
+              <Styled.ListTextValue>{title}</Styled.ListTextValue>
+              <Styled.ListTextValue className="content">{ellipsisContent}</Styled.ListTextValue>
+            </Styled.ListTextNameAreaBox>
+            <Styled.ListTableBox>
+              <Styled.ListTextValue
+                onClick={() => {
+                  onClick(id);
+                }}>
+                {status === 'COMPLETED' ? (
+                  <Styled.StyledFaCircleCheck />
+                ) : (
+                  <Styled.StyledFaRegCheckCircle />
+                )}
+              </Styled.ListTextValue>
+            </Styled.ListTableBox>
+          </Styled.ProjectListItem>
+        );
+      })}
+    </>
+  );
+};
