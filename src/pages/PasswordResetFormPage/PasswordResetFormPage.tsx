@@ -8,8 +8,10 @@ import {
   ButtonBox,
 } from './PasswordResetFormPage.styled';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import { sendResetLink } from '../../utils/emailService';
+import { Link } from 'react-router-dom';
+import { ErrorMessage } from '@hookform/error-message';
+import { UserPaths } from '../../routes/userPath';
+import { apiRequest } from '../../apis/authApi';
 
 interface PasswordResetFormData {
   email: string;

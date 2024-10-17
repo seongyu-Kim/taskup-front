@@ -1,9 +1,10 @@
 import { MainView, InputBox, Form, SubmitButton, ErrorText } from './PasswordResetLinkPage.styled';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useUserStore } from '../../stores/UserStore/userStore';
-
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ErrorMessage } from '@hookform/error-message';
+import { UserPaths } from '../../routes/userPath';
+import { apiRequest } from '../../apis/authApi';
 interface PasswordResetFormData {
   newPassword: string;
   confirmPassword: string;
