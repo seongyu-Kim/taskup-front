@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { IoIosReverseCamera } from 'react-icons/io';
+import { zIndex } from '@styles/Zindex';
 
 //모달 배경
 export const ProfileModalContainer = styled.div`
@@ -9,7 +10,7 @@ export const ProfileModalContainer = styled.div`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 100;
+  z-index: ${zIndex.modalBackGround};
 
   display: flex;
   flex-direction: column;
@@ -32,7 +33,7 @@ export const ProfileModalBox = styled.div`
   height: 300px;
   background: #d9d9d9;
   border-radius: 10px;
-  z-index: 1000;
+  z-index: ${zIndex.modalBox};
 
   display: flex;
   flex-direction: column;
@@ -56,16 +57,6 @@ export const ProfileLogOutButton = styled.button`
   color: white;
   cursor: pointer;
 `;
-//완료 버튼
-export const ProfileCompleteButton = styled(ProfileLogOutButton)`
-  position: absolute;
-  right: 10px;
-  border: none;
-  border-radius: 8px;
-  width: 50px;
-  background: #9aaa30;
-  color: white;
-`;
 //이름 영역
 export const ProfileNameText = styled.p`
   margin: 0;
@@ -84,7 +75,7 @@ export const ProfileModalBodyBox = styled.div`
     position: absolute;
     right: 25px;
     top: 125px;
-    z-index: 300;
+    z-index: ${zIndex.proFileImageCameraIcon};
   }
 `;
 //모달창 메인 영역
@@ -116,7 +107,7 @@ export const ProfileImg = styled.img`
   border: 1px solid gray;
   cursor: pointer;
   object-fit: cover;
-  z-index: 200;
+  z-index: ${zIndex.proFileImage};
   background: #222127;
   &:hover {
     opacity: 15%;
@@ -129,5 +120,5 @@ export const ProfileImgChangeCameraIcon = styled(IoIosReverseCamera)`
   height: 130px;
   color: white;
   position: absolute;
-  z-index: 100;
+  z-index: ${zIndex.proFileImageChangeIcon};
 `;

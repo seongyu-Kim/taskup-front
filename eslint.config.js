@@ -29,6 +29,7 @@ export default tseslint.config(
           endOfLine: 'auto',
         },
       ],
+      '@typescript-eslint/ no-require-imports': 'off',
       '@typescript-eslint/no-unused-vars': 'warn',
     },
   },
