@@ -4,7 +4,7 @@ import { FaCircleCheck } from 'react-icons/fa6';
 import { FaRegCheckCircle } from 'react-icons/fa';
 
 // 페이지 리스트 컨테이너
-export const MainPageContainer = styled.div`
+export const TaskListMainContainer = styled.div`
   height: 40%;
   width: 70%;
   display: flex;
