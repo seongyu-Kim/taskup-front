@@ -12,13 +12,15 @@ import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { UserPaths } from '../../routes/userPath';
 import { apiRequest } from '../../apis/apiClient';
+// import axios, { AxiosError } from 'axios';
 interface RegisterFormData {
   email: string;
   name: string;
   password: string;
   password_check: string;
-  number: string;
+  // number: string;
   verificationCode: string;
+  // code: string;
 }
 
 export default function RegisterPage() {
@@ -57,43 +59,35 @@ export default function RegisterPage() {
 
   // 회원가입 처리 함수
   const onSubmit = async (formData: RegisterFormData) => {
-    console.log('폼이 제출되었습니다:', formData);
-    setIsSubmitting(true);
-    setErrorMessage(null);
-    console.log('isSubmitting 상태:', isSubmitting);
+    try {
+      console.log('폼 제출 데이터:', formData);
+      setIsSubmitting(true);
+      setErrorMessage(null);
 
-    if (formData.password !== formData.password_check) {
-      setErrorMessage('비밀번호가 일치하지 않습니다.');
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (formData.verificationCode !== verificationCode) {
-      setErrorMessage('인증번호가 일치하지 않습니다.');
-      setIsSubmitting(false);
-      return;
-    }
-
-    // 회원가입 API 호출
-    const { error } = await apiRequest<null, { email: string; name: string; password: string }>(
-      'post',
-      '/sign-up',
-      {
+      const response = await apiRequest<
+        null,
+        { code: string; email: string; name: string; password: string }
+      >('post', '/sign-up', {
+        code: formData.verificationCode,
         email: formData.email,
         name: formData.name,
         password: formData.password,
-      },
-    );
+      });
 
-    if (error) {
-      setErrorMessage(error);
-      console.error('회원가입 에러:', error);
-    } else {
-      alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
-      navigate(UserPaths.login);
+      // API 응답 처리
+      if (response.error) {
+        setErrorMessage(response.error);
+        console.error('회원가입 에러:', response.error);
+      } else {
+        alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+        navigate(UserPaths.login);
+      }
+    } catch (error) {
+      console.error('API 호출 중 오류:', error);
+      setErrorMessage('회원가입 중 문제가 발생했습니다. 다시 시도해 주세요.');
+    } finally {
+      setIsSubmitting(false); 
     }
-
-    setIsSubmitting(false);
   };
 
   return (

@@ -25,8 +25,10 @@ export default function PasswordResetPage() {
   const onSubmit = async (data: PasswordResetFormData) => {
     setIsSubmitting(true);
     setErrorMessage(null);
-    // API 호출
-    const { error } = await apiRequest('post', '/password-reset', { email: data.email });
+
+    const { error } = await apiRequest('post', '/password-reset', {
+      email: data.email,
+    });
 
     if (error) {
       setErrorMessage(error);

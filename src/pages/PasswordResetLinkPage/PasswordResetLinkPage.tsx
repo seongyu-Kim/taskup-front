@@ -1,7 +1,7 @@
 import { MainView, InputBox, Form, SubmitButton } from './PasswordResetLinkPage.styled';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { UserPaths } from '../../routes/userPath';
 import { apiRequest } from '../../apis/apiClient';
@@ -17,36 +17,27 @@ export default function PasswordResetLinkPage() {
     watch,
     formState: { errors },
   } = useForm<PasswordResetFormData>({ mode: 'onChange' });
-  const [searchParams] = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const token = searchParams.get('token');
-
-  useEffect(() => {
-    if (!token) {
-      setErrorMessage('유효하지 않은 접근입니다.');
-    }
-  }, [token]);
+  // 쿼리 파라미터에서 email과 token 값 추출
+  const queryParams = new URLSearchParams(location.search);
+  const email = queryParams.get('email');
+  const token = queryParams.get('token');
 
   const onSubmit = async (data: PasswordResetFormData) => {
-    if (!token) return;
-
     setIsSubmitting(true);
     setErrorMessage(null);
 
-    if (data.newPassword !== data.confirmPassword) {
-      setErrorMessage('비밀번호가 일치하지 않습니다.');
-      setIsSubmitting(false);
-      return;
-    }
-
     // API 호출
     const { error } = await apiRequest('post', '/password-reset/confirm', {
+      email,
       token,
-      newPassword: data.newPassword,
+      password: data.newPassword,
+      confirmPassword: data.confirmPassword,
     });
 
     if (error) {
@@ -54,6 +45,7 @@ export default function PasswordResetLinkPage() {
     } else {
       setIsSuccess(true);
       alert('비밀번호가 성공적으로 변경되었습니다.');
+
       navigate(UserPaths.login);
     }
 
