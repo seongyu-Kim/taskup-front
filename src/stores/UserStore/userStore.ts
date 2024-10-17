@@ -39,5 +39,4 @@ export const useUserStore = create<UserState>((set) => ({
       set({ user: JSON.parse(storedUser), isLoggedIn: true });
     }
   },
-  // 변경사항 저장으로 다시 수정
 }));
