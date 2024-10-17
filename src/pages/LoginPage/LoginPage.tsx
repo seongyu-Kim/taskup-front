@@ -38,7 +38,7 @@ export default function LoginPage() {
       console.error('로그인 에러:', error);
     } else if (responseData) {
       const { email, name } = responseData.user;
-      login(email, name, true);
+      login(email, name);
       navigate(UserPaths.main);
     }
 
