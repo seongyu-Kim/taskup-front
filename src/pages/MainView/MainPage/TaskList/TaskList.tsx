@@ -53,7 +53,7 @@ export default function TaskList() {
           setCallTaskListData(response.data.data.data);
         }
       } catch (error) {
-        console.log('ERROR', error);
+        console.log('TASKLIST DATA CALL ERROR', error);
       }
     };
 
@@ -70,7 +70,6 @@ export default function TaskList() {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
-
   //체크박스
   const handleCompleteClick = (id: number) => {
     setCallTaskListData((prevData) =>

@@ -60,7 +60,7 @@ export default function CalenderView() {
           setCallEvent(response.data.data.data);
         }
       } catch (error) {
-        console.log('ERROR', error);
+        console.log('CALENDERVIEW DATA CALL ERROR', error);
       }
     };
     callCalenderEventData().catch(console.error);

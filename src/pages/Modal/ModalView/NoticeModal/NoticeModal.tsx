@@ -61,7 +61,7 @@ export default function NoticeModal() {
           setNoticeData(response.data.data.data);
         }
       } catch (error) {
-        console.log('ERROR', error);
+        console.log('NOTICE DATA CALL ERROR', error);
       }
     };
     callNoticeData().catch(console.error);
