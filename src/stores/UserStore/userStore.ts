@@ -3,7 +3,7 @@ import { apiRequest } from '@apis/authApi';
 export interface UserState {
   user: { email: string; name: string } | null;
   isLoggedIn: boolean;
-  login: (email: string, name: string, rememberMe: boolean) => void;
+  login: (email: string, name: string) => void;
   logout: () => void;
   restoreLogin: () => void;
 }
@@ -12,11 +12,11 @@ export const useUserStore = create<UserState>((set) => ({
   user: null,
   isLoggedIn: false,
 
-  login: (email: string, name: string, rememberMe = false) => {
+  login: (email: string, name: string) => {
     set({ user: { email, name }, isLoggedIn: true });
-    const storage = rememberMe ? localStorage : sessionStorage;
-    storage.setItem('isLoggedIn', 'true');
-    storage.setItem('user', JSON.stringify({ email, name }));
+    // const storage = rememberMe ? localStorage : sessionStorage;
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('user', JSON.stringify({ email, name }));
   },
   logout: async () => {
     try {
