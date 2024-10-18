@@ -31,7 +31,7 @@ export default function TaskList() {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const currentPage = getPageFromUrl();
-
+  //리스트 필터링
   useEffect(() => {
     const callTaskList = async () => {
       if (!user || !user.name) {
@@ -39,13 +39,16 @@ export default function TaskList() {
       }
       try {
         const response = await apiMainPage.get(
-          `/tasks?page=${currentPage}&pageSize=${itemsPerPage}&status`,
+          `/tasks?page=${currentPage}&pageSize=${itemsPerPage}`,
         );
         if (response && response.data) {
           const allTasks = response.data.data.data;
-          const userTasks = allTasks.filter(
-            (item: Task) => item.author?.includes(user.name) || item.members.includes(user.name),
-          );
+          const userTasks = allTasks.filter((item: Task) => {
+            if (item.members.includes(user.name)) {
+              return true;
+            }
+            return item.author === user.name;
+          });
           setCurrentTasks(userTasks);
           setTotalItems(response.data.data.total);
         }
@@ -73,20 +76,10 @@ export default function TaskList() {
   };
 
   const handleCompleteClick = (id: number, status: string) => {
-    const token = localStorage.getItem('token');
-    // console.log(JSON.stringify({ status: 'IN_PROGRESS' }));
     const callTaskListStatusChange = async () => {
       try {
         const statusChange = status === 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS';
-        await apiMainPage.patch(
-          `/tasks/${id.toString()}`,
-          { status: statusChange },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        await apiMainPage.patch(`/tasks/${id.toString()}`, { status: statusChange });
 
         setCurrentTasks((prevTasks) =>
           prevTasks.map((task) => (task.id === id ? { ...task, status: statusChange } : task)),
@@ -112,14 +105,16 @@ export default function TaskList() {
         </Styled.ProjectList>
       </Styled.ProjectListContainer>
       {currentTasks.length !== 0 && (
-        <Pagination
-          totalItems={totalItems}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
-          setCurrentPage={handlePageChange}
-        />
+        <>
+          <Pagination
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            setCurrentPage={handlePageChange}
+          />
+          <Divider />
+        </>
       )}
-      <Divider />
     </Styled.TaskListMainContainer>
   );
 }
@@ -147,23 +142,46 @@ const TaskContentList = ({
   data: Task[];
   onClick: (id: number, status: string) => void;
 }) => {
+  const navigate = useNavigate();
+  const handleViewTaskClick = (id: number) => {
+    navigate(`/view/${id.toString()}`);
+  };
+
   if (data.length === 0) {
     return <p>프로젝트가 없습니다</p>;
   }
 
+  const sortedData = [...data].sort((a, b) => a.id - b.id);
+
   return (
     <>
-      {data.map(({ id, title, content, status }, index) => {
+      {sortedData.map(({ id, title, content, status }, index) => {
         const isEven = index % 2 == 0 ? '#e0e0e0' : 'white';
         const ellipsisContent = `${content.slice(0, 10)}...`;
         return (
           <Styled.ProjectListItem backgroundColor={isEven} key={id}>
             <Styled.ListTableBox>
-              <Styled.ListTextValue>{id}</Styled.ListTextValue>
+              <Styled.ListTextValue
+                onClick={() => {
+                  handleViewTaskClick(id);
+                }}>
+                {id}
+              </Styled.ListTextValue>
             </Styled.ListTableBox>
             <Styled.ListTextNameAreaBox>
-              <Styled.ListTextValue>{title}</Styled.ListTextValue>
-              <Styled.ListTextValue className="content">{ellipsisContent}</Styled.ListTextValue>
+              <Styled.ListTextValue
+                onClick={() => {
+                  handleViewTaskClick(id);
+                }}>
+                {title}
+              </Styled.ListTextValue>
+              <Styled.ListTextValue
+                className="content"
+                onClick={() => {
+                  handleViewTaskClick(id);
+                }}>
+                {ellipsisContent}
+              </Styled.ListTextValue>
             </Styled.ListTextNameAreaBox>
             <Styled.ListTableBox>
               <Styled.ListTextValue

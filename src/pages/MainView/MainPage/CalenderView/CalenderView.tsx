@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import apiMainPage from '@apis/apiMainPage';
 import { useUserStore } from '@stores/UserStore/userStore';
 import { DatesSetArg } from '@fullcalendar/common';
+import { useNavigate } from 'react-router-dom';
+import { EventClickArg } from '@fullcalendar/core';
 
 interface CalenderType {
   id: number;
@@ -21,6 +23,7 @@ export default function CalenderView() {
   const [callEvent, setCallEvent] = useState<CalenderType[]>([]);
   const [calendarTitle, setCalendarTitle] = useState('');
   const { user } = useUserStore();
+  const navigate = useNavigate();
   //캘린더 상단 메뉴
   const header = {
     start: 'prevYear,dayGridDay,dayGridWeek,dayGridMonth,nextYear',
@@ -54,6 +57,12 @@ export default function CalenderView() {
     setCalendarTitle(`${year}-${month}`);
   };
 
+  //이벤트 클릭 이동!
+  const handleEventClick = (clickInfo: EventClickArg) => {
+    const eventId = clickInfo.event.id;
+    navigate(`/view/${eventId}`);
+  };
+
   //날짜 텍스트 보기
   if (!user) {
     return null;
@@ -63,18 +72,24 @@ export default function CalenderView() {
   }
 
   const userEventData = callEvent.filter((item) => {
-    return item.name && item.name.includes(user.name);
+    if (item.members === undefined) {
+      return item.name === user.name;
+    } else {
+      return item.members.includes(user.name);
+    }
   });
 
   return (
     <CalenderBox>
       <FullCalendar
         plugins={[dayGridPlugin]}
-        events={userEventData.map((item) => ({
-          title: item.title,
-          start: item.startDate,
-          end: item.endDate,
+        events={userEventData.map(({ id, title, startDate, endDate }) => ({
+          id: id,
+          title: title,
+          start: startDate,
+          end: endDate,
         }))}
+        eventClick={handleEventClick}
         initialView="dayGridMonth"
         height="500px"
         editable={true}

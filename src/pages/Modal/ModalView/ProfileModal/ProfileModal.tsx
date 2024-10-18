@@ -11,12 +11,17 @@ import { useProfileImgStore } from '@stores/ProfileImgStore/ProfileImgStore';
 import MainPageDefaultButton from '@components/MainPageDefaultButton/MainPageDefaultButton';
 
 export default function ProfileModal() {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [saveState, setSaveState] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [tempImgUrl, setTempImgUrl] = useState<string | null>(localStorage.getItem('profileImage'));
   const { isOpen, setIsOpen } = useModal();
   const { setModalState } = useModalState();
-
+  const { imageUrl, setImageUrl } = useProfileImgStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const logout = useUserStore((state) => state.logout);
+  const localImg = localStorage.getItem('profileImage');
   const navigate = useNavigate();
+  const { user } = useUserStore();
 
   // 로그아웃 기능 구현
   const handleLogout = () => {
@@ -24,19 +29,7 @@ export default function ProfileModal() {
     alert('로그아웃되었습니다.');
     navigate('/login');
   };
-
-  const { imageUrl, setImageUrl } = useProfileImgStore();
-  const [saveState, setSaveState] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [tempImgUrl, setTempImgUrl] = useState<string | null>(localStorage.getItem('profileImage'));
-  const localImg = localStorage.getItem('profileImage');
-
-  //로컬 스토리지에서 유저 데이터 가져오기
-  // const userData = localStorage.getItem('userData');
-  // const { name }: { email: string; name: string } = JSON.parse(userData!);
-
-  const { user } = useUserStore();
-
+  //이미지 저장
   const handleImageSave = () => {
     if (!tempImgUrl && selectedFile === null) {
       alert('파일을 선택해 주세요');
@@ -48,7 +41,6 @@ export default function ProfileModal() {
       setSaveState(false);
     }
   };
-
   // 이미지 변경
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

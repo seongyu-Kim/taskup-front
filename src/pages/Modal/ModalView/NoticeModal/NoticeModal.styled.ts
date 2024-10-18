@@ -85,5 +85,6 @@ export const NoticeModalBodyBox = styled.div`
 `;
 export const NoticeText = styled.p`
   text-align: center;
+  cursor: pointer;
   color: ${(props) => props.color};
 `;
