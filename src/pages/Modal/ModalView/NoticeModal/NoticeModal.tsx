@@ -2,50 +2,31 @@ import * as Styled from './NoticeModal.styled';
 import { useModal } from '@stores/ModalStore/ModalStore';
 import { RiCloseLargeFill } from 'react-icons/ri';
 import { handleModalCloseClick } from '@utils/HandleModalCloseClick';
-import { useEffect, useState } from 'react';
-import apiMainPage from '@apis/apiMainPage';
 import MainPageDefaultButton from '@components/MainPageDefaultButton/MainPageDefaultButton';
 import { useUserStore } from '@stores/UserStore/userStore';
+import { useNoticeMessage } from '@stores/UserMessageStore/UserMessagestore';
 
 interface NoticeDataType {
-  id: number;
-  name: string;
-  title?: string;
-  status?: string;
-  startDate: string;
-  endDate: string;
+  taskId?: number;
+  userId: string;
+  message: string;
 }
 
 export default function NoticeModal() {
   const { isOpen, setIsOpen } = useModal();
-  const [noticeData, setNoticeData] = useState<NoticeDataType[]>([]);
   const { user } = useUserStore();
-
-  useEffect(() => {
-    const callNoticeData = async () => {
-      try {
-        //임시
-        const response = await apiMainPage.get('/tasks/calender?startDate=2024-10-01&type=month');
-        if (response) {
-          setNoticeData(response.data.data);
-        }
-      } catch (error) {
-        console.log('NOTICE DATA CALL ERROR', error);
-      }
-    };
-    callNoticeData().catch(console.error);
-  }, []);
-
+  const { messages } = useNoticeMessage();
   if (!user) {
     return null;
   }
   //사용자 필터링
-  const userNoticeData = noticeData.filter((item) => item.name.includes(user.name));
-
+  const userNoticeData: NoticeDataType[] = messages.filter((item) =>
+    item.message.includes(user.name),
+  );
   if (!isOpen) {
     return null;
   }
-
+  console.log('userNoticeData', userNoticeData);
   return (
     <>
       <Styled.NoticeModalContainer onClick={() => setIsOpen(false)}>
@@ -55,29 +36,7 @@ export default function NoticeModal() {
             <p>알림</p>
           </Styled.NoticeModalHeaderBox>
           <Styled.NoticeModalBodyBox>
-            <ul>
-              {userNoticeData
-                .map((item) => ({
-                  ...item,
-                  dDay: Math.floor(
-                    (new Date(item.endDate).getTime() - Date.now()) / (1000 * 3600 * 24),
-                  ),
-                }))
-                .sort((a, b) => a.dDay - b.dDay)
-                .map((item) => {
-                  if (item.dDay <= 7 && item.dDay > 0) {
-                    return (
-                      <li key={item.id}>
-                        <p>프로젝트명: {item.title}</p>
-                        <Styled.NoticeText color={item.dDay <= 3 ? 'red' : 'black'}>
-                          마감일이 {item.dDay}일 남았습니다.
-                        </Styled.NoticeText>
-                      </li>
-                    );
-                  }
-                  return null;
-                })}
-            </ul>
+            <NoticeList data={userNoticeData} />
           </Styled.NoticeModalBodyBox>
           <MainPageDefaultButton
             onClick={() => {
@@ -90,3 +49,37 @@ export default function NoticeModal() {
     </>
   );
 }
+
+const NoticeList = ({ data }: { data: NoticeDataType[] }) => {
+  return (
+    <ul>
+      {data
+        .map(({ userId, message }) => {
+          const [, alertInfo, taskInfo, endDate] = message.split(': ');
+          const remainingDays = alertInfo.split(' ')[0];
+          const taskTitle = taskInfo.split("'")[1];
+
+          return { userId, taskTitle, remainingDays, endDate };
+        })
+        .sort((a, b) => {
+          const daysA = a.remainingDays.includes('하루') ? 1 : parseInt(a.remainingDays);
+          const daysB = b.remainingDays.includes('하루') ? 1 : parseInt(b.remainingDays);
+          return daysA - daysB;
+        })
+        .map(({ userId, taskTitle, remainingDays, endDate }) => {
+          const textColor = remainingDays.includes('3일')
+            ? 'orange'
+            : remainingDays.includes('하루')
+              ? 'red'
+              : 'black';
+          return (
+            <li key={userId}>
+              <Styled.NoticeText color="black">제목: {taskTitle}</Styled.NoticeText>
+              <Styled.NoticeText color={textColor}>{remainingDays} 남았습니다</Styled.NoticeText>
+              <Styled.NoticeText color="black">종료일: {endDate}</Styled.NoticeText>
+            </li>
+          );
+        })}
+    </ul>
+  );
+};

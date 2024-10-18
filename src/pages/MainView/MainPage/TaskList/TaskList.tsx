@@ -100,18 +100,6 @@ export default function TaskList() {
 
   return (
     <Styled.TaskListMainContainer>
-      <button
-        onClick={() => {
-          console.log('user', user);
-          const tempUserData = {
-            name: 'test_name',
-            email: 'parkjh001217@naver.com',
-          };
-          localStorage.setItem('user', JSON.stringify(tempUserData));
-          console.log('유저 데이터 삽입 완료');
-        }}>
-        유저 상태 확인
-      </button>
       <Styled.ProjectListContainer>
         <Styled.ProjectListArea>
           <Styled.ProjectListTitle>
