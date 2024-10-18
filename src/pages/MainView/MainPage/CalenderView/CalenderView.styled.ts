@@ -3,14 +3,12 @@ import styled from 'styled-components';
 export const CalenderBox = styled.div`
   width: 70%;
   max-width: 1134px;
-  //height: 50%;
   overflow: hidden;
 
-  //@media (min-width: 300px) and (max-width: 1500px) {
-  //  margin-top: 100px;
-  //  width: 70%;
-  //  height: 30%;
-  //}
+  @media (min-width: 200px) and (max-width: 1500px) {
+    margin-top: 100px;
+    width: 70%;
+  }
 
   // toolbar container
   .fc .fc-toolbar.fc-header-toolbar {
@@ -64,6 +62,7 @@ export const CalenderBox = styled.div`
   .fc .fc-daygrid-day-frame {
     font-size: 14px;
     background: white;
+    width: 200px;
   }
 
   // 날짜  ex) 2일
