@@ -48,10 +48,9 @@ export default function TaskList() {
           },
         );
         if (response && response.data) {
-          console.log('데이터 수신');
           const allTasks = response.data.data.data;
           const userTasks = allTasks.filter(
-            (item: Task) => item.members.includes(user.name) || item.author === user.name,
+            (item: Task) => item.author === user.name || item.members.includes(user.name),
           );
           setCurrentTasks(userTasks);
           setTotalItems(response.data.data.total);
