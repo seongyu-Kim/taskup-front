@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 export interface Message {
+  taskId: number;
   userId: string;
   message: string;
 }

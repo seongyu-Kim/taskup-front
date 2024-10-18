@@ -139,6 +139,11 @@ const TaskContentList = ({
   data: Task[];
   onClick: (id: number, status: string) => void;
 }) => {
+  const navigate = useNavigate();
+  const handleViewTaskClick = (id: number) => {
+    navigate(`/view/${id.toString()}`);
+  };
+
   if (data.length === 0) {
     return <p>프로젝트가 없습니다</p>;
   }
@@ -153,11 +158,27 @@ const TaskContentList = ({
         return (
           <Styled.ProjectListItem backgroundColor={isEven} key={id}>
             <Styled.ListTableBox>
-              <Styled.ListTextValue>{id}</Styled.ListTextValue>
+              <Styled.ListTextValue
+                onClick={() => {
+                  handleViewTaskClick(id);
+                }}>
+                {id}
+              </Styled.ListTextValue>
             </Styled.ListTableBox>
             <Styled.ListTextNameAreaBox>
-              <Styled.ListTextValue>{title}</Styled.ListTextValue>
-              <Styled.ListTextValue className="content">{ellipsisContent}</Styled.ListTextValue>
+              <Styled.ListTextValue
+                onClick={() => {
+                  handleViewTaskClick(id);
+                }}>
+                {title}
+              </Styled.ListTextValue>
+              <Styled.ListTextValue
+                className="content"
+                onClick={() => {
+                  handleViewTaskClick(id);
+                }}>
+                {ellipsisContent}
+              </Styled.ListTextValue>
             </Styled.ListTextNameAreaBox>
             <Styled.ListTableBox>
               <Styled.ListTextValue

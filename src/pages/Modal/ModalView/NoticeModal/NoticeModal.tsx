@@ -5,9 +5,10 @@ import { handleModalCloseClick } from '@utils/HandleModalCloseClick';
 import MainPageDefaultButton from '@components/MainPageDefaultButton/MainPageDefaultButton';
 import { useUserStore } from '@stores/UserStore/userStore';
 import { useNoticeMessage } from '@stores/UserMessageStore/UserMessagestore';
+import { useNavigate } from 'react-router-dom';
 
 interface NoticeDataType {
-  taskId?: number;
+  taskId: number;
   userId: string;
   message: string;
 }
@@ -51,22 +52,29 @@ export default function NoticeModal() {
 }
 
 const NoticeList = ({ data }: { data: NoticeDataType[] }) => {
+  const navigate = useNavigate();
+  const { setIsOpen } = useModal();
+  const handleViewTaskClick = (id: number) => {
+    navigate(`/view/${id.toString()}`);
+    setIsOpen(false);
+  };
+  console.log('userNoticeData', data);
   return (
     <ul>
       {data
-        .map(({ userId, message }) => {
+        .map(({ taskId, userId, message }) => {
           const [, alertInfo, taskInfo, endDate] = message.split(': ');
           const remainingDays = alertInfo.split(' ')[0];
           const taskTitle = taskInfo.split("'")[1];
 
-          return { userId, taskTitle, remainingDays, endDate };
+          return { taskId, userId, taskTitle, remainingDays, endDate };
         })
         .sort((a, b) => {
           const daysA = a.remainingDays.includes('하루') ? 1 : parseInt(a.remainingDays);
           const daysB = b.remainingDays.includes('하루') ? 1 : parseInt(b.remainingDays);
           return daysA - daysB;
         })
-        .map(({ userId, taskTitle, remainingDays, endDate }) => {
+        .map(({ taskId, userId, taskTitle, remainingDays, endDate }) => {
           const textColor = remainingDays.includes('3일')
             ? 'orange'
             : remainingDays.includes('하루')
@@ -74,9 +82,27 @@ const NoticeList = ({ data }: { data: NoticeDataType[] }) => {
               : 'black';
           return (
             <li key={userId}>
-              <Styled.NoticeText color="black">제목: {taskTitle}</Styled.NoticeText>
-              <Styled.NoticeText color={textColor}>{remainingDays} 남았습니다</Styled.NoticeText>
-              <Styled.NoticeText color="black">종료일: {endDate}</Styled.NoticeText>
+              <Styled.NoticeText
+                onClick={() => {
+                  handleViewTaskClick(taskId);
+                }}
+                color="black">
+                제목: {taskTitle}
+              </Styled.NoticeText>
+              <Styled.NoticeText
+                onClick={() => {
+                  handleViewTaskClick(taskId);
+                }}
+                color={textColor}>
+                {remainingDays} 남았습니다
+              </Styled.NoticeText>
+              <Styled.NoticeText
+                onClick={() => {
+                  handleViewTaskClick(taskId);
+                }}
+                color="black">
+                종료일: {endDate}
+              </Styled.NoticeText>
             </li>
           );
         })}
