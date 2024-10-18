@@ -73,10 +73,12 @@ export const NoticeModalBodyBox = styled.div`
       align-items: center;
       width: 100%;
       list-style-type: none;
+      padding: 10px 0 10px 0;
       border-bottom: 1px solid #9c9c9c;
       p {
         display: flex;
         align-items: center;
+        margin: 0;
       }
     }
   }
