@@ -9,6 +9,7 @@ import defaultImage from '@assets/임시 프로필사진.png';
 import { useUserStore } from '@stores/UserStore/userStore';
 import { Message, useNoticeMessage } from '@stores/UserMessageStore/UserMessagestore';
 import { EventSourcePolyfill } from 'event-source-polyfill';
+import apiMainPage from '@apis/apiMainPage';
 
 export default function SideBar() {
   const { setIsOpen } = useModal();
@@ -16,10 +17,20 @@ export default function SideBar() {
   const { imageUrl } = useProfileImgStore();
   const [nowImg, setNowImg] = useState<string | null>(null);
   const navigate = useNavigate();
-  //로컬스토리지에서 유저 데이터 가져오기
-  // const userData = localStorage.getItem('userData');
-  // const { email, name }: { email: string; name: string } = JSON.parse(userData!);
   const { user, isLoggedIn } = useUserStore();
+  const { setMessage } = useNoticeMessage();
+  //데이터 요청
+  useEffect(() => {
+    const loadUserProfileImg = async () => {
+      try {
+        const response = await apiMainPage.get(`/user/profile`);
+        console.log('회원조회', response.data.data);
+      } catch (error) {
+        console.error('Profile Img Load Error', error);
+      }
+    };
+    loadUserProfileImg().catch(console.error);
+  });
   //초기 프로필 사진 없을 때 기본 사진
   useEffect(() => {
     if (imageUrl == '/static/media/임시 프로필사진.4d93130773eae276d513.png') {
@@ -37,7 +48,6 @@ export default function SideBar() {
     }
   }, [imageUrl]);
 
-  const { setMessage } = useNoticeMessage();
   useEffect(() => {
     const sseUrl = 'http://kdt-react-node-1-team03.elicecoding.com:5000/events';
     const eventSource = new EventSourcePolyfill(sseUrl, { heartbeatTimeout: 86400000 });
@@ -53,11 +63,6 @@ export default function SideBar() {
       }
     };
 
-    //이벤트 연결 확인용 (디버깅용이라 추후 삭제)
-    // eventSource.onopen = () => {
-    //   // console.log('SSE 연결 성공');
-    // };
-    //오류 발생 처리
     eventSource.onerror = (error) => {
       console.error('SSE 연결에러', error);
       eventSource.close();
@@ -65,7 +70,6 @@ export default function SideBar() {
 
     if (!isLoggedIn) {
       eventSource.close();
-      // console.log('SSE 연결 종료');
     }
   }, [isLoggedIn]);
 
