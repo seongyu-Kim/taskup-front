@@ -29,7 +29,7 @@ export default function LoginPage() {
 
     // API 호출
     const { data: responseData, error } = await apiRequest<{
-      userInfo: { token: string };
+      userinfo: { token: string };
       user: { email: string; name: string };
     }>('post', '/sign-in', { email: data.email, password: data.password });
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
       setErrorMessage(error);
       console.error('로그인 에러:', error);
     } else if (responseData) {
-      const { token } = responseData.userInfo;
+      const { token } = responseData.userinfo;
       const { email, name } = responseData.user;
       login(email, name, token);
       navigate(UserPaths.main);
