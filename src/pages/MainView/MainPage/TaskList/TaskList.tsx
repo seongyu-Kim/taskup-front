@@ -3,7 +3,8 @@ import * as Styled from './TaskList.styled';
 import Pagination from '@components/Pagination/Pagination';
 import apiMainPage from '@apis/apiMainPage';
 import { useUserStore } from '@stores/UserStore/userStore';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Divider from '@components/Divider';
 
 interface Task {
   id: number;
@@ -19,40 +20,17 @@ interface Task {
 
 const itemsPerPage = 10;
 
+const getPageFromUrl = () => {
+  const params = new URLSearchParams(window.location.search);
+  return parseInt(params.get('page') || '1', 10);
+};
+
 export default function TaskList() {
-  const { user } = useUserStore();
   const [totalItems, setTotalItems] = useState(0);
-  const location = useLocation();
+  const [currentTasks, setCurrentTasks] = useState<Task[]>([]);
+  const { user } = useUserStore();
   const navigate = useNavigate();
-
-  const getPageFromUrl = () => {
-    const params = new URLSearchParams(location.search);
-    return parseInt(params.get('page') || '1', 10);
-  };
-
-  const [currentPage, setCurrentPage] = useState(getPageFromUrl());
-
-  useEffect(() => {
-    setCurrentPage(getPageFromUrl());
-  }, [location.search]);
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    const newSearchParams = new URLSearchParams({
-      page: newPage.toString(),
-      pageSize: itemsPerPage.toString(),
-      status: '',
-    });
-    navigate(
-      {
-        pathname: '/main/tasks',
-        search: newSearchParams.toString(),
-      },
-      { replace: true },
-    );
-  };
-
-  const [callTaskListData, setCallTaskListData] = useState<Task[]>([]);
+  const currentPage = getPageFromUrl();
 
   useEffect(() => {
     const callTaskList = async () => {
@@ -68,7 +46,7 @@ export default function TaskList() {
           const userTasks = allTasks.filter(
             (item: Task) => item.author?.includes(user.name) || item.members.includes(user.name),
           );
-          setCallTaskListData(userTasks);
+          setCurrentTasks(userTasks);
           setTotalItems(response.data.data.total);
         }
       } catch (error) {
@@ -79,14 +57,27 @@ export default function TaskList() {
     callTaskList().catch(console.error);
   }, [currentPage, user]);
 
+  const handlePageChange = (newPage: number) => {
+    const newSearchParams = new URLSearchParams({
+      page: newPage.toString(),
+      pageSize: itemsPerPage.toString(),
+      status: '',
+    });
+    navigate(
+      {
+        pathname: '/main/tasks',
+        search: newSearchParams.toString(),
+      },
+      { replace: true },
+    );
+  };
+
   if (!user) {
     return null;
   }
 
-  const currentTasks = callTaskListData;
-
   const handleCompleteClick = (id: number) => {
-    setCallTaskListData((prevData) =>
+    setCurrentTasks((prevData) =>
       prevData.map((item) =>
         item.id === id
           ? {
@@ -101,17 +92,7 @@ export default function TaskList() {
   return (
     <Styled.TaskListMainContainer>
       <Styled.ProjectListContainer>
-        <Styled.ProjectListArea>
-          <Styled.ProjectListTitle>
-            <Styled.TitleText>아이디</Styled.TitleText>
-          </Styled.ProjectListTitle>
-          <Styled.ProjectListTitleName>
-            <Styled.TitleText>제목</Styled.TitleText>
-          </Styled.ProjectListTitleName>
-          <Styled.ProjectListTitle>
-            <Styled.TitleText>완료여부</Styled.TitleText>
-          </Styled.ProjectListTitle>
-        </Styled.ProjectListArea>
+        <TaskListHeader />
         <Styled.ProjectList>
           <TaskContentList data={currentTasks} onClick={handleCompleteClick} />
         </Styled.ProjectList>
@@ -124,9 +105,26 @@ export default function TaskList() {
           setCurrentPage={handlePageChange}
         />
       )}
+      <Divider />
     </Styled.TaskListMainContainer>
   );
 }
+
+const TaskListHeader = () => {
+  return (
+    <Styled.ProjectListArea>
+      <Styled.ProjectListTitle>
+        <Styled.TitleText>아이디</Styled.TitleText>
+      </Styled.ProjectListTitle>
+      <Styled.ProjectListTitleName>
+        <Styled.TitleText>제목</Styled.TitleText>
+      </Styled.ProjectListTitleName>
+      <Styled.ProjectListTitle>
+        <Styled.TitleText>완료여부</Styled.TitleText>
+      </Styled.ProjectListTitle>
+    </Styled.ProjectListArea>
+  );
+};
 
 const TaskContentList = ({ data, onClick }: { data: Task[]; onClick: (id: number) => void }) => {
   if (data.length === 0) {
