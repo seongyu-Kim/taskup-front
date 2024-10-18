@@ -34,18 +34,12 @@ export default function TaskList() {
 
   useEffect(() => {
     const callTaskList = async () => {
-      const token = localStorage.getItem('token');
       if (!user || !user.name) {
         return;
       }
       try {
         const response = await apiMainPage.get(
           `/tasks?page=${currentPage}&pageSize=${itemsPerPage}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         if (response && response.data) {
           const allTasks = response.data.data.data;
@@ -79,20 +73,10 @@ export default function TaskList() {
   };
 
   const handleCompleteClick = (id: number, status: string) => {
-    const token = localStorage.getItem('token');
-    // console.log(JSON.stringify({ status: 'IN_PROGRESS' }));
     const callTaskListStatusChange = async () => {
       try {
         const statusChange = status === 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS';
-        await apiMainPage.patch(
-          `/tasks/${id.toString()}`,
-          { status: statusChange },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        await apiMainPage.patch(`/tasks/${id.toString()}`, { status: statusChange });
 
         setCurrentTasks((prevTasks) =>
           prevTasks.map((task) => (task.id === id ? { ...task, status: statusChange } : task)),
