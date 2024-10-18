@@ -113,7 +113,7 @@ export default function TaskList() {
           </Styled.ProjectListTitle>
         </Styled.ProjectListArea>
         <Styled.ProjectList>
-          <List data={currentTasks} onClick={handleCompleteClick} />
+          <TaskContentList data={currentTasks} onClick={handleCompleteClick} />
         </Styled.ProjectList>
       </Styled.ProjectListContainer>
       {currentTasks.length !== 0 && (
@@ -128,7 +128,7 @@ export default function TaskList() {
   );
 }
 
-const List = ({ data, onClick }: { data: Task[]; onClick: (id: number) => void }) => {
+const TaskContentList = ({ data, onClick }: { data: Task[]; onClick: (id: number) => void }) => {
   if (data.length === 0) {
     return <p>프로젝트가 없습니다</p>;
   }
