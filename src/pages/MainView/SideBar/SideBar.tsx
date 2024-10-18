@@ -63,14 +63,15 @@ export default function SideBar() {
       }
     };
 
-    eventSource.onerror = (error) => {
+    eventSource.onerror = (error: Event) => {
       console.error('SSE 연결에러', error);
+      console.log('서버 연결 끊김'); // 서버 연결 끊김 메시지 출력
       eventSource.close();
     };
 
-    if (!isLoggedIn) {
+    return () => {
       eventSource.close();
-    }
+    };
   }, [isLoggedIn]);
 
   return (

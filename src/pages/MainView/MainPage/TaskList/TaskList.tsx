@@ -102,14 +102,16 @@ export default function TaskList() {
         </Styled.ProjectList>
       </Styled.ProjectListContainer>
       {currentTasks.length !== 0 && (
-        <Pagination
-          totalItems={totalItems}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
-          setCurrentPage={handlePageChange}
-        />
+        <>
+          <Pagination
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            setCurrentPage={handlePageChange}
+          />
+          <Divider />
+        </>
       )}
-      <Divider />
     </Styled.TaskListMainContainer>
   );
 }
