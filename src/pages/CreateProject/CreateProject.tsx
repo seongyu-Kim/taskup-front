@@ -17,7 +17,7 @@ interface ProjectData {
   content: string;
   startDate: string;
   endDate: string;
-  members: string;
+  members: string[];
 }
 
 const CreateProject: React.FC = () => {
@@ -46,7 +46,7 @@ const CreateProject: React.FC = () => {
       setContent(projectData.content);
       setStartDate(new Date(projectData.startDate));
       setEndDate(new Date(projectData.endDate));
-      setMembers(projectData.members.split(',')); // 쉼표로 구분된 문자열을 배열로 변환
+      setMembers(projectData.members);
     }
   }, [projectData]);
 
@@ -57,7 +57,7 @@ const CreateProject: React.FC = () => {
     setEndDate(date);
   };
 
-  /////
+  ///
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!title || !subTitle || !content || !startDate || !endDate || members.length === 0) {
@@ -78,7 +78,7 @@ const CreateProject: React.FC = () => {
         title: title,
         subTitle: subTitle,
         content: content,
-        members: members,
+        members: members.map((member) => member.trim()).filter((member) => member !== ''),
         startDate: startDate ? format(startDate, 'yyyy-MM-dd') : null,
         endDate: endDate ? format(endDate, 'yyyy-MM-dd') : null,
       };
@@ -110,12 +110,14 @@ const CreateProject: React.FC = () => {
         if (error.response?.status === 401) {
           alert('인증에 실패하였습니다. 다시 로그인 해주세요.');
         } else if (error.response?.status === 404) {
-          alert('등록되지 않은 사용자입니다.'); // 404 에러에 대한 메시지
+          alert('등록되지 않은 사용자가 존재합니다.');
+        } else if (error.response?.status === 400) {
+          alert('중복된 사용자가 존재합니다.');
         } else {
           alert('등록에 실패하였습니다.');
         }
       } else {
-        console.error('Unknown error:', error);
+        console.error('알 수 없는 error:', error);
         alert('등록에 실패하였습니다.');
       }
     }
@@ -163,7 +165,7 @@ const CreateProject: React.FC = () => {
                   placeholder="프로젝트 내용"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  disabled
+                  required
                 />
               </Flex>
 
@@ -210,8 +212,11 @@ const CreateProject: React.FC = () => {
               <Styled.Input
                 type="text"
                 placeholder="참가자를 쉼표로 구분하여 입력하세요"
-                value={members.join(', ')}
-                onChange={(e) => setMembers(e.target.value.split(','))}
+                value={members.join(',')}
+                onChange={(e) => {
+                  const memberArray = e.target.value.split(',');
+                  setMembers(memberArray);
+                }}
                 required
               />
             </Flex>
