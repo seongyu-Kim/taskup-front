@@ -43,30 +43,29 @@ export default function SideBar() {
     const eventSource = new EventSourcePolyfill(sseUrl, { heartbeatTimeout: 86400000 });
 
     eventSource.onmessage = ({ data }) => {
-      console.log('이벤트 데이터 수신', data);
       if (data !== '연결되었습니다') {
         try {
           const newMessage: Message = JSON.parse(data);
           setMessage(newMessage);
         } catch (error) {
-          console.log('메시지 오류', error);
+          console.log('알림 요청 오류', error);
         }
       }
     };
 
     //이벤트 연결 확인용 (디버깅용이라 추후 삭제)
-    eventSource.onopen = () => {
-      console.log('SSE 연결 성공');
-    };
+    // eventSource.onopen = () => {
+    //   // console.log('SSE 연결 성공');
+    // };
     //오류 발생 처리
     eventSource.onerror = (error) => {
       console.error('SSE 연결에러', error);
-      eventSource.close(); // 필요 시 연결 종료
+      eventSource.close();
     };
 
     if (!isLoggedIn) {
       eventSource.close();
-      console.log('SSE 연결 종료');
+      // console.log('SSE 연결 종료');
     }
   }, [isLoggedIn]);
 

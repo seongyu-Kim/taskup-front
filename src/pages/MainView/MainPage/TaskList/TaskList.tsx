@@ -72,22 +72,36 @@ export default function TaskList() {
     );
   };
 
+  const handleCompleteClick = (id: number, status: string) => {
+    const token = localStorage.getItem('token');
+    // console.log(JSON.stringify({ status: 'IN_PROGRESS' }));
+    const callTaskListStatusChange = async () => {
+      try {
+        const statusChange = status === 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS';
+        await apiMainPage.patch(
+          `/tasks/${id.toString()}`,
+          { status: statusChange },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        setCurrentTasks((prevTasks) =>
+          prevTasks.map((task) => (task.id === id ? { ...task, status: statusChange } : task)),
+        );
+      } catch (error) {
+        console.log('TASK STATUS CHANGE ERROR', error);
+      }
+    };
+
+    callTaskListStatusChange().catch(console.error);
+  };
+
   if (!user) {
     return null;
   }
-
-  const handleCompleteClick = (id: number) => {
-    setCurrentTasks((prevData) =>
-      prevData.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status: item.status === 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS',
-            }
-          : item,
-      ),
-    );
-  };
 
   return (
     <Styled.TaskListMainContainer>
@@ -126,7 +140,13 @@ const TaskListHeader = () => {
   );
 };
 
-const TaskContentList = ({ data, onClick }: { data: Task[]; onClick: (id: number) => void }) => {
+const TaskContentList = ({
+  data,
+  onClick,
+}: {
+  data: Task[];
+  onClick: (id: number, status: string) => void;
+}) => {
   if (data.length === 0) {
     return <p>프로젝트가 없습니다</p>;
   }
@@ -148,7 +168,7 @@ const TaskContentList = ({ data, onClick }: { data: Task[]; onClick: (id: number
             <Styled.ListTableBox>
               <Styled.ListTextValue
                 onClick={() => {
-                  onClick(id);
+                  onClick(id, status);
                 }}>
                 {status === 'COMPLETED' ? (
                   <Styled.StyledFaCircleCheck />
