@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import image from '../assets/logo_color.webp';
 
 const breakpoints = {
   tablet: '768px',
@@ -28,7 +29,7 @@ const SidebarContainer = styled.div`
 const RegisterSidebar: React.FC = () => {
   return (
     <SidebarContainer>
-      <img src="./logo_color.png" alt="TaskUp logo" />
+      <img src={image} alt="TaskUp logo" />
     </SidebarContainer>
   );
 };

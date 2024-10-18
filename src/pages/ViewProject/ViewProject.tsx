@@ -12,7 +12,7 @@ interface ProjectData {
   content: string;
   startDate: string;
   endDate: string;
-  memebers: string;
+  members: string[];
 }
 
 const ViewProject: React.FC = () => {
@@ -116,7 +116,9 @@ const ViewProject: React.FC = () => {
             <Styled.Hr />
             <Styled.ContentFlex>
               <Styled.ContentTitle>참가자</Styled.ContentTitle>
-              <Styled.ContentDescription>{projectData.memebers}</Styled.ContentDescription>
+              <Styled.ContentDescription>
+                {projectData.members.join(', ')}
+              </Styled.ContentDescription>
             </Styled.ContentFlex>
             <Styled.MarginTop top={60} />
             <Styled.BtnBox>
