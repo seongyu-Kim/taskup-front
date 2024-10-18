@@ -63,19 +63,27 @@ export const NoticeModalBodyBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 0;
     &::-webkit-scrollbar {
       display: none;
     }
     li {
       display: flex;
-      justify-content: space-around;
+      flex-direction: column;
+      align-items: center;
       width: 100%;
       list-style-type: none;
+      padding: 10px 0 10px 0;
       border-bottom: 1px solid #9c9c9c;
+      p {
+        display: flex;
+        align-items: center;
+        margin: 0;
+      }
     }
   }
 `;
 export const NoticeText = styled.p`
+  text-align: center;
   color: ${(props) => props.color};
 `;

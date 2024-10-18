@@ -26,4 +26,5 @@ export const BaseButton = styled.button<ButtonProps>`
   bottom: ${(props) => props.bottom};
   left: ${(props) => props.left};
   right: ${(props) => props.right};
+  cursor: pointer;
 `;

@@ -34,7 +34,7 @@ export default function CalenderView() {
       try {
         //임시로 전체 데이터 사용
         const response = await apiMainPage.get(
-          `/tasks/calender?startDate=${calendarTitle}-29&type=month`,
+          `/tasks/calender?startDate=${calendarTitle}-1&type=month`,
         );
         if (response) {
           setCallEvent(response.data.data);

@@ -7,6 +7,8 @@ import { useProfileImgStore } from '@stores/ProfileImgStore/ProfileImgStore';
 import { useEffect, useState } from 'react';
 import defaultImage from '@assets/임시 프로필사진.png';
 import { useUserStore } from '@stores/UserStore/userStore';
+import { Message, useNoticeMessage } from '@stores/UserMessageStore/UserMessagestore';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 export default function SideBar() {
   const { setIsOpen } = useModal();
@@ -17,7 +19,7 @@ export default function SideBar() {
   //로컬스토리지에서 유저 데이터 가져오기
   // const userData = localStorage.getItem('userData');
   // const { email, name }: { email: string; name: string } = JSON.parse(userData!);
-  const { user } = useUserStore();
+  const { user, isLoggedIn } = useUserStore();
   //초기 프로필 사진 없을 때 기본 사진
   useEffect(() => {
     if (imageUrl == '/static/media/임시 프로필사진.4d93130773eae276d513.png') {
@@ -34,6 +36,38 @@ export default function SideBar() {
       setNowImg(saveImg);
     }
   }, [imageUrl]);
+
+  const { setMessage } = useNoticeMessage();
+  useEffect(() => {
+    const sseUrl = 'http://kdt-react-node-1-team03.elicecoding.com:5000/events';
+    const eventSource = new EventSourcePolyfill(sseUrl, { heartbeatTimeout: 86400000 });
+
+    eventSource.onmessage = ({ data }) => {
+      if (data !== '연결되었습니다') {
+        try {
+          const newMessage: Message = JSON.parse(data);
+          setMessage(newMessage);
+        } catch (error) {
+          console.log('알림 요청 오류', error);
+        }
+      }
+    };
+
+    //이벤트 연결 확인용 (디버깅용이라 추후 삭제)
+    // eventSource.onopen = () => {
+    //   // console.log('SSE 연결 성공');
+    // };
+    //오류 발생 처리
+    eventSource.onerror = (error) => {
+      console.error('SSE 연결에러', error);
+      eventSource.close();
+    };
+
+    if (!isLoggedIn) {
+      eventSource.close();
+      // console.log('SSE 연결 종료');
+    }
+  }, [isLoggedIn]);
 
   return (
     <>
