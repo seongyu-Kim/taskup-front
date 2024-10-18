@@ -7,6 +7,7 @@ import apiMainPage from '@apis/apiMainPage';
 import { useUserStore } from '@stores/UserStore/userStore';
 import { DatesSetArg } from '@fullcalendar/common';
 import { useNavigate } from 'react-router-dom';
+import { EventClickArg } from '@fullcalendar/core';
 
 interface CalenderType {
   id: number;
@@ -57,7 +58,7 @@ export default function CalenderView() {
   };
 
   //이벤트 클릭 이동!
-  const handleEventClick = (clickInfo: any) => {
+  const handleEventClick = (clickInfo: EventClickArg) => {
     const eventId = clickInfo.event.id;
     navigate(`/view/${eventId}`);
   };
@@ -71,7 +72,11 @@ export default function CalenderView() {
   }
 
   const userEventData = callEvent.filter((item) => {
-    return item.name && item.name.includes(user.name);
+    if (item.members === undefined) {
+      return item.name === user.name;
+    } else {
+      return item.members.includes(user.name);
+    }
   });
 
   return (

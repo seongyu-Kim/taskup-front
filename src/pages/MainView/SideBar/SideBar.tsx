@@ -24,6 +24,7 @@ export default function SideBar() {
     const loadUserProfileImg = async () => {
       try {
         const response = await apiMainPage.get(`/user/profile`);
+        console.log(response.data.data);
       } catch (error) {
         console.error('Profile Img Load Error', error);
       }

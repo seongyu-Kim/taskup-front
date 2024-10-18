@@ -31,7 +31,7 @@ export default function TaskList() {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const currentPage = getPageFromUrl();
-
+  //리스트 필터링
   useEffect(() => {
     const callTaskList = async () => {
       if (!user || !user.name) {
@@ -43,9 +43,12 @@ export default function TaskList() {
         );
         if (response && response.data) {
           const allTasks = response.data.data.data;
-          const userTasks = allTasks.filter(
-            (item: Task) => item.author === user.name || item.members.includes(user.name),
-          );
+          const userTasks = allTasks.filter((item: Task) => {
+            if (item.members.includes(user.name)) {
+              return true;
+            }
+            return item.author === user.name;
+          });
           setCurrentTasks(userTasks);
           setTotalItems(response.data.data.total);
         }
