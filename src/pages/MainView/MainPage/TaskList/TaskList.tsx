@@ -34,17 +34,24 @@ export default function TaskList() {
 
   useEffect(() => {
     const callTaskList = async () => {
+      const token = localStorage.getItem('token');
       if (!user || !user.name) {
         return;
       }
       try {
         const response = await apiMainPage.get(
-          `/tasks?page=${currentPage}&pageSize=${itemsPerPage}&status`,
+          `/tasks?page=${currentPage}&pageSize=${itemsPerPage}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
         if (response && response.data) {
+          console.log('데이터 수신');
           const allTasks = response.data.data.data;
           const userTasks = allTasks.filter(
-            (item: Task) => item.author?.includes(user.name) || item.members.includes(user.name),
+            (item: Task) => item.members.includes(user.name) || item.author === user.name,
           );
           setCurrentTasks(userTasks);
           setTotalItems(response.data.data.total);
@@ -151,9 +158,11 @@ const TaskContentList = ({
     return <p>프로젝트가 없습니다</p>;
   }
 
+  const sortedData = [...data].sort((a, b) => a.id - b.id);
+
   return (
     <>
-      {data.map(({ id, title, content, status }, index) => {
+      {sortedData.map(({ id, title, content, status }, index) => {
         const isEven = index % 2 == 0 ? '#e0e0e0' : 'white';
         const ellipsisContent = `${content.slice(0, 10)}...`;
         return (
