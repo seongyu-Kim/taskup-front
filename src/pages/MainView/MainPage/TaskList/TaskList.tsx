@@ -3,7 +3,8 @@ import * as Styled from './TaskList.styled';
 import Pagination from '@components/Pagination/Pagination';
 import apiMainPage from '@apis/apiMainPage';
 import { useUserStore } from '@stores/UserStore/userStore';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Divider from '@components/Divider';
 
 interface Task {
   id: number;
@@ -19,40 +20,17 @@ interface Task {
 
 const itemsPerPage = 10;
 
+const getPageFromUrl = () => {
+  const params = new URLSearchParams(window.location.search);
+  return parseInt(params.get('page') || '1', 10);
+};
+
 export default function TaskList() {
-  const { user } = useUserStore();
   const [totalItems, setTotalItems] = useState(0);
-  const location = useLocation();
+  const [currentTasks, setCurrentTasks] = useState<Task[]>([]);
+  const { user } = useUserStore();
   const navigate = useNavigate();
-
-  const getPageFromUrl = () => {
-    const params = new URLSearchParams(location.search);
-    return parseInt(params.get('page') || '1', 10);
-  };
-
-  const [currentPage, setCurrentPage] = useState(getPageFromUrl());
-
-  useEffect(() => {
-    setCurrentPage(getPageFromUrl());
-  }, [location.search]);
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    const newSearchParams = new URLSearchParams({
-      page: newPage.toString(),
-      pageSize: itemsPerPage.toString(),
-      status: '',
-    });
-    navigate(
-      {
-        pathname: '/main/tasks',
-        search: newSearchParams.toString(),
-      },
-      { replace: true },
-    );
-  };
-
-  const [callTaskListData, setCallTaskListData] = useState<Task[]>([]);
+  const currentPage = getPageFromUrl();
 
   useEffect(() => {
     const callTaskList = async () => {
@@ -68,7 +46,7 @@ export default function TaskList() {
           const userTasks = allTasks.filter(
             (item: Task) => item.author?.includes(user.name) || item.members.includes(user.name),
           );
-          setCallTaskListData(userTasks);
+          setCurrentTasks(userTasks);
           setTotalItems(response.data.data.total);
         }
       } catch (error) {
@@ -79,53 +57,58 @@ export default function TaskList() {
     callTaskList().catch(console.error);
   }, [currentPage, user]);
 
+  const handlePageChange = (newPage: number) => {
+    const newSearchParams = new URLSearchParams({
+      page: newPage.toString(),
+      pageSize: itemsPerPage.toString(),
+      status: '',
+    });
+    navigate(
+      {
+        pathname: '/main/tasks',
+        search: newSearchParams.toString(),
+      },
+      { replace: true },
+    );
+  };
+
+  const handleCompleteClick = (id: number, status: string) => {
+    const token = localStorage.getItem('token');
+    // console.log(JSON.stringify({ status: 'IN_PROGRESS' }));
+    const callTaskListStatusChange = async () => {
+      try {
+        const statusChange = status === 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS';
+        await apiMainPage.patch(
+          `/tasks/${id.toString()}`,
+          { status: statusChange },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        setCurrentTasks((prevTasks) =>
+          prevTasks.map((task) => (task.id === id ? { ...task, status: statusChange } : task)),
+        );
+      } catch (error) {
+        console.log('TASK STATUS CHANGE ERROR', error);
+      }
+    };
+
+    callTaskListStatusChange().catch(console.error);
+  };
+
   if (!user) {
     return null;
   }
 
-  const currentTasks = callTaskListData;
-
-  const handleCompleteClick = (id: number) => {
-    setCallTaskListData((prevData) =>
-      prevData.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status: item.status === 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS',
-            }
-          : item,
-      ),
-    );
-  };
-
   return (
     <Styled.TaskListMainContainer>
-      <button
-        onClick={() => {
-          console.log('user', user);
-          const tempUserData = {
-            name: 'test_name',
-            email: 'parkjh001217@naver.com',
-          };
-          localStorage.setItem('user', JSON.stringify(tempUserData));
-          console.log('유저 데이터 삽입 완료');
-        }}>
-        유저 상태 확인
-      </button>
       <Styled.ProjectListContainer>
-        <Styled.ProjectListArea>
-          <Styled.ProjectListTitle>
-            <Styled.TitleText>아이디</Styled.TitleText>
-          </Styled.ProjectListTitle>
-          <Styled.ProjectListTitleName>
-            <Styled.TitleText>제목</Styled.TitleText>
-          </Styled.ProjectListTitleName>
-          <Styled.ProjectListTitle>
-            <Styled.TitleText>완료여부</Styled.TitleText>
-          </Styled.ProjectListTitle>
-        </Styled.ProjectListArea>
+        <TaskListHeader />
         <Styled.ProjectList>
-          <List data={currentTasks} onClick={handleCompleteClick} />
+          <TaskContentList data={currentTasks} onClick={handleCompleteClick} />
         </Styled.ProjectList>
       </Styled.ProjectListContainer>
       {currentTasks.length !== 0 && (
@@ -136,11 +119,34 @@ export default function TaskList() {
           setCurrentPage={handlePageChange}
         />
       )}
+      <Divider />
     </Styled.TaskListMainContainer>
   );
 }
 
-const List = ({ data, onClick }: { data: Task[]; onClick: (id: number) => void }) => {
+const TaskListHeader = () => {
+  return (
+    <Styled.ProjectListArea>
+      <Styled.ProjectListTitle>
+        <Styled.TitleText>아이디</Styled.TitleText>
+      </Styled.ProjectListTitle>
+      <Styled.ProjectListTitleName>
+        <Styled.TitleText>제목</Styled.TitleText>
+      </Styled.ProjectListTitleName>
+      <Styled.ProjectListTitle>
+        <Styled.TitleText>완료여부</Styled.TitleText>
+      </Styled.ProjectListTitle>
+    </Styled.ProjectListArea>
+  );
+};
+
+const TaskContentList = ({
+  data,
+  onClick,
+}: {
+  data: Task[];
+  onClick: (id: number, status: string) => void;
+}) => {
   if (data.length === 0) {
     return <p>프로젝트가 없습니다</p>;
   }
@@ -162,7 +168,7 @@ const List = ({ data, onClick }: { data: Task[]; onClick: (id: number) => void }
             <Styled.ListTableBox>
               <Styled.ListTextValue
                 onClick={() => {
-                  onClick(id);
+                  onClick(id, status);
                 }}>
                 {status === 'COMPLETED' ? (
                   <Styled.StyledFaCircleCheck />
