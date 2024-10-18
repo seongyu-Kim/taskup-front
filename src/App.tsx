@@ -40,7 +40,8 @@ function App() {
           <Route path="/password-reset/confirm" element={<PasswordResetLinkPage />} />
         </Route>
         <Route path="/create" element={<CreateProject />} />
-        <Route path="/view" element={<ViewProject />} />
+        <Route path="/create/:projectId" element={<CreateProject />} />
+        <Route path="/view/:projectId" element={<ViewProject />} />
       </Routes>
       <ModalPortal>
         <ModalView />
