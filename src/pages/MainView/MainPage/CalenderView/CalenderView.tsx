@@ -43,7 +43,7 @@ export default function CalenderView() {
           setCallEvent(response.data.data);
         }
       } catch (error) {
-        console.log('CALENDERVIEW DATA CALL ERROR', error);
+        console.log('CALENDER VIEW DATA CALL ERROR', error);
       }
     };
     callCalenderEventData().catch(console.error);
@@ -72,7 +72,7 @@ export default function CalenderView() {
   }
 
   const userEventData = callEvent.filter((item) => {
-    if (item.members === undefined) {
+    if (!item.members || item.members.length === 0) {
       return item.name === user.name;
     } else {
       return item.members.includes(user.name);
