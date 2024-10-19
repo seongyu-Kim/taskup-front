@@ -5,7 +5,6 @@ import { useModal, useModalState } from '@stores/ModalStore/ModalStore';
 import { useNavigate } from 'react-router-dom';
 import { useProfileImgStore } from '@stores/ProfileImgStore/ProfileImgStore';
 import { useEffect, useState } from 'react';
-import defaultImage from '@assets/임시 프로필사진.png';
 import { useUserStore } from '@stores/UserStore/userStore';
 import { Message, useNoticeMessage } from '@stores/UserMessageStore/UserMessagestore';
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -14,40 +13,44 @@ import apiMainPage from '@apis/apiMainPage';
 export default function SideBar() {
   const { setIsOpen } = useModal();
   const { setModalState } = useModalState();
-  const { imageUrl } = useProfileImgStore();
-  const [nowImg, setNowImg] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const { imageUrl, setImageUrl } = useProfileImgStore();
   const { user, isLoggedIn } = useUserStore();
   const { setMessage } = useNoticeMessage();
-  //데이터 요청
+  const navigate = useNavigate();
+  //프로필 데이터 요청
+  const [userImage, setUserImage] = useState<string | null>(null);
   useEffect(() => {
-    const loadUserProfileImg = async () => {
+    const loadUserProfile = async () => {
       try {
-        const response = await apiMainPage.get(`/user/profile`);
-        console.log(response.data.data);
+        const responseUserProfile = await apiMainPage.get(`/user/profile`);
+        const userName = responseUserProfile.data.data.name;
+        if (userName === user!.name && responseUserProfile.data.data.profileImage !== null) {
+          const file = responseUserProfile.data.data.profileImage.split(
+            'kdt-react-node-1-team03.elicecoding.com:5000',
+          )[1];
+          const loadUserImg = async () => {
+            try {
+              const responseUserImg = await apiMainPage.get(`${file}`, { responseType: 'blob' });
+              if (responseUserImg.data) {
+                const imgBlob = new Blob([responseUserImg.data], { type: 'image/jpeg' });
+                const imgUrl = URL.createObjectURL(imgBlob);
+                setUserImage(imgUrl);
+                setImageUrl(imgUrl);
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          };
+          loadUserImg().catch(console.error);
+        }
       } catch (error) {
         console.error('Profile Img Load Error', error);
       }
     };
-    loadUserProfileImg().catch(console.error);
-  });
-  //초기 프로필 사진 없을 때 기본 사진
-  useEffect(() => {
-    if (imageUrl == '/static/media/임시 프로필사진.4d93130773eae276d513.png') {
-      const saveImg = localStorage.getItem('profileImage');
-      if (saveImg === null) {
-        setNowImg(imageUrl);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    const saveImg = localStorage.getItem('profileImage');
-    if (saveImg) {
-      setNowImg(saveImg);
-    }
+    loadUserProfile().catch(console.error);
   }, [imageUrl]);
 
+  //sse 알림 수신 부분
   useEffect(() => {
     const sseUrl = 'http://kdt-react-node-1-team03.elicecoding.com:5000/events';
     const eventSource = new EventSourcePolyfill(sseUrl, { heartbeatTimeout: 86400000 });
@@ -80,7 +83,7 @@ export default function SideBar() {
         <Styled.LogoImg src={logo} alt="TaskUp" />
         <Styled.DetailDiv>
           <Styled.ProfileBox>
-            <Styled.ProfileImg src={nowImg || defaultImage} alt="프로필 사진" />
+            <Styled.ProfileImg src={userImage || imageUrl} alt="프로필 사진" />
             <Styled.NameBox
               onClick={() => {
                 setModalState('Profile');

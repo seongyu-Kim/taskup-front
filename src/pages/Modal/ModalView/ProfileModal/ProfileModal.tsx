@@ -9,17 +9,16 @@ import { useUserStore } from '@stores/UserStore/userStore';
 import { useNavigate } from 'react-router-dom';
 import { useProfileImgStore } from '@stores/ProfileImgStore/ProfileImgStore';
 import MainPageDefaultButton from '@components/MainPageDefaultButton/MainPageDefaultButton';
+import apiMainPage from '@apis/apiMainPage';
 
 export default function ProfileModal() {
-  const [saveState, setSaveState] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [tempImgUrl, setTempImgUrl] = useState<string | null>(localStorage.getItem('profileImage'));
+  const [tempImgUrl, setTempImgUrl] = useState<string | null>('');
   const { isOpen, setIsOpen } = useModal();
   const { setModalState } = useModalState();
   const { imageUrl, setImageUrl } = useProfileImgStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const logout = useUserStore((state) => state.logout);
-  const localImg = localStorage.getItem('profileImage');
   const navigate = useNavigate();
   const { user } = useUserStore();
 
@@ -35,11 +34,7 @@ export default function ProfileModal() {
       alert('파일을 선택해 주세요');
       return;
     }
-    if (saveState) {
-      setImageUrl(tempImgUrl!);
-      localStorage.setItem('profileImage', tempImgUrl!);
-      setSaveState(false);
-    }
+    setImageUrl(tempImgUrl!);
   };
   // 이미지 변경
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,29 +53,47 @@ export default function ProfileModal() {
       reader.readAsDataURL(file);
     }
   };
-
+  //바깥 영역 클릭
   const handleModalOutsideClick = () => {
     setIsOpen(false);
-    setSaveState(false);
-    setTempImgUrl(localImg);
+    setTempImgUrl('');
+    setSelectedFile(null);
   };
-
+  //완료 버튼 클릭
   const handleCompleteButtonClick = () => {
+    const userImage = async () => {
+      if (!selectedFile) {
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('profileImage', selectedFile);
+
+      try {
+        await apiMainPage.patch(`/user/profile`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
     setIsOpen(false);
     setModalState('');
-    setSaveState(true);
     handleImageSave();
+    userImage().catch(console.error);
   };
-
+  //이미지 변경 클릭
   const handleImageChangeClick = () => {
     handleFileSelectorClick(fileInputRef);
-    setSaveState(!saveState);
   };
-
+  //로그아웃 버튼 클릭
   const handleLogoutClick = () => {
     setIsOpen(false);
     setModalState('');
     handleLogout();
+    setTempImgUrl('');
   };
 
   if (!isOpen) {
@@ -106,7 +119,7 @@ export default function ProfileModal() {
             <Styled.ProfileModalImgBox>
               <Styled.ProfileImg
                 id="profile_img"
-                src={tempImgUrl || localImg || imageUrl}
+                src={tempImgUrl || imageUrl}
                 onClick={handleImageChangeClick}
                 alt="프로필 사진"
               />
