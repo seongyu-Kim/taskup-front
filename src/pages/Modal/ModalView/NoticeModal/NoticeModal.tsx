@@ -27,7 +27,6 @@ export default function NoticeModal() {
   if (!isOpen) {
     return null;
   }
-  console.log('userNoticeData', userNoticeData);
   return (
     <>
       <Styled.NoticeModalContainer onClick={() => setIsOpen(false)}>
@@ -58,7 +57,6 @@ const NoticeList = ({ data }: { data: NoticeDataType[] }) => {
     navigate(`/view/${id.toString()}`);
     setIsOpen(false);
   };
-  console.log('userNoticeData', data);
   return (
     <ul>
       {data

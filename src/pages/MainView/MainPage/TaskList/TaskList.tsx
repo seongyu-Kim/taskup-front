@@ -44,19 +44,19 @@ export default function TaskList() {
         if (response && response.data) {
           const allTasks = response.data.data.data;
           const userTasks = allTasks.filter((item: Task) => {
-            if (item.members.includes(user.name)) {
-              return true;
+            if (!item.members || item.members.length === 0) {
+              return item.author === user.name;
+            } else {
+              return item.members.includes(user.name) || item.author === user.name;
             }
-            return item.author === user.name;
           });
           setCurrentTasks(userTasks);
           setTotalItems(response.data.data.total);
         }
       } catch (error) {
-        console.log('TASKLIST DATA CALL ERROR', error);
+        console.log('TASK LIST DATA CALL ERROR', error);
       }
     };
-
     callTaskList().catch(console.error);
   }, [currentPage, user]);
 
@@ -151,11 +151,9 @@ const TaskContentList = ({
     return <p>프로젝트가 없습니다</p>;
   }
 
-  const sortedData = [...data].sort((a, b) => a.id - b.id);
-
   return (
     <>
-      {sortedData.map(({ id, title, content, status }, index) => {
+      {data.map(({ id, title, content, status }, index) => {
         const isEven = index % 2 == 0 ? '#e0e0e0' : 'white';
         const ellipsisContent = `${content.slice(0, 10)}...`;
         return (
