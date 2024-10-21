@@ -48,7 +48,7 @@ export default function SideBar() {
       }
     };
     loadUserProfile().catch(console.error);
-  }, [imageUrl]);
+  }, []);
 
   //sse 알림 수신 부분
   useEffect(() => {
