@@ -30,22 +30,27 @@ export default function CalenderView() {
     center: 'title',
     end: 'today prev,next',
   };
+
+  const callCalenderEventData = async () => {
+    try {
+      //임시로 전체 데이터 사용
+      const response = await apiMainPage.get(
+        `/tasks/calender?startDate=${calendarTitle}-1&type=month`,
+      );
+      if (response) {
+        setCallEvent(response.data.data);
+      }
+    } catch (error) {
+      console.log('CALENDER VIEW DATA CALL ERROR', error);
+    }
+  };
+  callCalenderEventData().catch(console.error);
   //버튼 별 커스텀
+  useEffect(() => {
+    callCalenderEventData().catch(console.error);
+  }, []);
 
   useEffect(() => {
-    const callCalenderEventData = async () => {
-      try {
-        //임시로 전체 데이터 사용
-        const response = await apiMainPage.get(
-          `/tasks/calender?startDate=${calendarTitle}-1&type=month`,
-        );
-        if (response) {
-          setCallEvent(response.data.data);
-        }
-      } catch (error) {
-        console.log('CALENDER VIEW DATA CALL ERROR', error);
-      }
-    };
     callCalenderEventData().catch(console.error);
   }, [calendarTitle]);
 
@@ -86,8 +91,8 @@ export default function CalenderView() {
         events={userEventData.map(({ id, title, startDate, endDate }) => ({
           id: id,
           title: title,
-          start: startDate,
-          end: endDate,
+          startStr: startDate,
+          endStr: endDate,
         }))}
         eventClick={handleEventClick}
         initialView="dayGridMonth"
