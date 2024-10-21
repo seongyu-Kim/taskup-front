@@ -23,7 +23,7 @@ export const useUserStore = create<UserState>((set) => ({
   },
   logout: async () => {
     try {
-      await apiRequest('post', '/logout');
+      await apiRequest('post', '/user/logout');
       console.log('로그아웃 성공');
       localStorage.removeItem('isLoggedIn');
       localStorage.removeItem('user');
