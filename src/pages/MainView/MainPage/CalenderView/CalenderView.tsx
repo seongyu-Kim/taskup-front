@@ -102,6 +102,7 @@ export default function CalenderView() {
         dayCellContent={handleDayCellContent}
         headerToolbar={header}
         datesSet={handleDateSet}
+        displayEventTime={false}
       />
     </CalenderBox>
   );
