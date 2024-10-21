@@ -3,7 +3,8 @@ import * as Styled from './TaskList.styled';
 import Pagination from '@components/Pagination/Pagination';
 import apiMainPage from '@apis/apiMainPage';
 import { useUserStore } from '@stores/UserStore/userStore';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Divider from '@components/Divider';
 
 interface Task {
   id: number;
@@ -17,26 +18,49 @@ interface Task {
   author: string;
 }
 
+const itemsPerPage = 10;
+
+const getPageFromUrl = () => {
+  const params = new URLSearchParams(window.location.search);
+  return parseInt(params.get('page') || '1', 10);
+};
+
 export default function TaskList() {
-  const { user } = useUserStore();
-  const itemsPerPage = 10;
   const [totalItems, setTotalItems] = useState(0);
-  const location = useLocation();
+  const [currentTasks, setCurrentTasks] = useState<Task[]>([]);
+  const { user } = useUserStore();
   const navigate = useNavigate();
-
-  const getPageFromUrl = () => {
-    const params = new URLSearchParams(location.search);
-    return parseInt(params.get('page') || '1', 10);
-  };
-
-  const [currentPage, setCurrentPage] = useState(getPageFromUrl());
-
+  const currentPage = getPageFromUrl();
+  //리스트 필터링
   useEffect(() => {
-    setCurrentPage(getPageFromUrl());
-  }, [location.search]);
+    const callTaskList = async () => {
+      if (!user || !user.name) {
+        return;
+      }
+      try {
+        const response = await apiMainPage.get(
+          `/tasks?page=${currentPage}&pageSize=${itemsPerPage}`,
+        );
+        if (response && response.data) {
+          const allTasks = response.data.data.data;
+          const userTasks = allTasks.filter((item: Task) => {
+            if (!item.members || item.members.length === 0) {
+              return item.author === user.name;
+            } else {
+              return item.members.includes(user.name) || item.author === user.name;
+            }
+          });
+          setCurrentTasks(userTasks);
+          setTotalItems(response.data.data.total);
+        }
+      } catch (error) {
+        console.log('TASK LIST DATA CALL ERROR', error);
+      }
+    };
+    callTaskList().catch(console.error);
+  }, [currentPage, user]);
 
   const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
     const newSearchParams = new URLSearchParams({
       page: newPage.toString(),
       pageSize: itemsPerPage.toString(),
@@ -51,122 +75,127 @@ export default function TaskList() {
     );
   };
 
-  const [callTaskListData, setCallTaskListData] = useState<Task[]>([]);
-
-  useEffect(() => {
-    const callTaskList = async () => {
-      if (!user || !user.name) {
-        return;
-      }
+  const handleCompleteClick = (id: number, status: string) => {
+    const callTaskListStatusChange = async () => {
       try {
-        const response = await apiMainPage.get(
-          `/tasks?page=${currentPage}&pageSize=${itemsPerPage}&status`,
+        const statusChange = status === 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS';
+        await apiMainPage.patch(`/tasks/${id.toString()}`, { status: statusChange });
+
+        setCurrentTasks((prevTasks) =>
+          prevTasks.map((task) => (task.id === id ? { ...task, status: statusChange } : task)),
         );
-        if (response && response.data) {
-          const allTasks = response.data.data.data;
-          const userTasks = allTasks.filter(
-            (item: Task) => item.author?.includes(user.name) || item.members.includes(user.name),
-          );
-          setCallTaskListData(userTasks);
-          setTotalItems(response.data.data.total);
-        }
       } catch (error) {
-        console.log('TASKLIST DATA CALL ERROR', error);
+        console.log('TASK STATUS CHANGE ERROR', error);
       }
     };
 
-    callTaskList().catch(console.error);
-  }, [currentPage, user]);
+    callTaskListStatusChange().catch(console.error);
+  };
 
   if (!user) {
     return null;
   }
 
-  const currentTasks = callTaskListData;
-
-  const handleCompleteClick = (id: number) => {
-    setCallTaskListData((prevData) =>
-      prevData.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status: item.status === 'IN_PROGRESS' ? 'COMPLETED' : 'IN_PROGRESS',
-            }
-          : item,
-      ),
-    );
-  };
-
-  return callTaskListData.length === 0 ? (
-    <Styled.MainPageContainer>
+  return (
+    <Styled.TaskListMainContainer>
       <Styled.ProjectListContainer>
-        <Styled.ProjectListArea>
-          <Styled.ProjectListTitle>
-            <Styled.TitleText>Num</Styled.TitleText>
-          </Styled.ProjectListTitle>
-          <Styled.ProjectListTitleName>
-            <Styled.TitleText>Name</Styled.TitleText>
-          </Styled.ProjectListTitleName>
-          <Styled.ProjectListTitle>
-            <Styled.TitleText>CheckBox</Styled.TitleText>
-          </Styled.ProjectListTitle>
-        </Styled.ProjectListArea>
+        <TaskListHeader />
         <Styled.ProjectList>
-          <p>프로젝트가 없습니다</p>
+          <TaskContentList data={currentTasks} onClick={handleCompleteClick} />
         </Styled.ProjectList>
       </Styled.ProjectListContainer>
-    </Styled.MainPageContainer>
-  ) : (
-    <Styled.MainPageContainer>
-      <Styled.ProjectListContainer>
-        <Styled.ProjectListArea>
-          <Styled.ProjectListTitle>
-            <Styled.TitleText>Num</Styled.TitleText>
-          </Styled.ProjectListTitle>
-          <Styled.ProjectListTitleName>
-            <Styled.TitleText>Name</Styled.TitleText>
-          </Styled.ProjectListTitleName>
-          <Styled.ProjectListTitle>
-            <Styled.TitleText>CheckBox</Styled.TitleText>
-          </Styled.ProjectListTitle>
-        </Styled.ProjectListArea>
-        <Styled.ProjectList>
-          {currentTasks.map((item, index) => (
-            <Styled.ProjectListItem
-              backgroundColor={index % 2 === 0 ? '#e0e0e0' : 'white'}
-              key={item.id}>
-              <Styled.ListTableBox>
-                <Styled.ListTextValue>{item.id}</Styled.ListTextValue>
-              </Styled.ListTableBox>
-              <Styled.ListTextNameAreaBox>
-                <Styled.ListTextValue>{item.title}</Styled.ListTextValue>
-                <Styled.ListTextValue className="content">{`${item.content.slice(
-                  0,
-                  10,
-                )}...`}</Styled.ListTextValue>
-              </Styled.ListTextNameAreaBox>
-              <Styled.ListTableBox>
-                <Styled.ListTextValue
-                  onClick={() => {
-                    handleCompleteClick(item.id);
-                  }}>
-                  {item.status === 'COMPLETED' ? (
-                    <Styled.StyledFaCircleCheck />
-                  ) : (
-                    <Styled.StyledFaRegCheckCircle />
-                  )}
-                </Styled.ListTextValue>
-              </Styled.ListTableBox>
-            </Styled.ProjectListItem>
-          ))}
-        </Styled.ProjectList>
-      </Styled.ProjectListContainer>
-      <Pagination
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-        currentPage={currentPage}
-        setCurrentPage={handlePageChange}
-      />
-    </Styled.MainPageContainer>
+      {currentTasks.length !== 0 && (
+        <>
+          <Pagination
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            setCurrentPage={handlePageChange}
+          />
+          <Divider />
+        </>
+      )}
+    </Styled.TaskListMainContainer>
   );
 }
+
+const TaskListHeader = () => {
+  return (
+    <Styled.ProjectListArea>
+      <Styled.ProjectListTitle>
+        <Styled.TitleText>아이디</Styled.TitleText>
+      </Styled.ProjectListTitle>
+      <Styled.ProjectListTitleName>
+        <Styled.TitleText>제목</Styled.TitleText>
+      </Styled.ProjectListTitleName>
+      <Styled.ProjectListTitle>
+        <Styled.TitleText>완료여부</Styled.TitleText>
+      </Styled.ProjectListTitle>
+    </Styled.ProjectListArea>
+  );
+};
+
+const TaskContentList = ({
+  data,
+  onClick,
+}: {
+  data: Task[];
+  onClick: (id: number, status: string) => void;
+}) => {
+  const navigate = useNavigate();
+  const handleViewTaskClick = (id: number) => {
+    navigate(`/view/${id.toString()}`);
+  };
+
+  if (data.length === 0) {
+    return <p>프로젝트가 없습니다</p>;
+  }
+
+  return (
+    <>
+      {data.map(({ id, title, content, status }, index) => {
+        const isEven = index % 2 == 0 ? '#e0e0e0' : 'white';
+        const ellipsisContent = `${content.slice(0, 10)}...`;
+        return (
+          <Styled.ProjectListItem backgroundColor={isEven} key={id}>
+            <Styled.ListTableBox>
+              <Styled.ListTextValue
+                onClick={() => {
+                  handleViewTaskClick(id);
+                }}>
+                {id}
+              </Styled.ListTextValue>
+            </Styled.ListTableBox>
+            <Styled.ListTextNameAreaBox>
+              <Styled.ListTextValue
+                onClick={() => {
+                  handleViewTaskClick(id);
+                }}>
+                {title}
+              </Styled.ListTextValue>
+              <Styled.ListTextValue
+                className="content"
+                onClick={() => {
+                  handleViewTaskClick(id);
+                }}>
+                {ellipsisContent}
+              </Styled.ListTextValue>
+            </Styled.ListTextNameAreaBox>
+            <Styled.ListTableBox>
+              <Styled.ListTextValue
+                onClick={() => {
+                  onClick(id, status);
+                }}>
+                {status === 'COMPLETED' ? (
+                  <Styled.StyledFaCircleCheck />
+                ) : (
+                  <Styled.StyledFaRegCheckCircle />
+                )}
+              </Styled.ListTextValue>
+            </Styled.ListTableBox>
+          </Styled.ProjectListItem>
+        );
+      })}
+    </>
+  );
+};

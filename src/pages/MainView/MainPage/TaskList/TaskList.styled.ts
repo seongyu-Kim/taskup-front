@@ -4,14 +4,12 @@ import { FaCircleCheck } from 'react-icons/fa6';
 import { FaRegCheckCircle } from 'react-icons/fa';
 
 // 페이지 리스트 컨테이너
-export const MainPageContainer = styled.div`
-  height: 40%;
+export const TaskListMainContainer = styled.div`
   width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
   //gap: 15px;
-  border-bottom: 1px solid black;
   @media (max-width: 760px) {
     margin-bottom: 30px;
     height: 30%;
