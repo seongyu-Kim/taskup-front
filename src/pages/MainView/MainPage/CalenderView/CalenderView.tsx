@@ -91,8 +91,8 @@ export default function CalenderView() {
         events={userEventData.map(({ id, title, startDate, endDate }) => ({
           id: id,
           title: title,
-          startStr: startDate,
-          endStr: endDate,
+          start: startDate,
+          end: endDate,
         }))}
         eventClick={handleEventClick}
         initialView="dayGridMonth"
