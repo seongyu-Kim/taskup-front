@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { UserPaths } from '../../routes/userPath';
-import { apiRequest } from '../../apis/apiClient';
+import { apiRequest } from '../../apis/authApi';
 interface PasswordResetFormData {
   newPassword: string;
   confirmPassword: string;
