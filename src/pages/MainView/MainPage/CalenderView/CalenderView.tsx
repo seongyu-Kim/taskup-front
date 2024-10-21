@@ -77,11 +77,7 @@ export default function CalenderView() {
   }
 
   const userEventData = callEvent.filter((item) => {
-    if (!item.members || item.members.length === 0) {
-      return item.name === user.name;
-    } else {
-      return item.members.includes(user.name);
-    }
+    return item.members.includes(user.name) || item.name === user.name;
   });
 
   return (
