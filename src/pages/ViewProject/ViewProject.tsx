@@ -3,67 +3,61 @@ import * as Styled from './ViewProject.styled';
 import { MdOutlineArrowBackIosNew } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import apiMainPage from '@apis/apiMainPage';
 import SideBar from '../MainView/SideBar/SideBar';
 
 interface ProjectData {
   title: string;
-  subtitle: string;
-  author: string;
-  description: string;
+  subTitle: string;
+  content: string;
   startDate: string;
   endDate: string;
-  participants: string;
+  members: string[];
 }
 
 const ViewProject: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const [projectData, setProjectData] = useState<ProjectData | null>(null);
+  const [author, setAuthor] = useState<string>('');
+
   const navigation = useNavigate();
 
   const fetchProjectData = async () => {
     try {
-      // const response = await axios.get(`/task/${projectId}`);
-      // setProjectData(response.data);
-
-      const dummyData: ProjectData = {
-        title: 'TaskUp',
-        subtitle: '업무 관리 웹 애플리케이션',
-        author: '김선규',
-        description: '엘리스 1차 프로젝트.\n업무 관리 웹 애플리케이션\n이름:TaskUp.',
-        startDate: '2023-10-01',
-        endDate: '2023-10-01',
-        participants: '김선규, 박주호, 김하영, 백기준',
-      };
-      setProjectData(dummyData);
+      const response = await apiMainPage.get(`/tasks/${projectId}`);
+      setProjectData(response.data.data);
     } catch (error) {
       console.error('데이터 가져오기 실패:', error);
     }
   };
 
-  //프로젝트 수정...
-  // const handleUpdate = async () => {
-  //   try {
-  //     if (projectData) {
-  //       const updatedData = {
-  //         ...projectData,
-  //         title: '',
-  //         description: '',
-  //       };
+  console.log('projectData', projectData);
 
-  //       await axios.patch(`/tasks/${projectId}`, updatedData);
-  //       alert('프로젝트가 수정되었습니다.');
-  //       fetchProjectData();
-  //     }
-  //   } catch (error) {
-  //     console.error('프로젝트를 수정 실패:', error);
-  //     alert('프로젝트 수정에 실패하였습니다.');
-  //   }
-  // };
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser); // 문자열을 객체로 변환
+      setAuthor(user.name); // 이름을 상태에 설정
+    }
+    fetchProjectData();
+  }, [projectId]);
+
+  if (!projectData) {
+    return <h1>존재하지 않는 페이지입니다.</h1>;
+  }
 
   const handleDelete = async () => {
+    const token = localStorage.getItem('token');
+    console.log('Token', token);
+
     if (window.confirm('프로젝트를 삭제하시겠습니까?')) {
       try {
-        await axios.delete(`/tasks/${projectId}`);
+        await apiMainPage.delete(`/tasks/${projectId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
         alert('프로젝트가 삭제되었습니다.');
         navigation('/main');
       } catch (error) {
@@ -72,14 +66,6 @@ const ViewProject: React.FC = () => {
       }
     }
   };
-
-  useEffect(() => {
-    fetchProjectData();
-  }, [projectId]);
-
-  if (!projectData) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <Styled.Container>
@@ -101,41 +87,47 @@ const ViewProject: React.FC = () => {
             <Styled.Hr />
             <Styled.ContentFlex>
               <Styled.ContentTitle>부제목</Styled.ContentTitle>
-              <Styled.ContentDescription>{projectData.subtitle}</Styled.ContentDescription>
+              <Styled.ContentDescription>{projectData.subTitle}</Styled.ContentDescription>
             </Styled.ContentFlex>
             <Styled.Hr />
             <Styled.ContentFlex>
               <Styled.ContentTitle>작성자</Styled.ContentTitle>
-              <Styled.ContentDescription>{projectData.author}</Styled.ContentDescription>
+              <Styled.ContentDescription>{author}</Styled.ContentDescription>
             </Styled.ContentFlex>
             <Styled.Hr />
             <Styled.ContentFlex>
               <Styled.ContentTitle>내용</Styled.ContentTitle>
               <Styled.ContentDescription style={{ height: '10rem' }}>
-                {projectData.description.split('\n').map((line, index) => (
-                  <React.Fragment key={index}>
-                    {line}
-                    <br />
-                  </React.Fragment>
-                ))}
+                {projectData.content}
               </Styled.ContentDescription>
             </Styled.ContentFlex>
             <Styled.Hr />
             <Styled.ContentFlex>
               <Styled.ContentTitle>시작일</Styled.ContentTitle>
-              <Styled.ContentDate>{projectData.startDate}</Styled.ContentDate>
+              <Styled.ContentDate>
+                {new Date(projectData.startDate).toISOString().slice(2, 10)}
+              </Styled.ContentDate>
               <Styled.MarginLeft left={70} />
               <Styled.ContentTitle>종료일</Styled.ContentTitle>
-              <Styled.ContentDate>{projectData.endDate}</Styled.ContentDate>
+              <Styled.ContentDate>
+                {new Date(projectData.endDate).toISOString().slice(2, 10)}
+              </Styled.ContentDate>
             </Styled.ContentFlex>
             <Styled.Hr />
             <Styled.ContentFlex>
               <Styled.ContentTitle>참가자</Styled.ContentTitle>
-              <Styled.ContentDescription>{projectData.participants}</Styled.ContentDescription>
+              <Styled.ContentDescription>
+                {projectData.members.join(', ')}
+              </Styled.ContentDescription>
             </Styled.ContentFlex>
             <Styled.MarginTop top={60} />
             <Styled.BtnBox>
-              <Styled.GreenBtn1>수정하기</Styled.GreenBtn1>
+              <Styled.GreenBtn1
+                onClick={() => {
+                  navigation(`/create/${projectId}`, { state: projectData });
+                }}>
+                수정하기
+              </Styled.GreenBtn1>
               <Styled.GreenBtn2 onClick={handleDelete}>삭제하기</Styled.GreenBtn2>
             </Styled.BtnBox>
           </Styled.ContentBox>

@@ -17,6 +17,6 @@
     "jsx": "react-jsx",
     "baseUrl": "src",
   },
-  "include": ["src/**/*", "global.d.ts", "fullcalendar.d.ts"],
+  "include": ["src/**/*", "global.d.ts", "fullcalendar.d.ts", "event-source-polyfill.d.ts"],
   "extends": "./tsconfig.paths.json"
 }
