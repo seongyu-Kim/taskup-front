@@ -1,39 +1,72 @@
 # TaskUp
-> **📖 설명**
-> - 프로젝트를 간단하게 생성하고 조회 및 관리할 수 있는 플랫폼
-
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/2908bc18-d27b-44cc-9a5d-16651b37146f" alt="포스터" width="500" />
+  <img width="45%" alt="스크린샷 2025-02-19 오후 5 27 29" src="https://github.com/user-attachments/assets/2001235a-ea94-43b0-9aac-b37b4b7e9ecf" />
 </div>
 
-> **기술 스택**
-> - <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"> <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"> <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=axios&logoColor=white" />
+<br />
+
+## 1. 팀 소개
+**팀명** : 3팀
+
+**팀원** : 김선규(팀장), 박주호, 김하영, 백기준
+
+<br />
+
+## 2. 기획내용
+**프로젝트 주제** : 업무 지원 플랫폼
+
+**프로젝트 기간** : 2024년 10월 04일 ~ 2024년 10월 21일
+
+**프로젝트 인원** : 4명
+
+**프로젝트 소개** : 프로젝트를 간단하게 생성하고, 조회 및 관리할 수 있는 플랫폼
+
+<br/>
+
+**기술 스택** :  ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> 	![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=axios&logoColor=white" /> 
+
+<br />
+
+## 3. 역할 분담
+| **팀원**            | **역할**                                                                 |
+|---------------------|--------------------------------------------------------------------------|
+| **김선규 (Front)**  | 프로젝트 생성, 프로젝트 상세보기                                                |
+| **박주호 (Front)**  | 메인페이지, 사이드바                                            |
+| **김하영 (Front)**  | 로그인 & 회원가입, 비밀번호 찾기, 비밀번호 재설정                                      |
+| **백기준 (Back)**   | 로그인 & 회원가입 API, 프로젝트 API, 알림 API                     |
+
+<br />
+
+## 4. 구현기능
+##### 로그인 및 회원가입
+- 로그인 : 사용자의 입력 값을 유효성 검사 후 토큰 저장
+- 회원가입 : 이메일로 인증코드 발송 후 인증코드와 입력 값 유효성 검사 후 회원가입
+- 비밀번호 재설정 : 이메일 유효성 검사 및 인증 후 이메일로 재설정 링크 전송
+
+##### 메인페이지 
+- 사이드바 : 새 프로젝트 생성, 알림 확인, 프로필 수정, 로그아웃 버튼
+- 프로젝트 리스트: 현재 참여중인 프로젝트를 조회하고 클릭해 상세페이지로 이동, 체크 버튼을 통해 완료 여부 표시
+- 캘린더: 현재 참여중인 프로젝트의 일정을 캘린더에서 확인 가능
+- 프로필 수정: 프로필 사진 변경 가능
+- 알림창: 프로젝트 종료일이 일주일 이내일 경우 알림 발송
 
 
-> **개발 인원(역할)**
-> - FE 3/ BE 2(관리자 애플리케이션 프론트엔드 개발)
+##### 프로젝트 생성
+- 프로젝트를 생성하거나 수정할 수 있는 페이지
+- 프로젝트 생성/수정 페이지를 분리하는 대신, 데이터의 유무의 따라 요청을 다르게 하여 하나의 페이지에서 생성과 수정 가능
 
-> **개발 기간**
->  - 2023.10 ~ 2023.10
+##### 프로젝트 상세보기
+- 프로젝트의 세부 정보를 보여주는 페이지
+- 수정하기 버튼을 누를 경우 데이터를 전달받아 생성 폼에서 기존 정보가 채워진 상태로 수정 가능
 
-<br>
+<br />
 
-### 💁‍♂️ 주요 업무 및 상세 역할
-- React hooks를 이용한 상태관리
-- TypeScript를 사용한 정적 타입 분석
-- 프로젝트 생성 폼, 프로젝트 상세보기 페이지 구현
+## 5. 보완할 점 & 추후 개발하고자 하는부분
+- 프로젝트 정보와 같이 다양한 상태값이 필요할 땐 하나의 상태로 축약할 수 있으나 축약하지 않고 너무 많은 상태값을 사용했음
+- 디자인이나 사용자 경험에 대한 부분이 많이 아쉬움
+- 업무 지원 플랫폼이란 주제에 맞게 개발을 했지만 업무 지원에 초점이 맞춰지기 보다는 단순한 CRUD에 초점이 맞춰진 것 같아서 기획 부분에서 아쉬움이 남음. 기획의 중요성을 확실히 느낌
 
-<br>
+<br />
 
-### 💡 느낀 점
-- TypeScript의 장점
-  TypeScript를 본격적으로 사용하면서, 정적 타입 분석을 통해 코드의 안정성을 높이고, 예상치 못한 오류를 미리 예방할 수 있었습니다. JavaScript에 익숙하다보니 처음엔 문법적인 부분에서 어려움을 겪었지만 프로젝트가 진행 될수록,  타입 정의가 명확해지며 코드 가독성도 개선된 점이 인상적이었습니다.
-    
-- 효율적인 페이지관리와 프로젝트 최적화
-  프로젝트 생성 및 수정 페이지를 따로 만들지 않고, 데이터 유무에 따라 요청을 다르게 처리하는 방식으로 페이지 관리를 최적화했습니다. 이를 통해 중복된 코드를 줄이고, 유지 보수성 높은 구조를 구현할 수 있었습니다. 또한 이를 고민하는 과정에서 효율적인 코드에 대해 깊이 고민할 수 있었습니다.
- 
-<br>
-
-### 시연영상
+## 시연영상
 https://www.youtube.com/watch?v=MQrHQkgr8G8&list=PLhBsbIXDcDgdM62hExqcubGo2vD4I8uV2
-
